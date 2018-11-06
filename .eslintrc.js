@@ -30,6 +30,8 @@ module.exports = {
 		indent: ['error', 'tab'],
 		//禁用var，用let和const代替
 		'no-var': 'error',
+		// 不允许空格和 tab 混合缩进
+		'no-mixed-spaces-and-tabs': 'error',
 	},
 	parserOptions: {
 		parser: 'babel-eslint',

@@ -11,26 +11,46 @@ export default new Router({
 		{
 			path: '/',
 			name: 'home',
+			meta: {
+				requireAuth: true,
+			},
 			component: Home,
+		},
+		{
+			path: '/sign',
+			name: 'sign',
+			component: () => import('./views/sign'), // 登录与注册,
 		},
 		{
 			path: '/message',
 			name: 'message',
+			meta: {
+				requireAuth: true,
+			},
 			component: () => import('./views/message'), // 消息中心
 		},
 		{
 			path: '/user',
 			name: 'user',
+			meta: {
+				requireAuth: true,
+			},
 			component: () => import('./views/user'), // 用户中心
 		},
 		{
 			path: '/set',
 			name: 'set',
+			meta: {
+				requireAuth: true,
+			},
 			component: () => import('./views/set'), // 设置
 		},
 		{
 			path: '/device',
 			name: 'device',
+			meta: {
+				requireAuth: true,
+			},
 			component: () => import('./views/device'), // 设备
 			children: [
 				{

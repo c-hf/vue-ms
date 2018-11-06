@@ -32,18 +32,19 @@
                 </el-badge>
             </dir>
             <el-dropdown trigger="click"
+                         @command='handleCommand'
                          placement="bottom">
                 <div class="right-user el-dropdown-link">
                     <span class="right-user-avatar">
-                        <img :src="user.avaUrl"
-                             :alt="user.name">
+                        <img :src="user.avatar"
+                             :alt="user.nickName">
                     </span>
                 </div>
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item disabled>Welcome!</el-dropdown-item>
-                    <el-dropdown-item><i class="fa fa-user fa-fw"></i>&nbsp;我的账号</el-dropdown-item>
+                    <el-dropdown-item command="userInfo"><i class="fa fa-user fa-fw"></i>&nbsp;我的账号</el-dropdown-item>
                     <el-dropdown-item><i class="fa fa-gear fa-fw"></i>&nbsp;设置</el-dropdown-item>
-                    <el-dropdown-item><i class="fa fa-sign-out fa-fw"></i>&nbsp;登出</el-dropdown-item>
+                    <el-dropdown-item command="signOut"><i class="fa fa-sign-out fa-fw"></i>&nbsp;登出</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
         </el-col>
@@ -52,6 +53,9 @@
 
 <script>
 import HeaderSearch from './search';
+import { userInfo, signOut } from '@/api/user';
+import storage from '@/assets/js/storage';
+
 export default {
 	name: 'Header',
 	data() {
@@ -75,6 +79,43 @@ export default {
 	methods: {
 		setCollapse() {
 			this.$emit('setCollapse');
+		},
+		handleCommand(command) {
+			if (command === 'signOut') {
+				signOut()
+					.then(data => {
+						if (data === 'ok') {
+							storage.remove('token');
+							this.$store.dispatch('token', '');
+							this.$router.replace({
+								name: 'sign',
+							});
+						}
+					})
+					.catch(error => {
+						this.$message({
+							showClose: true,
+							center: true,
+							message: error.message,
+							type: 'error',
+						});
+					});
+			} else if (command === 'userInfo') {
+				userInfo()
+					.then(data => {
+						if (data) {
+							console.log(data);
+						}
+					})
+					.catch(error => {
+						this.$message({
+							showClose: true,
+							center: true,
+							message: error.message,
+							type: 'error',
+						});
+					});
+			}
 		},
 	},
 	components: {

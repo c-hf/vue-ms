@@ -8,7 +8,7 @@
                         <span>设备信息</span>
                     </div>
                     <el-form ref="deviceForm"
-                             :model="device"
+                             :model="deviceData"
                              :rules="rules"
                              label-position="left"
                              label-width="10%">
@@ -16,7 +16,7 @@
                         <el-form-item label="DeviceID:"
                                       class="device-id">
                             <el-col :span="8">
-                                <span class="device-id">{{ device.id }}</span>
+                                <span class="device-id">{{ deviceData.id }}</span>
                             </el-col>
                             <el-col :span="2"
                                     :offset="0">
@@ -30,7 +30,7 @@
                         <el-form-item label="设备名称:"
                                       prop="name">
                             <el-col :span="8">
-                                <el-input v-model="device.name"
+                                <el-input v-model="deviceData.name"
                                           placeholder="最多输入 16 个字符"></el-input>
                             </el-col>
                         </el-form-item>
@@ -39,7 +39,7 @@
                                       prop="type">
                             <el-cascader :options="options"
                                          :show-all-levels="false"
-                                         v-model="device.type"></el-cascader>
+                                         v-model="deviceData.type"></el-cascader>
                         </el-form-item>
 
                         <el-form-item label="设备描述:"
@@ -47,13 +47,13 @@
                             <el-col :span="8">
                                 <el-input type="textarea"
                                           :autosize="{ minRows: 4, maxRows: 6}"
-                                          v-model="device.desc"></el-input>
+                                          v-model="deviceData.desc"></el-input>
                             </el-col>
                         </el-form-item>
 
                         <el-form-item label="操作系统"
                                       prop="os">
-                            <el-radio-group v-model="device.os">
+                            <el-radio-group v-model="deviceData.os">
                                 <el-radio label="Linux"></el-radio>
                                 <el-radio label="Android"
                                           disabled></el-radio>
@@ -62,7 +62,7 @@
 
                         <el-form-item label="联网方式"
                                       prop="networking">
-                            <el-radio-group v-model="device.networking">
+                            <el-radio-group v-model="deviceData.networking">
                                 <el-radio label="wifi"></el-radio>
                                 <el-radio label="移动蜂窝网络"
                                           disabled></el-radio>
@@ -75,7 +75,7 @@
                         <el-form-item label="设备接入协议"
                                       prop="protocol">
                             <el-col :span="4">
-                                <el-select v-model="device.protocol"
+                                <el-select v-model="deviceData.protocol"
                                            @change="setProtocol"
                                            placeholder="请选择">
                                     <el-option label="HTTP"
@@ -87,8 +87,8 @@
                             <el-col :span="8"
                                     :offset="1">
                                 <div class="device-protocol"
-                                     v-show="device.protocol">
-                                    <h5>{{ device.protocol }} 基本功能：</h5>
+                                     v-show="deviceData.protocol">
+                                    <h5>{{ deviceData.protocol }} 基本功能：</h5>
                                     <span>{{ protocolIntro }}</span>
                                 </div>
                             </el-col>
@@ -114,7 +114,7 @@ export default {
 	data() {
 		return {
 			// 表单信息
-			device: {
+			deviceData: {
 				id: 'AKFIEOCJHaks48vc56',
 				name: '',
 				type: [],
@@ -145,7 +145,7 @@ export default {
 		submitForm(formName) {
 			this.$refs[formName].validate(valid => {
 				if (valid) {
-					this.$emit('infoSubmit', this.device, this.custom);
+					this.$emit('infoSubmit', this.deviceData, this.custom);
 				} else {
 					return false;
 				}

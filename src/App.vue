@@ -22,6 +22,7 @@
 <script>
 import AppHeader from '@/components/header';
 import AppAside from '@/components/aside';
+import { userInfo } from '@/api/user';
 
 export default {
 	data() {
@@ -30,9 +31,12 @@ export default {
 			isCollapse: false,
 			width: 220,
 			user: {
-				name: 'Admin',
-				avaUrl:
-					'http://img.zcool.cn/community/0139855923a94db5b3086ed4ff769f.jpg@1280w_1l_2o_100sh.jpg',
+				nickName: '',
+				avatar: '',
+				birthday: '',
+				intro: '',
+				region: '',
+				sex: '',
 			},
 		};
 	},
@@ -54,6 +58,22 @@ export default {
 			this.isCollapse = true;
 			this.width = 64;
 		},
+	},
+	created() {
+		userInfo()
+			.then(data => {
+				if (!data === 'ok') {
+					this.user = data;
+				}
+			})
+			.catch(error => {
+				this.$message({
+					showClose: true,
+					center: true,
+					message: error.message,
+					type: 'error',
+				});
+			});
 	},
 };
 </script>

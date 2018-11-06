@@ -24,3 +24,7 @@ img {
 i {
 	font-style: normal;
 }
+
+input::-webkit-input-safebox-button {
+	display: none;
+}

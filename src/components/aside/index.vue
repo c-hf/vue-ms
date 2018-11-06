@@ -2,12 +2,12 @@
     <div class="app-aside">
         <div class="user">
             <span class="user-avatar">
-                <img :src="user.avaUrl"
-                     :alt="user.name">
+                <img :src="user.avatar"
+                     :alt="user.nickName">
             </span>
             <span class="user-name"
                   v-show="!isCollapse">
-                {{ user.name }}
+                {{ user.nickName }}
             </span>
             <span class="user-item">
 
