@@ -104,6 +104,7 @@ export default {
 	.user {
 		width: auto;
 		height: 160px;
+		padding-top: 20px;
 		display: flex;
 		flex-direction: column;
 		align-items: center;

@@ -29,10 +29,10 @@
                                 v-show="show">
                             <sign-up v-if="sign"
                                      @toggleSign="toggleSign"
-                                     @setSign='toggleSign' />
+                                     @setSign="toggleSign" />
                             <sign-in v-else
                                      @toggleSign="toggleSign"
-                                     @setAvatar='setAvatar' />
+                                     @setAvatar="setAvatar" />
                         </el-col>
                     </transition>
                 </el-card>
@@ -87,7 +87,7 @@ export default {
 	top: 0;
 	left: 0;
 	background-color: #f3f6f8;
-	z-index: 100;
+	z-index: 1000;
 
 	.el-col {
 		height: 100%;

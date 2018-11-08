@@ -141,7 +141,9 @@ export default {
 				signIn(this.data)
 					.then(data => {
 						storage.set('token', data.token);
+						storage.set('id', data.emailId);
 						this.$store.dispatch('token', data.token);
+						this.$store.dispatch('user', data.userInfo);
 						this.$message({
 							showClose: true,
 							center: true,

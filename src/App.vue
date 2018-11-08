@@ -30,14 +30,7 @@ export default {
 			title: '首页',
 			isCollapse: false,
 			width: 220,
-			user: {
-				nickName: '',
-				avatar: '',
-				birthday: '',
-				intro: '',
-				region: '',
-				sex: '',
-			},
+			user: {},
 		};
 	},
 	components: {
@@ -62,8 +55,9 @@ export default {
 	created() {
 		userInfo()
 			.then(data => {
-				if (!data === 'ok') {
+				if (data !== 'ok') {
 					this.user = data;
+					this.$store.dispatch('user', data);
 				}
 			})
 			.catch(error => {
@@ -74,6 +68,12 @@ export default {
 					type: 'error',
 				});
 			});
+	},
+	updated() {
+		if (!this.user.nickName) {
+			console.log(this.user);
+			this.user = this.$store.state.user;
+		}
 	},
 };
 </script>

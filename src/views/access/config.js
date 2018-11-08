@@ -1,3 +1,8 @@
+const prefix = 'access';
+const suffix = 'key';
+export const CATEGORY_CONTENT_KEY = `${prefix}-content-${suffix}`;
+export const CATEGORY_CONTENT_UPDATE_TIME_INTERVAL = 1 * 24 * 60 * 60 * 1000; // 过期时间
+
 // 验证规则
 export const RULES = {
 	id: [
@@ -74,7 +79,7 @@ export const OPTIONS = [
 		],
 	},
 	{
-		value: 'Lighting',
+		value: 'lighting',
 		label: '照明',
 		children: [
 			{

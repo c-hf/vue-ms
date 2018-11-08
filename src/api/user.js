@@ -1,22 +1,4 @@
-import axios from 'axios';
-
-import { TIMEOUT } from './config';
-
-let options = {
-	method: 'post', //方法
-	url: '', //地址
-	data: null,
-	timeout: TIMEOUT,
-};
-
-const axiosFn = options => {
-	return axios(options).then(response => {
-		if (!response.data.code) {
-			return response.data;
-		}
-		throw new Error(response.data.message);
-	});
-};
+import { options, axiosFn } from './config';
 
 export const signSendCode = data => {
 	options.method = 'post';

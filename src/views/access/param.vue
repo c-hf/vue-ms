@@ -17,6 +17,9 @@
                             <el-col :span="6">
                                 <span>{{ item.attr }}<i v-show="item.unit"> {{ item.unit }}</i></span>
                             </el-col>
+                            <el-col :span="6">
+
+                            </el-col>
                             <!-- <el-col :span="2"
                                     :offset="0">
                                 <el-button type="text"

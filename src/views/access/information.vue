@@ -1,5 +1,6 @@
 <template>
-    <div class="access-information">
+    <div class="access-information"
+         v-loading="loading">
         <el-row>
             <el-col :span="24">
                 <el-card class="device-list">
@@ -11,18 +12,19 @@
                              :model="deviceData"
                              :rules="rules"
                              label-position="left"
-                             label-width="10%">
+                             label-width="120px">
 
                         <el-form-item label="DeviceID:"
+                                      prop="id"
                                       class="device-id">
                             <el-col :span="8">
                                 <span class="device-id">{{ deviceData.id }}</span>
                             </el-col>
-                            <el-col :span="2"
-                                    :offset="0">
+                            <el-col :span="2">
                                 <el-button icon="el-icon-refresh"
                                            size="mini"
-                                           :loading="loading"
+                                           :loading="getIdLoading"
+                                           @click="getId"
                                            circle></el-button>
                             </el-col>
                         </el-form-item>
@@ -37,9 +39,11 @@
 
                         <el-form-item label="设备类型:"
                                       prop="type">
-                            <el-cascader :options="options"
-                                         :show-all-levels="false"
-                                         v-model="deviceData.type"></el-cascader>
+                            <el-col :span="8">
+                                <el-cascader :options="options"
+                                             :show-all-levels="true"
+                                             v-model="deviceData.type"></el-cascader>
+                            </el-col>
                         </el-form-item>
 
                         <el-form-item label="设备描述:"
@@ -107,7 +111,13 @@
 </template>
 
 <script>
-import { RULES, OPTIONS } from './config.js';
+import {
+	RULES,
+	CATEGORY_CONTENT_KEY,
+	CATEGORY_CONTENT_UPDATE_TIME_INTERVAL,
+} from './config.js'; //OPTIONS
+import { getDeviceCategoryInfo, getDeviceId } from '@/api/device';
+import storage from '@/assets/js/storage';
 
 export default {
 	name: 'AccessInformation',
@@ -115,7 +125,7 @@ export default {
 		return {
 			// 表单信息
 			deviceData: {
-				id: 'AKFIEOCJHaks48vc56',
+				id: '',
 				name: '',
 				type: [],
 				desc: '',
@@ -126,13 +136,61 @@ export default {
 			// 验证规则
 			rules: RULES,
 			// 数据源
-			options: OPTIONS,
+			options: [],
 			protocolIntro: '',
 			loading: false,
+			getIdLoading: false,
 			custom: false,
 		};
 	},
 	methods: {
+		// 获取设备id
+		getId() {
+			this.getIdLoading = true;
+			getDeviceId()
+				.then(data => {
+					this.deviceData.id = data.deviceId;
+					this.getIdLoading = false;
+				})
+				.catch(error => {
+					this.$message({
+						showClose: true,
+						center: true,
+						message: error.message,
+						type: 'error',
+					});
+					this.getIdLoading = false;
+				});
+		},
+		// 获取设备分类
+		getInfo() {
+			this.loading = true;
+			let [contents = {}, id, updateTime] = [
+				storage.get(CATEGORY_CONTENT_KEY),
+				storage.get('id'),
+				'',
+			];
+			const curTime = new Date().getTime(); // 获取当前时间
+			if (contents && contents[id]) {
+				updateTime = contents[id].updateTime || 0;
+
+				if (
+					curTime - updateTime <=
+					CATEGORY_CONTENT_UPDATE_TIME_INTERVAL
+				) {
+					// localstorage
+					this.options = contents[id].data;
+					this.loading = false;
+				} else {
+					// HTTP
+					this.getInfoByHttp(id, contents, curTime);
+				}
+			} else {
+				// HTTP
+				this.getInfoByHttp(id, contents, curTime);
+			}
+		},
+		// 设置 intro 信息
 		setProtocol(value) {
 			if (value === 'MQTT') {
 				this.protocolIntro =
@@ -155,6 +213,52 @@ export default {
 		resetForm(formName) {
 			this.$refs[formName].resetFields();
 		},
+		// http获取设备分类
+		getInfoByHttp(id, contents, updateTime) {
+			getDeviceCategoryInfo()
+				.then(data => {
+					this.setOptions(data);
+					this.updateLocalStorage(id, contents, updateTime);
+					this.loading = false;
+				})
+				.catch(error => {
+					this.$message({
+						showClose: true,
+						center: true,
+						message: error.message,
+						type: 'error',
+					});
+					this.loading = false;
+				});
+		},
+		// 更新本地缓存
+		updateLocalStorage(id, contents, curTime) {
+			contents = contents || {};
+			contents[id] = {};
+			contents[id].data = this.options;
+			contents[id].updateTime = curTime;
+			storage.set(CATEGORY_CONTENT_KEY, contents);
+		},
+		// 设置 options
+		setOptions(data) {
+			data.forEach(el => {
+				let optionItem = {};
+				optionItem.value = el.categoryId;
+				optionItem.label = el.name;
+				optionItem.children = [];
+				el.categoryItem.forEach(el => {
+					let childrenItem = {};
+					childrenItem.value = el.categoryItemId;
+					childrenItem.label = el.name;
+					optionItem.children.push(childrenItem);
+				});
+				this.options.push(optionItem);
+			});
+		},
+	},
+	created() {
+		this.getId();
+		this.getInfo();
 	},
 };
 </script>
@@ -162,7 +266,6 @@ export default {
 <style lang="scss" scoped>
 .access-information {
 	.el-form {
-		width: 100%;
 		padding-left: 10%;
 
 		.device-id {
