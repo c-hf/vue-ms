@@ -5,6 +5,7 @@
              status-icon
              label-width="0"
              label-position="left"
+             @keyup.enter.native="onSubmit('signInForm')"
              class="form-sign-in">
         <el-form-item>
             <h1 class="main-title">登录 XXX</h1>

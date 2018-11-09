@@ -71,7 +71,7 @@ export default {
 	},
 	updated() {
 		if (!this.user.nickName) {
-			console.log(this.user);
+			// console.log(this.user);
 			this.user = this.$store.state.user;
 		}
 	},

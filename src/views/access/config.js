@@ -1,6 +1,6 @@
-const prefix = 'access';
 const suffix = 'key';
-export const CATEGORY_CONTENT_KEY = `${prefix}-content-${suffix}`;
+export const INFORMATION_DATA_KEY = `information-content-${suffix}`;
+export const PARAM_DATA_KEY = `param-content-${suffix}`;
 export const CATEGORY_CONTENT_UPDATE_TIME_INTERVAL = 1 * 24 * 60 * 60 * 1000; // 过期时间
 
 // 验证规则

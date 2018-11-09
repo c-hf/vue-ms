@@ -5,8 +5,8 @@
              status-icon
              label-width="0"
              label-position="top"
+             @keyup.enter.native="onSubmit('signUpForm')"
              class="form-sign-up">
-
         <el-form-item>
             <h1 class="main-title">欢迎注册 XXX</h1>
             <h2 class="subtitle">开启智慧生活</h2>

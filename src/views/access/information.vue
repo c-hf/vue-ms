@@ -113,9 +113,9 @@
 <script>
 import {
 	RULES,
-	CATEGORY_CONTENT_KEY,
+	INFORMATION_DATA_KEY,
 	CATEGORY_CONTENT_UPDATE_TIME_INTERVAL,
-} from './config.js'; //OPTIONS
+} from './config.js';
 import { getDeviceCategoryInfo, getDeviceId } from '@/api/device';
 import storage from '@/assets/js/storage';
 
@@ -166,7 +166,7 @@ export default {
 		getInfo() {
 			this.loading = true;
 			let [contents = {}, id, updateTime] = [
-				storage.get(CATEGORY_CONTENT_KEY),
+				storage.get(INFORMATION_DATA_KEY),
 				storage.get('id'),
 				'',
 			];
@@ -237,7 +237,7 @@ export default {
 			contents[id] = {};
 			contents[id].data = this.options;
 			contents[id].updateTime = curTime;
-			storage.set(CATEGORY_CONTENT_KEY, contents);
+			storage.set(INFORMATION_DATA_KEY, contents);
 		},
 		// 设置 options
 		setOptions(data) {
@@ -266,7 +266,7 @@ export default {
 <style lang="scss" scoped>
 .access-information {
 	.el-form {
-		padding-left: 10%;
+		padding-left: 8%;
 
 		.device-id {
 			width: 100%;

@@ -50,7 +50,6 @@ export default {
 	position: absolute;
 	top: 0;
 	left: 0;
-	z-index: 888;
 	background-color: #f3f6f8;
 
 	.device-list {
