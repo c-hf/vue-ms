@@ -5,7 +5,7 @@
              status-icon
              label-width="0"
              label-position="left"
-             @keyup.enter.native="onSubmit('signInForm')"
+             @keyup.enter.native="onEnter('signInForm')"
              class="form-sign-in">
         <el-form-item>
             <h1 class="main-title">登录 XXX</h1>
@@ -54,6 +54,7 @@ export default {
 				/^[a-z0-9]+(?:[._-][a-z0-9]+)*@[a-z0-9]+(?:[._-][a-z0-9]+)*\.[a-z]{2,4}$/i,
 			];
 			if (!value) {
+				this.vId = false;
 				callback(new Error('请输入邮箱'));
 			} else {
 				// this.showCode = true;
@@ -66,7 +67,7 @@ export default {
 						this.avatar = true;
 						this.$emit('setAvatar', data);
 					});
-
+					this.vId = true;
 					callback();
 				} else if (emailRegExp.test(this.data.id)) {
 					this.data.type = 'email';
@@ -77,8 +78,10 @@ export default {
 						this.avatar = true;
 						this.$emit('setAvatar', data.avatar);
 					});
+					this.vId = true;
 					callback();
 				}
+				this.vId = false;
 				callback(new Error('请输入正确的邮箱'));
 			}
 		};
@@ -94,6 +97,8 @@ export default {
 		};
 		return {
 			emailSuffix: EMAIL_SUFFIX,
+			vId: false,
+			vPassWord: false,
 			data: {},
 			rules: {
 				id: [
@@ -162,6 +167,12 @@ export default {
 						});
 					});
 			});
+		},
+		onEnter(formName) {
+			if (!this.vId) {
+				return false;
+			}
+			this.onSubmit(formName);
 		},
 		signUp() {
 			this.$emit('toggleSign');

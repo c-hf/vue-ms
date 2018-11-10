@@ -5,7 +5,7 @@
              status-icon
              label-width="0"
              label-position="top"
-             @keyup.enter.native="onSubmit('signUpForm')"
+             @keyup.enter.native="onEnter('signUpForm')"
              class="form-sign-up">
         <el-form-item>
             <h1 class="main-title">欢迎注册 XXX</h1>
@@ -68,11 +68,14 @@ export default {
 		const validateNickName = (rule, value, callback) => {
 			const nameRegExp = /^[\u4e00-\u9fa5a-zA-Z0-9_]{4,18}$/;
 			if (!value) {
+				this.vNickName = false;
 				callback(new Error('请输入昵称'));
 			} else {
 				if (nameRegExp.test(this.data.name)) {
+					this.vNickName = true;
 					callback();
 				}
+				this.vNickName = false;
 				callback(
 					new Error('昵称为 4 - 18 个字，支持中、英文、数字及 _')
 				);
@@ -85,17 +88,19 @@ export default {
 				/^[a-z0-9]+(?:[._-][a-z0-9]+)*@[a-z0-9]+(?:[._-][a-z0-9]+)*\.[a-z]{2,4}$/i,
 			];
 			if (!value) {
-				// this.showCode = false;
+				this.vId = false;
 				callback(new Error('请输入邮箱'));
 			} else {
-				// this.showCode = true;
 				if (phoneRegExp.test(this.data.id)) {
 					this.data.type = 'phone';
+					this.vId = true;
 					callback();
 				} else if (emailRegExp.test(this.data.id)) {
 					this.data.type = 'email';
+					this.vId = true;
 					callback();
 				}
+				this.vId = false;
 				callback(new Error('请输入正确的邮箱'));
 			}
 		};
@@ -103,11 +108,15 @@ export default {
 		const validatePassWord = (rule, value, callback) => {
 			const nameRegExp = /^\S{6,16}$/;
 			if (!value) {
+				this.vPassWord = false;
 				callback(new Error('请输入密码'));
 			} else {
-				nameRegExp.test(this.data.password)
-					? callback()
-					: callback(new Error('密码为 6 - 16 位，不支持空格'));
+				if (nameRegExp.test(this.data.password)) {
+					this.vPassWord = true;
+					callback();
+				}
+				this.vPassWord = false;
+				callback(new Error('密码为 6 - 16 位，不支持空格'));
 			}
 		};
 		// 验证码
@@ -122,6 +131,9 @@ export default {
 		};
 
 		return {
+			vNickName: false,
+			vId: false,
+			vPassWord: false,
 			data: {
 				nickName: '',
 				password: '',
@@ -274,6 +286,12 @@ export default {
 					}
 				}, 1000);
 			});
+		},
+		onEnter(formName) {
+			if (!this.vNickName || !this.vId || !this.vPassWord) {
+				return false;
+			}
+			this.onSubmit(formName);
 		},
 	},
 	mounted() {},
