@@ -66,8 +66,8 @@ export default {
 					}).then(data => {
 						this.avatar = true;
 						this.$emit('setAvatar', data);
+						this.vId = true;
 					});
-					this.vId = true;
 					callback();
 				} else if (emailRegExp.test(this.data.id)) {
 					this.data.type = 'email';
@@ -77,8 +77,8 @@ export default {
 					}).then(data => {
 						this.avatar = true;
 						this.$emit('setAvatar', data.avatar);
+						this.vId = true;
 					});
-					this.vId = true;
 					callback();
 				}
 				this.vId = false;
@@ -98,7 +98,6 @@ export default {
 		return {
 			emailSuffix: EMAIL_SUFFIX,
 			vId: false,
-			vPassWord: false,
 			data: {},
 			rules: {
 				id: [
