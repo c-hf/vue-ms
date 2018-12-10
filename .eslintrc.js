@@ -22,8 +22,8 @@ module.exports = {
 		'no-redeclare': 'error',
 		//一行结束后面不要有空格
 		'no-trailing-spaces': 'warn',
-		//强制驼峰法命名
-		camelcase: 'error',
+		// //强制驼峰法命名
+		// camelcase: 'error',
 		//必须使用全等
 		eqeqeq: 'error',
 		//缩进风格

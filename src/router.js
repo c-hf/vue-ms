@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import store from './store';
 import Home from './views/home';
+import index from './views/index';
 
 Vue.use(Router);
 
@@ -8,62 +10,115 @@ export default new Router({
 	mode: 'history',
 	base: process.env.BASE_URL,
 	routes: [
+		// index
 		{
 			path: '/',
-			name: 'home',
-			meta: {
-				requireAuth: true,
+			name: 'index',
+			component: index,
+			beforeEnter: (to, from, next) => {
+				store.state.user.groupId
+					? next()
+					: next({ path: '/information' });
 			},
-			component: Home,
+			children: [
+				{
+					path: '/home',
+					name: 'home',
+					meta: {
+						requireAuth: true,
+					},
+					component: Home,
+				},
+
+				// 家庭权限组
+				{
+					path: '/family',
+					name: 'family',
+					meta: {
+						requireAuth: true,
+					},
+					component: () => import('./views/family'),
+				},
+				// 消息中心
+				{
+					path: '/message',
+					name: 'message',
+					meta: {
+						requireAuth: true,
+					},
+					component: () => import('./views/message'),
+				},
+				// 用户中心
+				{
+					path: '/user',
+					name: 'user',
+					meta: {
+						requireAuth: true,
+					},
+					component: () => import('./views/user'),
+				},
+				// 设置
+				{
+					path: '/set',
+					name: 'set',
+					meta: {
+						requireAuth: true,
+					},
+					component: () => import('./views/set'),
+				},
+				// 设备
+				{
+					path: '/device',
+					name: 'device',
+					meta: {
+						requireAuth: true,
+					},
+					component: () => import('./views/device'),
+
+					children: [
+						// 管理
+						{
+							path: 'control',
+							name: 'control',
+							meta: {
+								requireAuth: true,
+							},
+							component: () => import('./views/control'),
+						},
+						// 接入
+						{
+							path: 'access',
+							name: 'access',
+							meta: {
+								requireAuth: true,
+							},
+							component: () => import('./views/access'),
+						},
+					],
+				},
+			],
 		},
+
+		// 登录与注册,
 		{
 			path: '/sign',
 			name: 'sign',
-			component: () => import('./views/sign'), // 登录与注册,
+			component: () => import('./views/sign'),
 		},
+
+		// 个人信息完善
 		{
-			path: '/message',
-			name: 'message',
+			path: '/information',
+			name: 'information',
 			meta: {
 				requireAuth: true,
 			},
-			component: () => import('./views/message'), // 消息中心
-		},
-		{
-			path: '/user',
-			name: 'user',
-			meta: {
-				requireAuth: true,
+			beforeEnter: (to, from, next) => {
+				from.fullPath === '/sign' || !store.state.user.groupId
+					? next()
+					: next('home');
 			},
-			component: () => import('./views/user'), // 用户中心
-		},
-		{
-			path: '/set',
-			name: 'set',
-			meta: {
-				requireAuth: true,
-			},
-			component: () => import('./views/set'), // 设置
-		},
-		{
-			path: '/device',
-			name: 'device',
-			meta: {
-				requireAuth: true,
-			},
-			component: () => import('./views/device'), // 设备
-			children: [
-				{
-					path: 'control',
-					name: 'control',
-					component: () => import('./views/control'), // 接入
-				},
-				{
-					path: 'access',
-					name: 'access',
-					component: () => import('./views/access'), // 新建
-				},
-			],
+			component: () => import('./views/information'),
 		},
 	],
 });

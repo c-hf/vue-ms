@@ -15,7 +15,7 @@ export let options = {
 export const axiosFn = options => {
 	return axios(options).then(response => {
 		if (!response.data.code) {
-			return response.data;
+			return response.data.response;
 		}
 		throw new Error(response.data.message);
 	});

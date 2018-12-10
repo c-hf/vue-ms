@@ -20,10 +20,15 @@
                  :router="true"
                  :unique-opened="true">
 
-            <el-menu-item index="/"
+            <el-menu-item index="/home"
                           :route="{name: 'home'}">
                 <i class="fa fa-home fa-fw fa-lg"></i>
                 <span slot="title">&nbsp;&nbsp;首页</span>
+            </el-menu-item>
+            <el-menu-item index="/family"
+                          :route="{name: 'family'}">
+                <i class="fa fa-home fa-fw fa-lg"></i>
+                <span slot="title">&nbsp;&nbsp;{{user.nickName}} 的家</span>
             </el-menu-item>
             <el-submenu index="device">
                 <template slot="title">
@@ -60,8 +65,6 @@
 </template>
 
 <script>
-import { menuRouterList } from './config.js';
-
 export default {
 	name: 'Aside',
 	data() {
@@ -80,6 +83,16 @@ export default {
 	},
 	methods: {
 		select(key) {
+			const menuRouterList = {
+				'/home': '首页',
+				'/family': `${this.user.nickName} 的家`,
+				'/device': '概览',
+				'/device/access': '设备接入',
+				'/device/control': '设备管理',
+				'/message': '消息中心',
+				'/set': '设置',
+			};
+
 			this.$emit('setTitle', menuRouterList[key]);
 		},
 		setTitle() {
@@ -111,8 +124,8 @@ export default {
 		justify-content: space-around;
 
 		&-avatar {
-			width: 55px;
-			height: 55px;
+			width: 50px;
+			height: 50px;
 			border-radius: 50%;
 			display: block;
 			border: 2px solid rgb(210, 214, 222);

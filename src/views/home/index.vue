@@ -65,10 +65,6 @@ export default {
 
 	.on-line-device,
 	.line-device {
-		// flex-direction: column;
-		// justify-content: space-around;
-		// align-items: flex-start;
-
 		.card-item-title {
 			margin-left: 10px;
 			position: relative;

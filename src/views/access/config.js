@@ -5,9 +5,16 @@ export const CATEGORY_CONTENT_UPDATE_TIME_INTERVAL = 1 * 24 * 60 * 60 * 1000; //
 
 // 验证规则
 export const RULES = {
-	id: [
+	groupId: [
 		{
 			required: true,
+			message: 'groupId 为必填项',
+		},
+	],
+	deviceId: [
+		{
+			required: true,
+			message: 'deviceId 为必填项',
 		},
 	],
 	name: [
@@ -27,6 +34,13 @@ export const RULES = {
 		{
 			required: true,
 			message: '请选择设备类型',
+			trigger: 'change',
+		},
+	],
+	roomId: [
+		{
+			required: true,
+			message: '请选择设备所在房间',
 			trigger: 'change',
 		},
 	],
@@ -66,84 +80,25 @@ export const RULES = {
 	],
 };
 
-// 数据源
-export const OPTIONS = [
+export const TABLEDATA = [
 	{
-		value: 'power',
-		label: '电源开关',
-		children: [
-			{
-				value: 'socket',
-				label: '智能插座',
-			},
-		],
+		prop: 'id',
+		label: '属性名称',
 	},
 	{
-		value: 'lighting',
-		label: '照明',
-		children: [
-			{
-				value: ' LEDLamp',
-				label: 'LED灯',
-			},
-			{
-				value: ' ceilingLamp',
-				label: '吸顶灯',
-			},
-			{
-				value: 'bedsideLamp',
-				label: '床头灯',
-			},
-			{
-				value: 'tableLamp',
-				label: '台灯',
-			},
-		],
+		prop: 'name',
+		label: '显示名称',
 	},
 	{
-		value: 'environment',
-		label: '环境电器',
-		children: [
-			{
-				value: 'airConditioner',
-				label: '空调',
-			},
-			{
-				value: 'airPurifier',
-				label: '空气净化器',
-			},
-			{
-				value: 'pm2.5Detector',
-				label: 'Pm2.5检测仪',
-			},
-		],
+		prop: 'attrType',
+		label: '类型',
 	},
 	{
-		value: 'sensor',
-		label: '传感器',
-		children: [
-			{
-				value: 'smokeAlarm',
-				label: '烟雾报警器',
-			},
-			{
-				value: 'tempHumiditySensor',
-				label: '温湿度传感器',
-			},
-		],
+		prop: 'value',
+		label: '值',
 	},
 	{
-		value: 'kitchen',
-		label: '厨房电器',
-		children: [
-			{
-				value: 'refrigerator',
-				label: '冰箱',
-			},
-			{
-				value: 'kettle',
-				label: '电热水壶',
-			},
-		],
+		prop: 'unit',
+		label: '单位',
 	},
 ];

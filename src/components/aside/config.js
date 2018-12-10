@@ -1,11 +1,12 @@
-export const menuRouterList = {
-	'/': '首页',
-	'/device': '概览',
-	'/device/access': '设备接入',
-	'/device/control': '设备管理',
-	'/message': '消息中心',
-	'/set': '设置',
-};
+// export const menuRouterList = {
+// 	'/': '首页',
+// 	'/device': '概览',
+// 	'/device/access': '设备接入',
+// 	'/device/control': '设备管理',
+// 	'/device/group': '权限组',
+// 	'/message': '消息中心',
+// 	'/set': '设置',
+// };
 
 // export const menuRouterList = {
 // 	'/': {

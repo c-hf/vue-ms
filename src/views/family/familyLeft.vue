@@ -1,21 +1,17 @@
 <template>
-    <div id="app">
-        <router-view />
-    </div>
+    <el-card class="family-right-card">
+        家庭成员数：
+    </el-card>
 </template>
+
 <script>
 export default {
+	name: 'FamilyRight',
 	data() {
 		return {};
 	},
-	methods: {},
-	created() {},
 };
 </script>
 
 <style lang="scss" scoped>
-#app {
-	width: 100%;
-	height: 100%;
-}
 </style>

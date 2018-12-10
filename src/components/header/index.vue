@@ -53,7 +53,7 @@
 
 <script>
 import HeaderSearch from './search';
-import { userInfo, signOut } from '@/api/user';
+import { getUserInfo, signOut } from '@/api/user';
 import storage from '@/assets/js/storage';
 
 export default {
@@ -61,32 +61,22 @@ export default {
 	data() {
 		return {};
 	},
-	props: {
-		title: {
-			type: String,
-			default: '首页',
-		},
-		user: {
-			type: Object,
-		},
-		promptBadge: {
-			type: Number,
-		},
-		emailBadge: {
-			type: Number,
-		},
-	},
+
 	methods: {
 		setCollapse() {
 			this.$emit('setCollapse');
 		},
+
 		handleCommand(command) {
 			if (command === 'signOut') {
 				signOut()
 					.then(data => {
 						if (data === 'ok') {
+							this.$emit('signOut');
 							storage.remove('token');
 							this.$store.dispatch('token', '');
+							this.$store.dispatch('user', {});
+							this.$store.dispatch('device', []);
 							this.$router.replace({
 								name: 'sign',
 							});
@@ -101,7 +91,7 @@ export default {
 						});
 					});
 			} else if (command === 'userInfo') {
-				userInfo()
+				getUserInfo()
 					.then(data => {
 						if (data) {
 							console.log(data);
@@ -118,8 +108,25 @@ export default {
 			}
 		},
 	},
+
 	components: {
 		HeaderSearch,
+	},
+
+	props: {
+		title: {
+			type: String,
+			default: '首页',
+		},
+		user: {
+			type: Object,
+		},
+		promptBadge: {
+			type: Number,
+		},
+		emailBadge: {
+			type: Number,
+		},
 	},
 };
 </script>
