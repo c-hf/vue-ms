@@ -44,6 +44,14 @@ export const deleteDevice = data => {
 	return axiosFn(deleteOptions);
 };
 
+// 更新设备属性
+export const updateDeviceProfile = data => {
+	options.method = 'put';
+	options.url = '/api/device/updateDeviceProfile';
+	options.data = data;
+	return axiosFn(options);
+};
+
 // 获取用户所有的设备信息
 export const getAllDeviceInfo = groupId => {
 	const getOptions = {

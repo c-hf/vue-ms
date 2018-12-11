@@ -20,7 +20,7 @@
                         <span>{{ props.row.desc }}</span>
                     </el-form-item>
                     <el-form-item label="所属分类">
-                        <span>{{ props.row.category.categoryId }}</span>
+                        <span>{{ props.row.categoryId }}</span>
                     </el-form-item>
                     <el-form-item label="操作系统">
                         <span>{{ props.row.os }}</span>
@@ -32,10 +32,10 @@
                         <span>{{ props.row.protocol }}</span>
                     </el-form-item>
                     <el-form-item label="创建时间">
-                        <span>{{ props.row.status.createTime }}</span>
+                        <span>{{ props.row.createTime }}</span>
                     </el-form-item>
                     <el-form-item label="最后活跃时间">
-                        <span>{{ props.row.status.updateTime }}</span>
+                        <span>{{ props.row.updateTime }}</span>
                     </el-form-item>
                 </el-form>
             </template>
@@ -49,13 +49,13 @@
                          prop="name"></el-table-column>
         <el-table-column :show-overflow-tooltip="true"
                          label="设备类型"
-                         prop="category.name"></el-table-column>
+                         prop="categoryItemName"></el-table-column>
         <el-table-column label="状态">
 
         </el-table-column>
         <el-table-column :show-overflow-tooltip="true"
                          label="最后活跃时间"
-                         prop="status.updateTime"></el-table-column>
+                         prop="updateTime"></el-table-column>
         <el-table-column fixed="right"
                          label="操作"
                          width="100">

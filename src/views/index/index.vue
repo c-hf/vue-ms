@@ -99,6 +99,11 @@ export default {
 		this.socket.on('rooms', data => {
 			this.$store.dispatch('rooms', data);
 		});
+
+		this.socket.on('updateOnline', data => {
+			this.$store.dispatch('updateOnline', data);
+		});
+
 		this.socket.on('addDevice', data => {
 			this.$store.dispatch('addDevice', data);
 		});
@@ -109,6 +114,7 @@ export default {
 			console.log(data);
 		});
 		this.socket.on('updateDeviceStatus', data => {
+			this.$store.dispatch('updateDeviceStatus', data);
 			console.log(data);
 		});
 	},

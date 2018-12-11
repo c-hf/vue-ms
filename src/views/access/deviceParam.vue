@@ -76,6 +76,7 @@ export default {
 					value: el.value,
 				});
 			});
+
 			const reqData = {
 				groupId: this.$store.state.user.groupId,
 				categoryItemId: this.data.type[1],
@@ -86,7 +87,7 @@ export default {
 				os: this.data.os,
 				networking: this.data.networking,
 				protocol: this.data.protocol,
-				status: status,
+				status: this.deviceAttr,
 			};
 			setDevice(reqData)
 				.then(() => {
