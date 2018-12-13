@@ -1,9 +1,11 @@
 <template>
     <div class="device">
-        <el-row :gutter="24"
-                v-for="(item, index) in device"
-                :key="index">
-            <ceiling-lamp :device="item" />
+        <el-row :gutter="24">
+            <el-col :span="8"
+                    v-for="(item, index) in device"
+                    :key="index">
+                <ceiling-lamp :device="item" />
+            </el-col>
             <!-- <el-col :span="8">
                 <el-card class="box-card">
                 </el-card>

@@ -46,8 +46,7 @@
 <script>
 import SignUp from './signUp';
 import SignIn from './signIn';
-import storage from '@/assets/js/storage';
-import { verificationToken, getUserInfo } from '@/api/user';
+import { getUserInfo } from '@/api/user';
 
 import avatar from '@//assets/img/avatar/avatar.jpg';
 

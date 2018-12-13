@@ -14,6 +14,14 @@
                                @setTitle="setTitle" />
                 </el-aside>
                 <el-main class="app-main">
+                    <div class="app-main-title">
+                        <span class="app-main-title-text">{{title}}</span>
+                        <el-breadcrumb separator-class="el-icon-arrow-right"
+                                       class="app-main-title-breadcrumb">
+                            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+                            <el-breadcrumb-item>{{title}}</el-breadcrumb-item>
+                        </el-breadcrumb>
+                    </div>
                     <router-view />
                 </el-main>
             </el-container>
@@ -122,4 +130,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '~@/assets/scss/mixins';
+.app-main {
+	&-title {
+		// padding: 0 20px;
+		margin-bottom: 20px;
+		@include flex-between();
+
+		// &-text {
+
+		// }
+	}
+}
 </style>

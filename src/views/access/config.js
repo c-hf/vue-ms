@@ -24,9 +24,9 @@ export const RULES = {
 			trigger: 'blur',
 		},
 		{
-			min: 4,
+			min: 2,
 			max: 16,
-			message: '长度在 4 到 16 个字符',
+			message: '长度在 2 到 16 个字符',
 			trigger: 'blur',
 		},
 	],
