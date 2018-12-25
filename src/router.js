@@ -84,15 +84,17 @@ export default new Router({
 								requireAuth: true,
 							},
 							component: () => import('./views/control'),
-						},
-						// 接入
-						{
-							path: 'access',
-							name: 'access',
-							meta: {
-								requireAuth: true,
-							},
-							component: () => import('./views/access'),
+							children: [
+								// 接入
+								{
+									path: 'access',
+									name: 'access',
+									meta: {
+										requireAuth: true,
+									},
+									component: () => import('./views/access'),
+								},
+							],
 						},
 					],
 				},

@@ -6,14 +6,6 @@
                     :key="index">
                 <ceiling-lamp :device="item" />
             </el-col>
-            <!-- <el-col :span="8">
-                <el-card class="box-card">
-                </el-card>
-            </el-col>
-            <el-col :span="8">
-                <el-card class="box-card">
-                </el-card>
-            </el-col> -->
         </el-row>
         <router-view />
     </div>
@@ -47,6 +39,8 @@ export default {
 .device {
 	width: 100%;
 	height: 100%;
+	background-color: #f3f6f8;
 	position: relative;
+	z-index: 10;
 }
 </style>

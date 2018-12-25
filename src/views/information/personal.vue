@@ -103,9 +103,6 @@ export default {
 
 		next(formName) {
 			this.$refs[formName].validate(valid => {
-				if (valid) {
-					this.$emit('next', this.dete);
-				}
 				if (!this.dete.avatar.length) {
 					this.isAvatarError = true;
 					if (this.isAvatarError) {
@@ -114,8 +111,9 @@ export default {
 							this.isAvatarError = true;
 						}, 100);
 					}
+				} else if (valid) {
+					this.$emit('next', this.dete);
 				}
-				return false;
 			});
 		},
 

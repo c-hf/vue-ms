@@ -279,7 +279,7 @@ export default {
 }
 
 .family-list {
-	height: 520px;
+	height: 480px;
 
 	.create-group {
 		display: flex;

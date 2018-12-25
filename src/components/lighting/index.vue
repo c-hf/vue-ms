@@ -10,7 +10,7 @@
                 {{roomName}} - {{device.name}}
             </span>
             <span class="lighting-card-left-item lighting-card-left-info">
-                <i v-if="deviceStatus.switch.value">已关闭</i>
+                <i v-if="deviceStatus.switch.value === 'true'">已关闭</i>
                 <i v-else>{{device.categoryItemName}}开启</i>
                 <!-- <i>
                     亮度:
@@ -23,9 +23,10 @@
         </el-col>
         <el-col :span="12"
                 class="lighting-card-right">
-            <span class="lighting-card-right-icon"><img src="../../assets/img/device/1.png"
+            <span class="lighting-card-right-icon"><img src="../../assets/img/device/4.png"
                      alt=""></span>
-            <span class="lighting-card-right-switch"></span>
+            <span class="lighting-card-right-online"
+                  :class="{on: isOn}"></span>
         </el-col>
     </el-card>
     <!-- </el-col> -->
@@ -49,6 +50,7 @@ export default {
 		},
 		deviceStatus() {
 			let status = {};
+			// console.log(this.device.status);
 			this.device.status.forEach(el => {
 				status[el.id] = {
 					name: el.name,
@@ -120,8 +122,8 @@ export default {
 
 		&-icon {
 			display: block;
-			width: 120px;
-			height: 120px;
+			width: 100px;
+			height: 100px;
 			border-radius: 50%;
 			// background-image: url(~@/assets/img/device/1.png);
 			// background-color: rgba($color: #d7dada, $alpha: 0.3);

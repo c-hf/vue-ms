@@ -4,16 +4,19 @@
         <el-col :span="18"
                 class="family-left">
             <el-col :span="12">
-                <el-card class="family-right-card">
+                <el-card class="family-left-card">
                     家庭成员数：
                 </el-card>
             </el-col>
             <el-col :span="12">
-                <el-card class="family-right-card">
+                <el-card class="family-left-card">
                     家庭成员数：
                 </el-card>
             </el-col>
             <el-col :span="24">
+                <el-card class="family-left-main-content">
+
+                </el-card>
             </el-col>
         </el-col>
         <el-col :span="6"
@@ -169,7 +172,12 @@ export default {
 .family {
 	&-left {
 		&-card {
+			height: 140px;
 			margin-bottom: 20px;
+		}
+
+		&-main-content {
+			height: 440px;
 		}
 	}
 

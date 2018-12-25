@@ -18,6 +18,7 @@ export default new Vuex.Store({
 		group: {},
 		rooms: [],
 		device: [],
+		region: {},
 	},
 	mutations: {
 		// 设置 token
@@ -38,6 +39,10 @@ export default new Vuex.Store({
 		// 设置 House
 		setRooms(state, val) {
 			state.rooms = val;
+		},
+
+		setRegion(state, val) {
+			state.device = val;
 		},
 
 		// 设置设备列表

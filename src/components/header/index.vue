@@ -1,26 +1,20 @@
 <template>
-    <el-row class="header-content">
-        <el-col :md="4"
-                :sm="4"
-                :xs="4"
-                class="left">
-            <a class="left-menu-btn"
-               @click.stop="setCollapse">
-                <i class="fa fa-bars fa-fw"></i>
-            </a>
-            <h1 class="left-title">{{ title }}</h1>
-        </el-col>
-        <el-col :md="12"
-                :sm="10"
-                :xs="6"
-                class="center">
-            Logo
-        </el-col>
-        <el-col :md="8"
-                :sm="10"
-                :xs="14"
-                class="right">
-            <header-search></header-search>
+    <div class="header-content">
+        <div class="left">
+            <div class="left-logo"
+                 :style="{width: `${width}px`}">Logo</div>
+            <div class="left-menu">
+                <el-button type="text"
+                           :disabled="disabled"
+                           class="left-menu-btn"
+                           @click.stop="setCollapse">
+                    <i class="fa fa-bars fa-fw"></i>
+                </el-button>
+            </div>
+        </div>
+
+        <div class="right">
+            <header-search />
             <dir class="right-item">
                 <el-badge :value="promptBadge"
                           class="right-prompt">
@@ -41,14 +35,24 @@
                     </span>
                 </div>
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item disabled>Welcome!</el-dropdown-item>
-                    <el-dropdown-item command="userInfo"><i class="fa fa-user fa-fw"></i>&nbsp;我的账号</el-dropdown-item>
-                    <el-dropdown-item><i class="fa fa-gear fa-fw"></i>&nbsp;设置</el-dropdown-item>
-                    <el-dropdown-item command="signOut"><i class="fa fa-sign-out fa-fw"></i>&nbsp;登出</el-dropdown-item>
+                    <el-dropdown-item disabled>
+                        Welcome!
+                    </el-dropdown-item>
+                    <el-dropdown-item command="userInfo">
+                        <i class="fa fa-user fa-fw"></i>
+                        &nbsp;我的账号
+                    </el-dropdown-item>
+                    <el-dropdown-item><i class="fa fa-gear fa-fw">
+                        </i>&nbsp;设置
+                    </el-dropdown-item>
+                    <el-dropdown-item command="signOut">
+                        <i class="fa fa-sign-out fa-fw">
+                        </i>&nbsp;登出
+                    </el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-        </el-col>
-    </el-row>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -69,43 +73,53 @@ export default {
 
 		handleCommand(command) {
 			if (command === 'signOut') {
-				signOut()
-					.then(data => {
-						if (data === 'ok') {
-							this.$emit('signOut');
-							storage.remove('token');
-							this.$store.dispatch('token', '');
-							this.$store.dispatch('user', {});
-							this.$store.dispatch('device', []);
-							this.$router.replace({
-								name: 'sign',
-							});
-						}
-					})
-					.catch(error => {
-						this.$message({
-							showClose: true,
-							center: true,
-							message: error.message,
-							type: 'error',
-						});
-					});
+				this.signOutFn();
 			} else if (command === 'userInfo') {
-				getUserInfo()
-					.then(data => {
-						if (data) {
-							console.log(data);
-						}
-					})
-					.catch(error => {
-						this.$message({
-							showClose: true,
-							center: true,
-							message: error.message,
-							type: 'error',
-						});
-					});
+				this.getUserInfoFn();
 			}
+		},
+
+		// signOut 封装
+		signOutFn() {
+			signOut()
+				.then(data => {
+					if (data === 'ok') {
+						this.$emit('signOut');
+						storage.remove('token');
+						this.$store.dispatch('token', '');
+						this.$store.dispatch('user', {});
+						this.$store.dispatch('device', []);
+						this.$router.replace({
+							name: 'sign',
+						});
+					}
+				})
+				.catch(error => {
+					this.$message({
+						showClose: true,
+						center: true,
+						message: error.message,
+						type: 'error',
+					});
+				});
+		},
+
+		// getUserInfo 封装
+		getUserInfoFn() {
+			getUserInfo()
+				.then(data => {
+					if (data) {
+						console.log(data);
+					}
+				})
+				.catch(error => {
+					this.$message({
+						showClose: true,
+						center: true,
+						message: error.message,
+						type: 'error',
+					});
+				});
 		},
 	},
 
@@ -114,12 +128,11 @@ export default {
 	},
 
 	props: {
-		title: {
-			type: String,
-			default: '首页',
-		},
 		user: {
 			type: Object,
+		},
+		width: {
+			type: Number,
 		},
 		promptBadge: {
 			type: Number,
@@ -127,48 +140,52 @@ export default {
 		emailBadge: {
 			type: Number,
 		},
+		disabled: {
+			type: Boolean,
+		},
 	},
 };
 </script>
 
 <style lang="scss" scoped>
+@import '~@/assets/scss/mixins';
 .header-content {
+	width: 100%;
 	height: 100%;
-	display: flex;
-	justify-content: center;
-	align-items: center;
+	@include flex-between();
 
 	.left,
-	.center,
 	.right {
 		height: 100%;
 		display: flex;
 		align-items: center;
+		box-sizing: border-box;
 	}
 
 	.left {
-		justify-content: flex-start;
-
-		&-menu-btn {
-			display: block;
-			color: #000;
-			margin: 0 20px;
-			cursor: pointer;
+		&-logo {
+			height: 100%;
+			transition: all 0.5s;
+			@include flex-center();
 		}
 
-		&-title {
-			user-select: none;
-			font-size: 16px;
-		}
-	}
+		&-menu {
+			height: 100%;
+			@include flex-center();
 
-	.center {
-		justify-content: center;
+			&-btn {
+				display: block;
+				color: #000;
+				margin: 0 20px;
+				cursor: pointer;
+			}
+		}
 	}
 
 	.right {
+		width: 500px;
 		height: 100%;
-		justify-content: space-around;
+		padding-right: 20px;
 
 		.el-input {
 			flex: 5;
@@ -187,9 +204,7 @@ export default {
 		}
 
 		&-user {
-			display: flex;
-			align-items: center;
-			justify-content: center;
+			@include flex-around();
 			cursor: pointer;
 
 			&-avatar {
@@ -197,7 +212,6 @@ export default {
 				width: 32px;
 				height: 32px;
 				border-radius: 50%;
-				// margin: 0 10px;
 
 				img {
 					width: 100%;

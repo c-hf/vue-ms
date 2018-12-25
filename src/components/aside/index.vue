@@ -14,18 +14,18 @@
             </span>
         </div>
         <el-menu class="el-menu-vertical"
-                 :default-active="$route.path"
+                 :default-active="active"
                  :collapse="isCollapse"
                  :collapse-transition="false"
                  :router="true"
                  :unique-opened="true">
 
-            <el-menu-item index="/home"
+            <el-menu-item index="home"
                           :route="{name: 'home'}">
                 <i class="fa fa-home fa-fw fa-lg"></i>
                 <span slot="title">&nbsp;&nbsp;首页</span>
             </el-menu-item>
-            <el-menu-item index="/family"
+            <el-menu-item index="family"
                           :route="{name: 'family'}">
                 <i class="fa fa-home fa-fw fa-lg"></i>
                 <span slot="title">&nbsp;&nbsp;{{user.nickName}} 的家</span>
@@ -36,26 +36,22 @@
                     <span slot="title">&nbsp;&nbsp;控制台</span>
                 </template>
                 <el-menu-item-group>
-                    <el-menu-item index="/device"
+                    <el-menu-item index="device"
                                   :route="{name: 'device'}">
                         概览
                     </el-menu-item>
-                    <el-menu-item index="/device/access"
-                                  :route="{name: 'access'}">
-                        设备接入
-                    </el-menu-item>
-                    <el-menu-item index="/device/control"
+                    <el-menu-item index="control"
                                   :route="{name: 'control'}">
                         设备管理
                     </el-menu-item>
                 </el-menu-item-group>
             </el-submenu>
-            <el-menu-item index="/message"
+            <el-menu-item index="message"
                           :route="{name: 'message'}">
                 <i class="fa fa-bell fa-fw fa-lg"></i>
                 <span slot="title">&nbsp;&nbsp;消息中心</span>
             </el-menu-item>
-            <el-menu-item index="/set"
+            <el-menu-item index="set"
                           :route="{name: 'set'}">
                 <i class="fa fa-cog fa-fw fa-lg"></i>
                 <span slot="title">&nbsp;&nbsp;设置</span>
@@ -68,9 +64,16 @@
 export default {
 	name: 'Aside',
 	data() {
-		return {
-			active: '/',
-		};
+		return {};
+	},
+	computed: {
+		active() {
+			const path = this.$route.path.split('/');
+			if (path[path.length - 1] === 'access') {
+				return 'control';
+			}
+			return path[path.length - 1];
+		},
 	},
 	props: {
 		isCollapse: {
@@ -81,30 +84,7 @@ export default {
 			type: Object,
 		},
 	},
-	methods: {
-		select(key) {
-			const menuRouterList = {
-				'/home': '首页',
-				'/family': `${this.user.nickName} 的家`,
-				'/device': '概览',
-				'/device/access': '设备接入',
-				'/device/control': '设备管理',
-				'/message': '消息中心',
-				'/set': '设置',
-			};
-
-			this.$emit('setTitle', menuRouterList[key]);
-		},
-		setTitle() {
-			// console.log('a');
-		},
-	},
-	watch: {
-		$route: 'setTitle',
-	},
-	beforeUpdate() {
-		this.select(this.$route.path);
-	},
+	methods: {},
 };
 </script>
 
@@ -113,6 +93,7 @@ export default {
 	min-width: 64px;
 	background-color: #fff;
 	transition: all 0.5s;
+	overflow-x: hidden;
 
 	.user {
 		width: auto;

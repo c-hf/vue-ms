@@ -1,25 +1,28 @@
 <template>
     <div id="app">
-        <el-container class="app-container">
+        <el-container class="app-container"
+                      ref="app">
             <el-header class="app-header">
                 <app-header :user="user"
-                            :title="title"
+                            :width="width"
+                            :disabled="setDisabled"
                             @setCollapse="setCollapse"
                             @signOut="signOut" />
             </el-header>
             <el-container class="app-content">
                 <el-aside :style="{width: `${width}px`}">
                     <app-aside :isCollapse="isCollapse"
-                               :user="user"
-                               @setTitle="setTitle" />
+                               :user="user" />
                 </el-aside>
                 <el-main class="app-main">
                     <div class="app-main-title">
-                        <span class="app-main-title-text">{{title}}</span>
+                        <span class="app-main-title-text">{{breadcrumb[breadcrumb.length-1].name}}</span>
                         <el-breadcrumb separator-class="el-icon-arrow-right"
                                        class="app-main-title-breadcrumb">
-                            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-                            <el-breadcrumb-item>{{title}}</el-breadcrumb-item>
+                            <el-breadcrumb-item :to="{ path: '/home' }">智家</el-breadcrumb-item>
+                            <el-breadcrumb-item :to="{ path: item.path }"
+                                                v-for="(item, index) in breadcrumb"
+                                                :key="index">{{item.name}}</el-breadcrumb-item>
                         </el-breadcrumb>
                     </div>
                     <router-view />
@@ -37,9 +40,10 @@ export default {
 	name: 'Index',
 	data() {
 		return {
-			title: '首页',
 			isCollapse: false,
+			setDisabled: false,
 			width: 220,
+			timer: null,
 			socket: io('http://localhost:3000', {
 				query: {
 					token: this.$store.state.token,
@@ -51,13 +55,36 @@ export default {
 		user() {
 			return this.$store.state.user;
 		},
+		breadcrumb() {
+			const menuRouterList = {
+				home: { path: '/home', name: '首页' },
+				family: { path: '/family', name: `${this.user.nickName} 的家` },
+				device: { path: '/device', name: '控制台' },
+				access: { path: '/device/control', name: '设备接入' },
+				control: { path: '/device/control', name: '设备管理' },
+				message: { path: '/message', name: '消息中心' },
+				set: { path: '/set', name: '设置' },
+			};
+			const path = this.$route.path.split('/');
+			let breadcrumbArray = [];
+			path.forEach(el => {
+				if (menuRouterList[el]) {
+					breadcrumbArray.push({
+						path: menuRouterList[el].path,
+						name: menuRouterList[el].name,
+					});
+				}
+			});
+			if (breadcrumbArray[breadcrumbArray.length - 1].name === '控制台') {
+				breadcrumbArray.push({
+					path: menuRouterList.device.path,
+					name: '概览',
+				});
+			}
+			return breadcrumbArray;
+		},
 	},
 	methods: {
-		// 设置 Title
-		setTitle(title) {
-			this.title = title;
-		},
-
 		// 侧边栏折叠
 		setCollapse() {
 			if (this.isCollapse) {
@@ -69,8 +96,31 @@ export default {
 			this.width = 64;
 		},
 
+		// 登出
 		signOut() {
 			this.socket.disconnect();
+		},
+
+		setWidth(width) {
+			if (width < 1250) {
+				this.setDisabled = true;
+				this.isCollapse = true;
+				this.width = 64;
+			} else {
+				this.setDisabled = false;
+				this.isCollapse = false;
+				this.width = 220;
+			}
+		},
+
+		onResize() {
+			if (this.timer) {
+				clearInterval(this.timer);
+			}
+			this.timer = null;
+			this.timer = setTimeout(() => {
+				this.setWidth(document.body.clientWidth);
+			}, 500);
 		},
 	},
 
@@ -104,6 +154,9 @@ export default {
 		this.socket.on('deviceList', data => {
 			this.$store.dispatch('device', data);
 		});
+		this.socket.on('group', data => {
+			this.$store.dispatch('group', data);
+		});
 		this.socket.on('rooms', data => {
 			this.$store.dispatch('rooms', data);
 		});
@@ -126,6 +179,11 @@ export default {
 			console.log(data);
 		});
 	},
+
+	mounted() {
+		this.setWidth(document.body.clientWidth);
+		window.onresize = this.onResize;
+	},
 };
 </script>
 
@@ -133,13 +191,13 @@ export default {
 @import '~@/assets/scss/mixins';
 .app-main {
 	&-title {
-		// padding: 0 20px;
-		margin-bottom: 20px;
+		padding-bottom: 20px;
 		@include flex-between();
 
-		// &-text {
-
-		// }
+		&-text {
+			font-size: 18px;
+			font-weight: bold;
+		}
 	}
 }
 </style>

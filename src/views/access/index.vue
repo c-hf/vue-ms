@@ -93,5 +93,6 @@ export default {
 	left: 0;
 	background-color: #f3f6f8;
 	padding-bottom: 200px;
+	z-index: 99;
 }
 </style>

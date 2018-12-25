@@ -24,6 +24,14 @@
 	flex-direction: $direction;
 }
 
+// flex-start
+@mixin flex-start($direction: row) {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	flex-direction: $direction;
+}
+
 //ellipsis
 @mixin ellipsis() {
 	overflow: hidden;

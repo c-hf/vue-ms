@@ -126,3 +126,13 @@ export const getDistrictInfo = data => {
 	};
 	return axiosFn(getOptions);
 };
+
+// 天气查询
+export const getWeatherInfo = data => {
+	const getOptions = {
+		method: 'get',
+		url: '/api/aMap/getWeatherInfo',
+		params: data,
+	};
+	return axiosFn(getOptions);
+};

@@ -1,10 +1,11 @@
 <template>
-    <div class="control"
-         v-loading="loading">
-        <el-card class="device-list">
-            <div slot="header"
-                 class="clearfix">
-                <span>设备列表</span>
+    <div class="control">
+        <!-- <el-row v-loading="loading"
+                :gutter="24"> -->
+        <el-col :span="24">
+
+            <el-card class="control-menu"
+                     :body-style="{	width:'100%',display: 'flex',justifyContent: 'space-between', alignItems: 'center' }">
                 <el-input placeholder="请输入DeviceID..."
                           suffix-icon="el-icon-search"
                           v-model="searchInput">
@@ -13,19 +14,20 @@
                            icon="el-icon-plus"
                            @click="routeAccess"
                            plain>添加设备</el-button>
-            </div>
-        </el-card>
-        <el-card class="device-list">
+            </el-card>
+        </el-col>
+        <el-card class="control-list">
 
             <device-list @onEdit="onEdit"
                          @onDelete="onDelete" />
         </el-card>
+        <router-view></router-view>
+        <!-- </el-row> -->
     </div>
 </template>
 
 <script>
 import { deleteDevice } from '@/api/device';
-// getAllDeviceInfo
 import DeviceList from './List';
 
 export default {
@@ -39,17 +41,6 @@ export default {
 	},
 
 	methods: {
-		// getGroupId() {
-		// 	if (!this.groupId) {
-		// 		return;
-		// 	}
-		// 	this.$notify({
-		// 		title: '警告',
-		// 		message: '你还未建立家庭组',
-		// 		duration: 0,
-		// 		type: 'warning',
-		// 	});
-		// },
 		// 设备接入
 		routeAccess() {
 			this.$router.push({ name: 'access' });
@@ -87,7 +78,6 @@ export default {
 			deleteDevice({ groupId: this.groupId, deviceId: deviceId })
 				.then(resData => {
 					console.log(resData);
-					// this.getInfo();
 				})
 				.catch(error => {
 					this.$message({
@@ -106,28 +96,25 @@ export default {
 	components: {
 		DeviceList,
 	},
-	created() {
-		// this.getGroupId();
-		// this.getDeviceInfo();
-	},
-	mounted() {
-		// this.getGroupId();
-		// this.getDeviceInfo();
-	},
 };
 </script>
 
 <style lang="scss" scoped>
+@import '~@/assets/scss/mixins';
 .control {
 	width: 100%;
 	height: 100%;
+	background-color: #f3f6f8;
 	position: absolute;
 	top: 0;
 	left: 0;
-	background-color: #f3f6f8;
+	z-index: 9999;
 
-	.device-list {
+	&-menu {
+		@include flex-between();
 		margin-bottom: 20px;
+	}
+	&-list {
 		.clearfix {
 			display: flex;
 			justify-content: space-between;

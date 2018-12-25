@@ -1,114 +1,200 @@
 <template>
-    <div class="home">
-        <el-row>
-            <el-col :span="24">
-                <el-card :body-style="{display: 'flex','justify-content': 'space-between','align-items': 'center'}">
-                    <div class="card-item on-line-device">
-                        <span class="card-item-title">在线设备</span>
-                        <span class="device-num">{{ onLineDeviceNum }}<i>台</i></span>
-                    </div>
-                    <div class="card-item line-device">
-                        <span class="card-item-title">离线设备</span>
-                        <span class="device-num">{{ lineDeviceNum }}<i>台</i></span>
-                    </div>
-                    <div class="card-item device-info">
-                        <span class="card-item-title">信息概览</span>
-                        <span class="info device-info-num">
-                            <i class="fa fa-briefcase fa-fw"></i>
-                            &nbsp;设备总数:
-                            <i class="num">{{ TotalNum }}</i>
-                        </span>
-                        <span class="info device-info-warning">
-                            <i class="fa fa-bullhorn fa-fw"></i>
-                            &nbsp;告警信息:
-                            <i>0</i>
-                        </span>
-                    </div>
-                </el-card>
-            </el-col>
-        </el-row>
-    </div>
+    <el-row class="home"
+            :gutter="24">
+        <el-col :span="8">
+            <el-card class="home-card home-card-on-line-device"
+                     :body-style="{display: 'flex',
+                     'align-items': 'center',
+                     'justify-content':'space-around'}">
+                <div class="home-card-item ">
+                    <span class="home-card-item-title">在线设备</span>
+                    <span class="home-card-item-num">
+                        {{ onLineDeviceNum }}
+                        <i>台</i>
+                    </span>
+                </div>
+                <div class="home-card-icon">
+                    <svg-icon iconClass="icon-zaixian" />
+                </div>
+            </el-card>
+        </el-col>
+        <el-col :span="8">
+            <el-card class="home-card home-card-line-device"
+                     :body-style="{display: 'flex',
+                     'align-items': 'center',
+                     'justify-content':'space-around'}">
+                <div class="home-card-item">
+                    <span class="home-card-item-title">离线设备</span>
+                    <span class="home-card-item-num">
+                        {{ lineDeviceNum }}
+                        <i>台</i>
+                    </span>
+                </div>
+                <div class="home-card-icon">
+                    <svg-icon iconClass="icon-lixian" />
+                </div>
+            </el-card>
+        </el-col>
+        <el-col :span="8">
+            <el-card class="home-card home-card-device-info"
+                     :body-style="{display: 'flex',
+                     'align-items': 'center',
+                     'justify-content':'space-around'}">
+                <div class="home-card-item">
+                    <span class="home-card-item-title">
+                        <svg-icon iconClass="icon-tools" />
+                        信息概览
+                    </span>
+                    <span class="home-card-item-info device-info-num">
+                        <svg-icon iconClass="icon-icon-" />
+                        设备总数:
+                        <i class="num">{{ totalNum }}</i>
+                    </span>
+                    <span class="home-card-item-info device-info-warning">
+                        <svg-icon iconClass="icon-shebeigaojing" />
+                        告警信息:
+                        <i class="num">{{ warnNum }}</i>
+                    </span>
+                </div>
+                <div class="home-card-icon">
+                    <svg-icon iconClass="icon-document" />
+                </div>
+            </el-card>
+        </el-col>
+        <el-col :span="14"
+                :lg="12">
+            <home-weather />
+        </el-col>
+        <el-col :span="10"
+                :lg="12">
+        </el-col>
+    </el-row>
 </template>
 
 <script>
+import HomeWeather from './weather';
 export default {
 	name: 'Home',
 	data() {
 		return {
-			TotalNum: 22,
-			onLineDeviceNum: 18,
-			lineDeviceNum: 4,
+			warnNum: 0,
 		};
 	},
-	components: {},
+	computed: {
+		totalNum() {
+			return this.$store.state.device.length;
+		},
+		onLineDeviceNum() {
+			let num = 0;
+			this.$store.state.device.forEach(el => {
+				if (el.onLine) {
+					num += 1;
+				}
+			});
+			return num;
+		},
+		lineDeviceNum() {
+			return this.totalNum - this.onLineDeviceNum;
+		},
+	},
+	components: {
+		HomeWeather,
+	},
 };
 </script>
 
 <style lang="scss" scoped>
+@import '~@/assets/scss/mixins';
 .home {
-	.card-item {
-		width: 30%;
-		height: 160px;
-		display: flex;
-		flex-direction: column;
-		justify-content: space-around;
-		align-items: flex-start;
+	&-card {
+		margin-bottom: 20px;
 
-		&-title {
-			font-size: 16px;
-		}
-	}
+		&-item {
+			width: 50%;
+			height: 100px;
+			@include flex-center(column);
+			align-items: flex-start;
 
-	.card-item:nth-of-type(3) {
-		width: 40%;
-	}
-
-	.on-line-device,
-	.line-device {
-		.card-item-title {
-			margin-left: 10px;
-			position: relative;
-
-			&::before {
-				content: '';
-				display: block;
-				width: 10px;
-				height: 10px;
-				border-radius: 50%;
-				background-color: rgba($color: #67c23a, $alpha: 1);
-				position: absolute;
-				left: -15px;
-				top: 6.4px;
-			}
-		}
-
-		.device-num {
-			display: block;
-			margin-left: 20%;
-			font-size: 64px;
-			i {
-				font-style: normal;
+			&-title {
+				padding-left: 20px;
 				font-size: 16px;
-				margin-left: 5px;
 			}
 		}
-	}
 
-	.line-device {
-		.card-item-title {
-			&::before {
-				background-color: rgba($color: #f56c6c, $alpha: 1);
-			}
+		&-icon {
+			height: 80px;
+			width: 80px;
+			font-size: 36px;
+			border-radius: 50%;
+			box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+			@include flex-center();
 		}
-	}
-	.device-info {
-		.info {
-			font-size: 14px;
-			margin-left: 10%;
-			color: rgba(48, 49, 51, 0.6);
 
-			i {
+		&-on-line-device,
+		&-line-device {
+			.home-card-item-title {
 				margin-left: 10px;
+				position: relative;
+
+				&::before {
+					content: '';
+					display: block;
+					width: 10px;
+					height: 10px;
+					border-radius: 50%;
+					background-color: rgba($color: #67c23a, $alpha: 1);
+					position: absolute;
+					left: 0px;
+					top: 6.4px;
+				}
+			}
+
+			.home-card-item-num {
+				display: block;
+				margin-top: 10px;
+				font-size: 48px;
+				padding-left: 40px;
+
+				i {
+					font-style: normal;
+					font-size: 16px;
+					margin-left: 5px;
+				}
+			}
+
+			.home-card-icon {
+				background-color: rgba($color: #409eff, $alpha: 0.8);
+				color: #fff;
+			}
+		}
+
+		&-line-device {
+			.home-card-item-title {
+				&::before {
+					background-color: rgba($color: #f56c6c, $alpha: 1);
+				}
+			}
+			.home-card-icon {
+				background-color: rgba($color: #f56c6c, $alpha: 0.8);
+				color: #fff;
+			}
+		}
+		&-device-info {
+			.home-card-item-info {
+				font-size: 14px;
+				margin-top: 10px;
+				margin-left: 40px;
+				color: rgba(48, 49, 51, 0.6);
+
+				i {
+					margin-left: 10px;
+					color: rgba(48, 49, 51, 1);
+				}
+			}
+
+			.home-card-icon {
+				background-color: rgba($color: #909399, $alpha: 0.8);
+				color: #fff;
 			}
 		}
 	}

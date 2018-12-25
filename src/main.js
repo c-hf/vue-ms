@@ -10,12 +10,19 @@ import 'element-ui/lib/theme-chalk/index.css';
 import 'font-awesome/css/font-awesome.min.css';
 
 import './assets/scss/index.scss';
+
+import './assets/iconfont/iconfont.js';
+import SvgIcon from '@/components/svgIcon';
+
 import storage from '@/assets/js/storage';
 import { baseURL } from '../src/config';
 import { getUserInfo } from '@/api/user';
+
 Vue.config.productionTip = false;
 
 Vue.use(ElementUI);
+
+Vue.component('svg-icon', SvgIcon);
 
 // 路由守卫
 router.beforeEach((to, from, next) => {
@@ -55,9 +62,9 @@ router.beforeEach((to, from, next) => {
 	}
 });
 
-router.beforeResolve((to, from, next) => {
-	next();
-});
+// router.beforeResolve((to, from, next) => {
+// 	next();
+// });
 
 // router.afterEach((to, from) => {
 // 	console.log('afterEach');
