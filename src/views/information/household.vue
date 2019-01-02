@@ -81,7 +81,6 @@ export default {
 					return;
 				}
 				this.setRegion();
-				console.log(this.group);
 				this.$emit('next', this.group);
 			});
 		},

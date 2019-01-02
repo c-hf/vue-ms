@@ -1,43 +1,68 @@
 <template>
     <div class="app-aside">
-        <div class="user">
-            <span class="user-avatar">
+        <div class="app-aside-user">
+            <span class="app-aside-user-avatar">
                 <img :src="user.avatar"
                      :alt="user.nickName">
             </span>
-            <span class="user-name"
-                  v-show="!isCollapse">
-                {{ user.nickName }}
+            <span class="app-aside-user-name">
+                <i v-if="!isCollapse">
+                    {{ user.nickName }}
+                </i>
+                <i v-else>...</i>
             </span>
-            <span class="user-item">
-
+            <span class="app-aside-user-btn">
+                <el-button size="mini"
+                           v-show="!isCollapse"
+                           circle>
+                    <svg-icon iconClass="icon-people_fill" />
+                </el-button>
+                <el-button size="mini"
+                           v-show="!isCollapse"
+                           circle>
+                    <svg-icon iconClass="icon-setup_fill" />
+                </el-button>
+                <el-button size="mini"
+                           v-show="!isCollapse"
+                           circle
+                           @click="signOut">
+                    <svg-icon iconClass="icon-signout" />
+                </el-button>
             </span>
         </div>
-        <el-menu class="el-menu-vertical"
+        <el-menu class="app-aside-menu"
                  :default-active="active"
                  :collapse="isCollapse"
                  :collapse-transition="false"
                  :router="true"
                  :unique-opened="true">
-
             <el-menu-item index="home"
                           :route="{name: 'home'}">
-                <i class="fa fa-home fa-fw fa-lg"></i>
-                <span slot="title">&nbsp;&nbsp;首页</span>
+                <svg-icon class="app-aside-icon"
+                          iconClass="icon-homepage_fill" />
+                <span slot="title">
+                    首页
+                </span>
             </el-menu-item>
             <el-menu-item index="family"
                           :route="{name: 'family'}">
-                <i class="fa fa-home fa-fw fa-lg"></i>
-                <span slot="title">&nbsp;&nbsp;{{user.nickName}} 的家</span>
+                <svg-icon class="app-aside-icon"
+                          iconClass="icon-group_fill" />
+                <span slot="title">
+                    {{user.nickName}} 的家
+                </span>
             </el-menu-item>
             <el-submenu index="device">
                 <template slot="title">
-                    <i class="fa fa-briefcase fa-fw fa-lg"></i>
-                    <span slot="title">&nbsp;&nbsp;控制台</span>
+                    <svg-icon class="app-aside-icon"
+                              iconClass="icon-tasklist_fill" />
+                    <span slot="title">
+                        控制台
+                    </span>
                 </template>
                 <el-menu-item-group>
-                    <el-menu-item index="device"
-                                  :route="{name: 'device'}">
+                    <el-menu-item index="overview"
+                                  :route="{name: 'overview'}">
                         概览
                     </el-menu-item>
                     <el-menu-item index="control"
@@ -48,13 +73,19 @@
             </el-submenu>
             <el-menu-item index="message"
                           :route="{name: 'message'}">
-                <i class="fa fa-bell fa-fw fa-lg"></i>
-                <span slot="title">&nbsp;&nbsp;消息中心</span>
+                <svg-icon class="app-aside-icon"
+                          iconClass="icon-mail_fill" />
+                <span slot="title">
+                    消息中心
+                </span>
             </el-menu-item>
             <el-menu-item index="set"
                           :route="{name: 'set'}">
-                <i class="fa fa-cog fa-fw fa-lg"></i>
-                <span slot="title">&nbsp;&nbsp;设置</span>
+                <svg-icon class="app-aside-icon"
+                          iconClass="icon-setup_fill" />
+                <span slot="title">
+                    设置
+                </span>
             </el-menu-item>
         </el-menu>
     </div>
@@ -66,6 +97,7 @@ export default {
 	data() {
 		return {};
 	},
+
 	computed: {
 		active() {
 			const path = this.$route.path.split('/');
@@ -75,6 +107,13 @@ export default {
 			return path[path.length - 1];
 		},
 	},
+
+	methods: {
+		signOut() {
+			this.$emit('signOut');
+		},
+	},
+
 	props: {
 		isCollapse: {
 			type: Boolean,
@@ -84,25 +123,21 @@ export default {
 			type: Object,
 		},
 	},
-	methods: {},
 };
 </script>
-
 <style lang="scss" scoped>
+@import '~@/assets/scss/mixins';
 .app-aside {
 	min-width: 64px;
 	background-color: #fff;
 	transition: all 0.5s;
-	overflow-x: hidden;
+	overflow: hidden;
 
-	.user {
+	&-user {
 		width: auto;
 		height: 160px;
-		padding-top: 20px;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: space-around;
+		padding: 20px;
+		@include flex-around(column);
 
 		&-avatar {
 			width: 50px;
@@ -120,22 +155,40 @@ export default {
 
 		&-name {
 			width: 50%;
-			overflow: hidden;
+			font-size: 18px;
+			font-weight: bold;
 			white-space: nowrap;
 			text-overflow: ellipsis;
 			text-align: center;
+			overflow: hidden;
+			cursor: pointer;
+		}
+
+		&-btn {
+			@include flex-center();
 		}
 	}
 
-	.el-menu {
+	&-icon {
+		vertical-align: middle;
+		padding-right: 10px;
+		font-size: 20px;
+		color: #909399;
+	}
+
+	.el-menu-item.is-active &-icon {
+		color: inherit;
+	}
+
+	&-menu {
 		width: 100%;
 		height: 100%;
 		border-right: none;
 		transition: all 0.5s;
-	}
 
-	.el-menu-vertical:not(.el-menu--collapse) {
-		width: 220px;
+		&:not(.el-menu--collapse) {
+			width: 220px;
+		}
 	}
 }
 </style>

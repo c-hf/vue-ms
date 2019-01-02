@@ -3,7 +3,10 @@
         <el-card class="device-list">
             <div slot="header"
                  class="clearfix">
-                <span>{{ data.name }} 属性参数</span>
+                <span>
+                    {{ data.name }}
+                    属性参数
+                </span>
             </div>
             <el-form label-position="left"
                      label-width="115px"
@@ -12,7 +15,12 @@
                               :key="index"
                               :label="item.name">
                     <el-col :span="6">
-                        <span>{{ item.value }}<i v-show="item.unit !== 'null'"> {{ item.unit }}</i></span>
+                        <span>
+                            {{ item.value }}
+                            <i v-show="item.unit !== 'null'">
+                                {{ item.unit }}
+                            </i>
+                        </span>
                     </el-col>
                 </el-form-item>
                 <el-form-item label="属性">
@@ -45,8 +53,12 @@
             </el-form>
             <div class="device-list-btn">
                 <el-button type="primary"
-                           @click="onSubmit">添加</el-button>
-                <el-button @click="onReset">上一步</el-button>
+                           @click="onSubmit">
+                    添加
+                </el-button>
+                <el-button @click="onReset">
+                    上一步
+                </el-button>
             </div>
         </el-card>
     </div>
@@ -71,10 +83,7 @@ export default {
 			this.$emit('setLoading', true);
 			let status = [];
 			this.deviceAttr.forEach(el => {
-				status.push({
-					id: el.id,
-					value: el.value,
-				});
+				status[el.id] = el.value;
 			});
 
 			const reqData = {
@@ -87,7 +96,7 @@ export default {
 				os: this.data.os,
 				networking: this.data.networking,
 				protocol: this.data.protocol,
-				status: this.deviceAttr,
+				status: status,
 			};
 			setDevice(reqData)
 				.then(() => {

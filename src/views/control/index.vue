@@ -3,7 +3,6 @@
         <!-- <el-row v-loading="loading"
                 :gutter="24"> -->
         <el-col :span="24">
-
             <el-card class="control-menu"
                      :body-style="{	width:'100%',display: 'flex',justifyContent: 'space-between', alignItems: 'center' }">
                 <el-input placeholder="请输入DeviceID..."
@@ -21,7 +20,7 @@
             <device-list @onEdit="onEdit"
                          @onDelete="onDelete" />
         </el-card>
-        <router-view></router-view>
+        <router-view />
         <!-- </el-row> -->
     </div>
 </template>
@@ -102,14 +101,7 @@ export default {
 <style lang="scss" scoped>
 @import '~@/assets/scss/mixins';
 .control {
-	width: 100%;
-	height: 100%;
-	background-color: #f3f6f8;
-	position: absolute;
-	top: 0;
-	left: 0;
-	z-index: 9999;
-
+	position: relative;
 	&-menu {
 		@include flex-between();
 		margin-bottom: 20px;

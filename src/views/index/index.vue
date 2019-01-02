@@ -12,17 +12,24 @@
             <el-container class="app-content">
                 <el-aside :style="{width: `${width}px`}">
                     <app-aside :isCollapse="isCollapse"
-                               :user="user" />
+                               :user="user"
+                               @signOut="signOut" />
                 </el-aside>
                 <el-main class="app-main">
                     <div class="app-main-title">
-                        <span class="app-main-title-text">{{breadcrumb[breadcrumb.length-1].name}}</span>
+                        <span class="app-main-title-text">
+                            {{breadcrumb[breadcrumb.length-1].name}}
+                        </span>
                         <el-breadcrumb separator-class="el-icon-arrow-right"
                                        class="app-main-title-breadcrumb">
-                            <el-breadcrumb-item :to="{ path: '/home' }">智家</el-breadcrumb-item>
+                            <el-breadcrumb-item :to="{ path: '/home' }">
+                                智家
+                            </el-breadcrumb-item>
                             <el-breadcrumb-item :to="{ path: item.path }"
                                                 v-for="(item, index) in breadcrumb"
-                                                :key="index">{{item.name}}</el-breadcrumb-item>
+                                                :key="index">
+                                {{item.name}}
+                            </el-breadcrumb-item>
                         </el-breadcrumb>
                     </div>
                     <router-view />
@@ -35,6 +42,8 @@
 import AppHeader from '@/components/header';
 import AppAside from '@/components/aside';
 import io from 'socket.io-client';
+import storage from '@/assets/js/storage';
+import { signOut } from '@/api/user';
 
 export default {
 	name: 'Index',
@@ -52,14 +61,18 @@ export default {
 		};
 	},
 	computed: {
+		// 获取 User
 		user() {
 			return this.$store.state.user;
 		},
+
+		// 面包屑
 		breadcrumb() {
 			const menuRouterList = {
 				home: { path: '/home', name: '首页' },
 				family: { path: '/family', name: `${this.user.nickName} 的家` },
-				device: { path: '/device', name: '控制台' },
+				device: { path: '/device/overview', name: '控制台' },
+				overview: { path: '/device/overview', name: '概览' },
 				access: { path: '/device/control', name: '设备接入' },
 				control: { path: '/device/control', name: '设备管理' },
 				message: { path: '/message', name: '消息中心' },
@@ -75,12 +88,7 @@ export default {
 					});
 				}
 			});
-			if (breadcrumbArray[breadcrumbArray.length - 1].name === '控制台') {
-				breadcrumbArray.push({
-					path: menuRouterList.device.path,
-					name: '概览',
-				});
-			}
+
 			return breadcrumbArray;
 		},
 	},
@@ -98,9 +106,35 @@ export default {
 
 		// 登出
 		signOut() {
-			this.socket.disconnect();
+			this.signOutFn();
 		},
 
+		// signOut 封装
+		signOutFn() {
+			signOut()
+				.then(resData => {
+					if (resData === 'ok') {
+						this.socket.disconnect();
+						storage.remove('token');
+						this.$store.dispatch('token', '');
+						this.$store.dispatch('user', {});
+						this.$store.dispatch('device', []);
+						this.$router.replace({
+							name: 'sign',
+						});
+					}
+				})
+				.catch(error => {
+					this.$message({
+						showClose: true,
+						center: true,
+						message: error.message,
+						type: 'error',
+					});
+				});
+		},
+
+		// 宽度设置
 		setWidth(width) {
 			if (width < 1250) {
 				this.setDisabled = true;
@@ -113,6 +147,7 @@ export default {
 			}
 		},
 
+		// resize 监听回调
 		onResize() {
 			if (this.timer) {
 				clearInterval(this.timer);
@@ -160,11 +195,9 @@ export default {
 		this.socket.on('rooms', data => {
 			this.$store.dispatch('rooms', data);
 		});
-
 		this.socket.on('updateOnline', data => {
 			this.$store.dispatch('updateOnline', data);
 		});
-
 		this.socket.on('addDevice', data => {
 			this.$store.dispatch('addDevice', data);
 		});

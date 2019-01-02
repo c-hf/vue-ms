@@ -79,15 +79,30 @@ export default {
 			}
 			return '北京';
 		},
+
 		district() {
 			if (this.$store.state.group.region) {
-				this.getWeatherInfoFn(this.$store.state.group.region[2].adcode);
+				this.getWeather(this.$store.state.group.region[2].adcode);
 				return this.$store.state.group.region[2].name;
 			}
 			return '东城区';
 		},
 	},
 	methods: {
+		getWeather(adcode) {
+			const weather = this.$store.state.homeData;
+			if (!weather.adcode) {
+				this.getWeatherInfoFn(adcode);
+				return;
+			}
+			const curTime = new Date().getTime();
+			if (curTime - weather.updateTime >= 30 * 60 * 1000) {
+				this.getWeatherInfoFn(adcode);
+			} else {
+				this.data = weather;
+			}
+		},
+
 		// 获取天气封装
 		getWeatherInfoFn(adcode) {
 			this.loading = true;
@@ -95,6 +110,9 @@ export default {
 				.then(resData => {
 					this.data = resData.lives[0];
 					this.data.icon = this.weatherIcon[resData.lives[0].weather];
+					const curTime = new Date().getTime();
+					this.data.updateTime = curTime;
+					this.$store.dispatch('homeData', this.data);
 				})
 				.catch(error => {
 					this.$message({
@@ -155,7 +173,10 @@ export default {
 
 <style lang="scss" scoped>
 @import '~@/assets/scss/mixins';
+
 .home-weather {
+	margin-bottom: 20px;
+
 	&-header {
 		height: 23px;
 		@include flex-between();

@@ -83,6 +83,7 @@ export default {
 				);
 			}
 		};
+
 		// 注册账号验证
 		const validateId = (rule, value, callback) => {
 			const [phoneRegExp, emailRegExp] = [
@@ -108,6 +109,7 @@ export default {
 				callback(new Error('请输入正确的邮箱'));
 			}
 		};
+
 		// 密码验证
 		const validatePassWord = (rule, value, callback) => {
 			const nameRegExp = /^\S{6,16}$/;
@@ -124,6 +126,7 @@ export default {
 				callback(new Error('密码为 6 - 16 位，不支持空格'));
 			}
 		};
+
 		// 验证码
 		const validateCode = (rule, value, callback) => {
 			if (!value) {
@@ -230,7 +233,6 @@ export default {
 		onSubmit(formName) {
 			this.$refs[formName].validate(valid => {
 				if (!valid) {
-					console.log(valid);
 					return false;
 				}
 				this.signUpFn();

@@ -1,5 +1,4 @@
 <template>
-    <!-- <el-col :span="8"> -->
     <el-card class="lighting-card">
         <el-col :span="12"
                 class="lighting-card-left">
@@ -10,26 +9,27 @@
                 {{roomName}} - {{device.name}}
             </span>
             <span class="lighting-card-left-item lighting-card-left-info">
-                <i v-if="deviceStatus.switch.value === 'true'">已关闭</i>
-                <i v-else>{{device.categoryItemName}}开启</i>
-                <!-- <i>
-                    亮度:
-                    <el-progress :text-inside="true"
-                                 :stroke-width="18"
-                                 :percentage="deviceStatus.luminance.value"
-                                 status="success"></el-progress>
-                </i> -->
+                <i v-if="deviceStatus.switch.value">
+                    {{device.categoryItemName}}
+                    开启
+                    {{ deviceStatus.switch.value}}
+                </i>
+                <i v-else>
+                    已关闭
+                    {{ deviceStatus.switch.value}}
+                </i>
             </span>
         </el-col>
         <el-col :span="12"
                 class="lighting-card-right">
-            <span class="lighting-card-right-icon"><img src="../../assets/img/device/4.png"
-                     alt=""></span>
+            <span class="lighting-card-right-icon">
+                <svg-icon iconClass="icon-ceilingLamp" />
+            </span>
             <span class="lighting-card-right-online"
-                  :class="{on: isOn}"></span>
+                  :class="{on: isOn}">
+            </span>
         </el-col>
     </el-card>
-    <!-- </el-col> -->
 </template>
 
 <script>
@@ -50,7 +50,6 @@ export default {
 		},
 		deviceStatus() {
 			let status = {};
-			// console.log(this.device.status);
 			this.device.status.forEach(el => {
 				status[el.id] = {
 					name: el.name,
@@ -58,6 +57,17 @@ export default {
 					unit: el.unit,
 				};
 			});
+			let value = true;
+			console.log(status.switch.value);
+			if (
+				status.switch.value === 'true' ||
+				status.switch.value === true
+			) {
+				value = true;
+			} else {
+				value = false;
+			}
+			status.switch.value = value;
 			return status;
 		},
 	},
@@ -121,15 +131,7 @@ export default {
 		@include flex-center(column);
 
 		&-icon {
-			display: block;
-			width: 100px;
-			height: 100px;
-			border-radius: 50%;
-			// background-image: url(~@/assets/img/device/1.png);
-			// background-color: rgba($color: #d7dada, $alpha: 0.3);
-			// background-size: 120% 120%;
-			// background-position: center center;
-			// background-repeat: no-repeat;
+			font-size: 100px;
 		}
 
 		&-switch {

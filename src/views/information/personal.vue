@@ -19,13 +19,17 @@
         <div class="information-personal-sex">
             <span class="information-personal-sex-text">选择性别</span>
             <span class="information-personal-sex-icon">
-                <i class="fa fa-venus"
+                <i class="information-personal-sex-icon-content"
                    :class="{'information-personal-sex-icon-active': male}"
-                   @click="changeSex(true)"></i>
+                   @click="changeSex(true)">
+                    <svg-icon iconClass="icon-nan" />
+                </i>
                 <i>or</i>
-                <i class="fa fa-mars"
+                <i class="information-personal-sex-icon-content"
                    :class="{'information-personal-sex-icon-active': !male}"
-                   @click="changeSex(false)"></i>
+                   @click="changeSex(false)">
+                    <svg-icon iconClass="icon-nv" />
+                </i>
             </span>
         </div>
         <div class="information-personal-birthday">
@@ -245,19 +249,20 @@ export default {
 
 		&-icon {
 			i {
-				display: block;
-				line-height: 50px;
-				text-align: center;
 				color: #909399;
 				border-radius: 50%;
 				margin: 0 10px;
+				@include flex-center();
 			}
 
-			.fa {
+			&-content {
+				color: rgba($color: #909399, $alpha: 0.8);
 				height: 50px;
 				width: 50px;
-				font-size: 24px;
-				color: rgba($color: #909399, $alpha: 0.8);
+
+				svg {
+					font-size: 24px;
+				}
 			}
 
 			.information-personal-sex-icon-active {

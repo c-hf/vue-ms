@@ -2,26 +2,27 @@ import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
 import store from './store';
-
 import axios from 'axios';
 import ElementUI from 'element-ui';
+import echarts from 'echarts/lib/echarts';
+
+import 'echarts/lib/component/title';
+import 'echarts/lib/component/legend';
 
 import 'element-ui/lib/theme-chalk/index.css';
-import 'font-awesome/css/font-awesome.min.css';
-
 import './assets/scss/index.scss';
 
-import './assets/iconfont/iconfont.js';
+// import './assets/iconfont/iconfont.js';
 import SvgIcon from '@/components/svgIcon';
-
 import storage from '@/assets/js/storage';
+
 import { baseURL } from '../src/config';
 import { getUserInfo } from '@/api/user';
 
 Vue.config.productionTip = false;
-
 Vue.use(ElementUI);
 
+Vue.prototype.$echarts = echarts;
 Vue.component('svg-icon', SvgIcon);
 
 // 路由守卫

@@ -73,6 +73,15 @@ export default new Router({
 					meta: {
 						requireAuth: true,
 					},
+					beforeEnter: (to, from, next) => {
+						if (to.fullPath === '/device') {
+							next({
+								path: '/device/overview',
+							});
+						} else {
+							next();
+						}
+					},
 					component: () => import('./views/device'),
 
 					children: [

@@ -115,8 +115,6 @@ export default {
 		SignUp,
 		SignIn,
 	},
-
-	created() {},
 };
 </script>
 
@@ -124,7 +122,7 @@ export default {
 .sign {
 	width: 100%;
 	height: 100%;
-	min-width: 768px;
+	min-width: 1024px;
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -139,6 +137,7 @@ export default {
 	.el-card {
 		width: 60%;
 		height: 80%;
+		min-width: 800px;
 		margin: auto;
 
 		.el-card__body {

@@ -1,5 +1,5 @@
 <template>
-    <el-card class="member-list">
+    <el-card class="member">
         <div slot="header">
             <div class="user">
                 <span class="user-avatar">
@@ -7,8 +7,12 @@
                          :alt="user.nickName">
                 </span>
                 <span class="user-info">
-                    <i class="user-info-nickName">{{ user.nickName }}</i>
-                    <i class="user-info-intro">{{ user.intro }}</i>
+                    <i class="user-info-nickName">
+                        {{ user.nickName }}
+                    </i>
+                    <i class="user-info-intro">
+                        {{ user.intro }}
+                    </i>
                 </span>
             </div>
             <el-input class="user-search"
@@ -19,25 +23,10 @@
                 <i slot="prefix"
                    class="el-input__icon el-icon-search"></i>
             </el-input>
-            <!-- <el-tabs>
-                <el-tab-pane label="家庭成员"
-                             name="first"></el-tab-pane>
-            </el-tabs> -->
         </div>
-
-        <div class="family-list">
-            <dir class="create-group"
-                 v-if="!memberList.length">
-                <span>未创建家庭组</span>
-                <span>
-                    是否创建？
-                    <el-button class="add-group-btn"
-                               type="text"
-                               @click="setGroupFn">创建</el-button>
-                </span>
-            </dir>
-            <user-search :userList="userList"
-                         v-if="isSearch" />
+        <div class="member-list">
+            <search :userList="userList"
+                    v-if="isSearch" />
             <div class="user-item"
                  v-else
                  v-for="(item, index) in memberList"
@@ -47,20 +36,23 @@
                          :alt="item.nickName">
                 </span>
                 <span class="user-item-info">
-                    <i class="user-item-info-nickName">{{ item.nickName }}</i>
-                    <i class="user-item-info-intro">{{ item.intro }}</i>
+                    <i class="user-item-info-nickName">
+                        {{ item.nickName }}
+                    </i>
+                    <i class="user-item-info-intro">
+                        {{ item.intro }}
+                    </i>
                 </span>
                 <div class="user-item-mask-layer">
                 </div>
             </div>
         </div>
-        <div class="family-tool">
+        <div class="member-tool">
             <el-button class="add-member-btn"
                        type="text"
                        icon="el-icon-circle-plus-outline"
                        @click="addMember"></el-button>
         </div>
-
     </el-card>
 </template>
 
@@ -73,10 +65,10 @@ import {
 	// getUserById,
 } from '@/api/user';
 
-import SearchUser from './searchUser';
+import Search from './search';
 
 export default {
-	name: 'MemberList',
+	name: 'Member',
 	data() {
 		return {
 			searchValue: '',
@@ -178,7 +170,7 @@ export default {
 	},
 
 	components: {
-		SearchUser,
+		Search,
 	},
 	created() {
 		this.getGrpupByIdFn();
@@ -187,7 +179,7 @@ export default {
 </script>
 
 <style lang="scss">
-.member-list {
+.member {
 	background-image: url(~@/assets/img/signLeft/4.jpg);
 	background-size: 100% 100%;
 	background-position: 0 0;
@@ -270,87 +262,87 @@ export default {
 		}
 	}
 
-	.user-search {
+	.search {
 		width: 100%;
 		> input {
 			border-radius: 0;
 		}
 	}
-}
 
-.family-list {
-	height: 480px;
+	&-list {
+		height: 480px;
 
-	.create-group {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-	}
-
-	.user-item {
-		height: 60px;
-		padding: 0 20px;
-		display: flex;
-		align-items: center;
-		justify-content: start;
-		position: relative;
-		cursor: pointer;
-
-		// 遮罩
-		&:hover .user-item-mask-layer {
-			width: 100%;
-			height: 100%;
-			background: #000;
-			opacity: 0.1;
-			position: absolute;
-			top: 0;
-			left: 0;
-			z-index: 12;
+		&-create-group {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
 		}
-		&-avatar {
-			width: 40px;
-			height: 40px;
-			border-radius: 50%;
-			display: block;
-			position: relative;
-			z-index: 15;
 
-			img {
-				height: 100%;
+		.user-item {
+			height: 60px;
+			padding: 0 20px;
+			display: flex;
+			align-items: center;
+			justify-content: start;
+			position: relative;
+			cursor: pointer;
+
+			// 遮罩
+			&:hover .user-item-mask-layer {
 				width: 100%;
+				height: 100%;
+				background: #000;
+				opacity: 0.1;
+				position: absolute;
+				top: 0;
+				left: 0;
+				z-index: 12;
+			}
+			&-avatar {
+				width: 40px;
+				height: 40px;
 				border-radius: 50%;
-			}
-		}
+				display: block;
+				position: relative;
+				z-index: 15;
 
-		&-info {
-			width: 50%;
-			text-align: left;
-			margin-left: 5%;
-			position: relative;
-			z-index: 15;
-
-			&-nickName {
-				font-size: 16px;
+				img {
+					height: 100%;
+					width: 100%;
+					border-radius: 50%;
+				}
 			}
-			&-intro {
-				overflow: hidden;
-				white-space: nowrap;
-				text-overflow: ellipsis;
-				margin-left: 14px;
-				font-size: 10px;
-				color: #99a9bf;
+
+			&-info {
+				width: 50%;
+				text-align: left;
+				margin-left: 5%;
+				position: relative;
+				z-index: 15;
+
+				&-nickName {
+					font-size: 16px;
+				}
+				&-intro {
+					overflow: hidden;
+					white-space: nowrap;
+					text-overflow: ellipsis;
+					margin-left: 14px;
+					font-size: 10px;
+					color: #99a9bf;
+				}
 			}
 		}
 	}
-}
 
-.family-tool {
-	width: 100%;
-	height: 40px;
-	border-top: 1px solid rgba($color: #ddd, $alpha: 0.6);
-	position: absolute;
-	bottom: 0;
-	z-index: 10;
+	&-tool {
+		width: 100%;
+		height: 40px;
+		border-top: 1px solid rgba($color: #ddd, $alpha: 0.6);
+		position: absolute;
+		bottom: 0;
+		z-index: 10;
+	}
 }
 </style>

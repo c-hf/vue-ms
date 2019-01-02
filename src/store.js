@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 import storage from '@/assets/js/storage';
+import { Object } from 'core-js';
 
 Vue.use(Vuex);
 
@@ -17,8 +18,9 @@ export default new Vuex.Store({
 		user: {},
 		group: {},
 		rooms: [],
-		device: [],
-		region: {},
+		device: new Map(),
+		status: new Map(),
+		homeData: {},
 	},
 	mutations: {
 		// 设置 token
@@ -41,41 +43,72 @@ export default new Vuex.Store({
 			state.rooms = val;
 		},
 
-		setRegion(state, val) {
-			state.device = val;
+		setHomeData(state, val) {
+			state.homeData = val;
 		},
 
 		// 设置设备列表
 		setDevice(state, val) {
-			state.device = val;
+			val.forEach(el => {
+				// state.device.push(el.device);
+				// state.status[el.deviceId] = el.status;
+				state.device.set(el.deviceId, el.device);
+				state.status.set(el.deviceId, el.status);
+			});
 		},
+
 		// 添加
 		addDevice(state, val) {
-			state.device.push(val);
+			state.device.set(val.deviceId, val.device);
+			state.status.set(val.deviceId, val.status);
+			// state.device.push(val.device);
+			// state.status[val.deviceId] = val.status;
+			// Vue.set(state.status, val.deviceId, val.status);
 		},
+
 		// 删除
 		deleteDevice(state, val) {
-			const index = findIndex(state, val);
-			state.device.splice(index, 1);
+			state.device.delete(val);
+			state.status.delete(val);
+			// const index = findIndex(state, val);
+			// state.device.splice(index, 1);
+			// delete state.status[val];
 		},
 
 		// 设置设备列表
 		updateOnline(state, val) {
+			let el = state.device.get(val.deviceId);
+			el.onLine = val.onLine;
+			state.device.set(el);
+			// const index = findIndex(state, val.deviceId);
+			// state.device[index].onLine = val.onLine;
+			// state.device
+		},
+
+		// 更新设备参数
+		updateDevice(state, val) {
 			const index = findIndex(state, val.deviceId);
-			state.device[index].onLine = val.onLine;
+			const keys = Object.keys(val);
+			let deviceItem = state.device[index];
+			for (let key of keys) {
+				deviceItem[key] = val[key];
+			}
+			state.device.splice(index, 1, deviceItem);
 		},
 
 		// 更新设备状态
 		updateDeviceStatus(state, val) {
 			const index = findIndex(state, val.deviceId);
+			let deviceItem = state.device[index];
 			val.status.forEach(el => {
 				const statusIndex = state.device[index].status.findIndex(
 					value => {
 						return value.id === el.id;
 					}
 				);
-				state.device[index].status[statusIndex].value = el.value;
+				deviceItem.status[statusIndex].value = el.value;
 			});
+			state.device.splice(index, 1, deviceItem);
 		},
 	},
 	actions: {
@@ -95,18 +128,30 @@ export default new Vuex.Store({
 			commit('setRooms', obj);
 		},
 
+		homeData({ commit }, obj) {
+			commit('setHomeData', obj);
+		},
+
 		device({ commit }, obj) {
 			commit('setDevice', obj);
 		},
+
 		addDevice({ commit }, obj) {
 			commit('addDevice', obj);
 		},
+
 		deleteDevice({ commit }, obj) {
 			commit('deleteDevice', obj);
 		},
+
 		updateOnline({ commit }, obj) {
 			commit('updateOnline', obj);
 		},
+
+		updateDevice({ commit }, obj) {
+			commit('updateDevice', obj);
+		},
+
 		updateDeviceStatus({ commit }, obj) {
 			commit('updateDeviceStatus', obj);
 		},

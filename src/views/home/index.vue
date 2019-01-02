@@ -7,7 +7,9 @@
                      'align-items': 'center',
                      'justify-content':'space-around'}">
                 <div class="home-card-item ">
-                    <span class="home-card-item-title">在线设备</span>
+                    <span class="home-card-item-title">
+                        在线设备
+                    </span>
                     <span class="home-card-item-num">
                         {{ onLineDeviceNum }}
                         <i>台</i>
@@ -24,7 +26,9 @@
                      'align-items': 'center',
                      'justify-content':'space-around'}">
                 <div class="home-card-item">
-                    <span class="home-card-item-title">离线设备</span>
+                    <span class="home-card-item-title">
+                        离线设备
+                    </span>
                     <span class="home-card-item-num">
                         {{ lineDeviceNum }}
                         <i>台</i>
@@ -46,7 +50,7 @@
                         信息概览
                     </span>
                     <span class="home-card-item-info device-info-num">
-                        <svg-icon iconClass="icon-icon-" />
+                        <svg-icon iconClass="icon-device" />
                         设备总数:
                         <i class="num">{{ totalNum }}</i>
                     </span>
@@ -64,6 +68,8 @@
         <el-col :span="14"
                 :lg="12">
             <home-weather />
+
+            <home-map />
         </el-col>
         <el-col :span="10"
                 :lg="12">
@@ -73,6 +79,7 @@
 
 <script>
 import HomeWeather from './weather';
+import HomeMap from './map';
 export default {
 	name: 'Home',
 	data() {
@@ -99,6 +106,7 @@ export default {
 	},
 	components: {
 		HomeWeather,
+		HomeMap,
 	},
 };
 </script>

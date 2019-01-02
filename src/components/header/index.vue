@@ -2,27 +2,28 @@
     <div class="header-content">
         <div class="left">
             <div class="left-logo"
-                 :style="{width: `${width}px`}">Logo</div>
+                 :style="{width: `${width}px`}">
+                Logo
+            </div>
             <div class="left-menu">
                 <el-button type="text"
                            :disabled="disabled"
                            class="left-menu-btn"
                            @click.stop="setCollapse">
-                    <i class="fa fa-bars fa-fw"></i>
+                    <svg-icon iconClass="icon-bars" />
                 </el-button>
             </div>
         </div>
-
         <div class="right">
             <header-search />
             <dir class="right-item">
                 <el-badge :value="promptBadge"
                           class="right-prompt">
-                    <i class="fa fa-bell-o"></i>
+                    <svg-icon iconClass="icon-remind" />
                 </el-badge>
                 <el-badge :value="emailBadge"
                           class="right-email">
-                    <i class="fa fa-envelope-o"></i>
+                    <svg-icon iconClass="icon-mail" />
                 </el-badge>
             </dir>
             <el-dropdown trigger="click"
@@ -39,15 +40,19 @@
                         Welcome!
                     </el-dropdown-item>
                     <el-dropdown-item command="userInfo">
-                        <i class="fa fa-user fa-fw"></i>
-                        &nbsp;我的账号
+                        <svg-icon class="dropdown-icon"
+                                  iconClass="icon-people" />
+                        我的账号
                     </el-dropdown-item>
-                    <el-dropdown-item><i class="fa fa-gear fa-fw">
-                        </i>&nbsp;设置
+                    <el-dropdown-item>
+                        <svg-icon class=""
+                                  iconClass="icon-setup" />
+                        设置
                     </el-dropdown-item>
                     <el-dropdown-item command="signOut">
-                        <i class="fa fa-sign-out fa-fw">
-                        </i>&nbsp;登出
+                        <svg-icon class=""
+                                  iconClass="icon-signout" />
+                        登出
                     </el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
@@ -57,8 +62,7 @@
 
 <script>
 import HeaderSearch from './search';
-import { getUserInfo, signOut } from '@/api/user';
-import storage from '@/assets/js/storage';
+import { getUserInfo } from '@/api/user';
 
 export default {
 	name: 'Header',
@@ -73,35 +77,10 @@ export default {
 
 		handleCommand(command) {
 			if (command === 'signOut') {
-				this.signOutFn();
+				this.$emit('signOut');
 			} else if (command === 'userInfo') {
 				this.getUserInfoFn();
 			}
-		},
-
-		// signOut 封装
-		signOutFn() {
-			signOut()
-				.then(data => {
-					if (data === 'ok') {
-						this.$emit('signOut');
-						storage.remove('token');
-						this.$store.dispatch('token', '');
-						this.$store.dispatch('user', {});
-						this.$store.dispatch('device', []);
-						this.$router.replace({
-							name: 'sign',
-						});
-					}
-				})
-				.catch(error => {
-					this.$message({
-						showClose: true,
-						center: true,
-						message: error.message,
-						type: 'error',
-					});
-				});
 		},
 
 		// getUserInfo 封装
@@ -178,6 +157,7 @@ export default {
 				color: #000;
 				margin: 0 20px;
 				cursor: pointer;
+				font-size: 18px;
 			}
 		}
 	}
@@ -192,6 +172,10 @@ export default {
 			margin-right: 10px;
 		}
 
+		&-prompt,
+		&-email {
+			font-size: 20px;
+		}
 		&-item {
 			flex: 2;
 			display: flex;

@@ -1,17 +1,21 @@
 <template>
-    <div class="search-user">
-        <div class="user-item"
+    <div class="search">
+        <div class="user"
              v-for="(item, index) in userList"
              :key="index">
-            <span class="user-item-avatar">
+            <span class="user-avatar">
                 <img :src="item.avatar"
                      :alt="item.nickName">
             </span>
-            <span class="user-item-info">
-                <i class="user-item-info-nickName">{{ item.nickName }}</i>
-                <i class="user-item-info-nickName">{{ item.userId }}</i>
+            <span class="user-info">
+                <i class="user-info-nickName">
+                    {{ item.nickName }}
+                </i>
+                <i class="user-info-nickName">
+                    {{ item.userId }}
+                </i>
             </span>
-            <div class="user-item-mask-layer">
+            <div class="user-mask-layer">
             </div>
         </div>
     </div>
@@ -19,7 +23,7 @@
 
 <script>
 export default {
-	name: 'SearchUser',
+	name: 'Search',
 	data() {
 		return {};
 	},
@@ -32,8 +36,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.search-user {
-	.user-item {
+.search {
+	.user {
 		height: 60px;
 		padding: 0 20px;
 		display: flex;
@@ -43,7 +47,7 @@ export default {
 		cursor: pointer;
 
 		// 遮罩
-		&:hover .user-item-mask-layer {
+		&:hover .user-mask-layer {
 			width: 100%;
 			height: 100%;
 			background: #000;

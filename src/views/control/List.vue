@@ -86,7 +86,6 @@ export default {
 	name: 'DeviceList',
 	data() {
 		return {
-			// deviceData: [],
 			selection: false,
 			multipleSelection: [],
 		};
@@ -123,12 +122,6 @@ export default {
 		deviceData() {
 			return this.$store.state.device;
 		},
-	},
-	mounted() {
-		// console.log(this.$store.state.device);
-		// setInterval(() => {
-		// 	console.log(this.$store.state.device);
-		// }, 3000);
 	},
 };
 </script>

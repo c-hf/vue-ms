@@ -45,9 +45,17 @@ export const deleteDevice = data => {
 };
 
 // 更新设备属性
-export const updateDeviceProfile = data => {
+export const setDesired = data => {
+	options.method = 'POST';
+	options.url = '/api/device/setDesired';
+	options.data = data;
+	return axiosFn(options);
+};
+
+// 更新设备参数
+export const updateDevice = data => {
 	options.method = 'put';
-	options.url = '/api/device/updateDeviceProfile';
+	options.url = '/api/device/updateDevice';
 	options.data = data;
 	return axiosFn(options);
 };
