@@ -1,67 +1,47 @@
 <template>
-    <div class="access-device-param">
-        <el-card class="device-list">
-            <div slot="header"
-                 class="clearfix">
-                <span>
-                    {{ data.name }}
-                    属性参数
-                </span>
-            </div>
-            <el-form label-position="left"
-                     label-width="115px"
-                     class="device-form">
-                <el-form-item v-for="(item, index) in deviceParam"
-                              :key="index"
-                              :label="item.name">
-                    <el-col :span="6">
-                        <span>
-                            {{ item.value }}
-                            <i v-show="item.unit !== 'null'">
-                                {{ item.unit }}
-                            </i>
-                        </span>
-                    </el-col>
-                </el-form-item>
-                <el-form-item label="属性">
-                    <el-table :data="deviceAttr"
-                              highlight-current-row
-                              style="width: 90%;">
-                        <el-table-column v-for="(item, index) in tableData"
-                                         :key="index"
-                                         :prop="item.prop"
-                                         :label="item.label">
-                        </el-table-column>
-                        <el-table-column label="操作"
-                                         fixed="right">
-                            <template slot-scope="scope">
-                                <el-button v-if="!custom"
-                                           type="text"
-                                           size="mini"
-                                           disabled>
-                                    Delete
-                                </el-button>
-                                <el-button v-else
-                                           type="text"
-                                           size="mini">
-                                    Delete
-                                </el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                </el-form-item>
-            </el-form>
-            <div class="device-list-btn">
-                <el-button type="primary"
-                           @click="onSubmit">
-                    添加
-                </el-button>
-                <el-button @click="onReset">
-                    上一步
-                </el-button>
-            </div>
-        </el-card>
-    </div>
+    <el-card class="access-device-param">
+        <div slot="header"
+             class="clearfix">
+            <span>
+                {{ data.name }}
+                属性参数
+            </span>
+        </div>
+        <el-form label-position="left"
+                 label-width="115px"
+                 class="device-form">
+            <el-form-item v-for="(item, index) in deviceParam"
+                          :key="index"
+                          :label="item.name">
+                <el-col :span="6">
+                    <span>
+                        {{ item.value }}
+                        {{ item.unit }}
+                    </span>
+                </el-col>
+            </el-form-item>
+            <el-form-item label="属性">
+                <el-table :data="deviceAttr"
+                          highlight-current-row
+                          style="width: 90%;">
+                    <el-table-column v-for="(item, index) in tableData"
+                                     :key="index"
+                                     :prop="item.prop"
+                                     :label="item.label">
+                    </el-table-column>
+                </el-table>
+            </el-form-item>
+        </el-form>
+        <div class="access-device-param-btn">
+            <el-button type="primary"
+                       @click="onSubmit">
+                添加
+            </el-button>
+            <el-button @click="onReset">
+                上一步
+            </el-button>
+        </div>
+    </el-card>
 </template>
 
 <script>
@@ -80,12 +60,10 @@ export default {
 	methods: {
 		// 提交按钮事件
 		onSubmit() {
-			this.$emit('setLoading', true);
-			let status = [];
+			let status = {};
 			this.deviceAttr.forEach(el => {
 				status[el.id] = el.value;
 			});
-
 			const reqData = {
 				groupId: this.$store.state.user.groupId,
 				categoryItemId: this.data.type[1],
@@ -98,7 +76,13 @@ export default {
 				protocol: this.data.protocol,
 				status: status,
 			};
-			setDevice(reqData)
+
+			this.setDeviceFn(reqData);
+		},
+
+		setDeviceFn(data) {
+			this.$emit('setLoading', true);
+			setDevice(data)
 				.then(() => {
 					this.$message({
 						showClose: true,
@@ -106,7 +90,6 @@ export default {
 						message: '创建成功！',
 						type: 'success',
 					});
-					this.$emit('setLoading', false);
 					this.$router.push({ name: 'control' });
 				})
 				.catch(error => {
@@ -116,6 +99,8 @@ export default {
 						message: error.message,
 						type: 'error',
 					});
+				})
+				.then(() => {
 					this.$emit('setLoading', false);
 				});
 		},
@@ -159,7 +144,7 @@ export default {
 			border-bottom: none;
 		}
 	}
-	.device-list-btn {
+	&-btn {
 		padding-left: 8%;
 		padding-top: 50px;
 		padding-bottom: 50px;

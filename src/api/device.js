@@ -1,9 +1,9 @@
 import { options, axiosFn } from './config';
 
 // 获取分类
-export const getDeviceCategoryInfo = () => {
+export const getAllDeviceCategory = () => {
 	options.method = 'get';
-	options.url = '/api/device/getDeviceCategoryInfo';
+	options.url = '/api/device/getAllDeviceCategory';
 	return axiosFn(options);
 };
 
@@ -68,6 +68,25 @@ export const getAllDeviceInfo = groupId => {
 		params: {
 			groupId: groupId,
 		},
+	};
+	return axiosFn(getOptions);
+};
+
+// 获取设备日志
+export const getDeviceLogById = data => {
+	const getOptions = {
+		method: 'get',
+		url: '/api/device/getDeviceLogById',
+		params: data,
+	};
+	return axiosFn(getOptions);
+};
+
+export const deleteDeviceLog = data => {
+	const getOptions = {
+		method: 'delete',
+		url: '/api/device/deleteDeviceLog',
+		params: data,
 	};
 	return axiosFn(getOptions);
 };

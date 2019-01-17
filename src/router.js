@@ -85,6 +85,15 @@ export default new Router({
 					component: () => import('./views/device'),
 
 					children: [
+						// 概览
+						{
+							path: 'overview',
+							name: 'overview',
+							meta: {
+								requireAuth: true,
+							},
+							component: () => import('./views/overview'),
+						},
 						// 管理
 						{
 							path: 'control',
@@ -104,6 +113,15 @@ export default new Router({
 									component: () => import('./views/access'),
 								},
 							],
+						},
+						// 概览
+						{
+							path: 'details/:deviceId',
+							name: 'details',
+							meta: {
+								requireAuth: true,
+							},
+							component: () => import('./views/details'),
 						},
 					],
 				},

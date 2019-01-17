@@ -90,7 +90,6 @@ export default {
 							opacity: opacity,
 						},
 					},
-					// symbol: this.svgPath[el.categoryItemId],
 					label: {
 						normal: {
 							show: true,
@@ -112,7 +111,7 @@ export default {
 							show: true,
 						},
 					},
-					value: [`ID->${el.roomId}`],
+					value: [`ID - ${el.roomId}`],
 					x: this.randomNum(10),
 					y: this.randomNum(10),
 				});
@@ -275,11 +274,11 @@ export default {
 .family-rooms-info {
 	&-echart {
 		width: 80%;
-		height: 400px;
+		height: 360px;
 	}
 	&-tree {
 		width: 20%;
-		height: 400px;
+		height: 360px;
 	}
 }
 </style>

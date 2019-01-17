@@ -1,24 +1,27 @@
 <template>
-    <el-row class="family"
-            :gutter="24">
-        <el-col :span="18"
-                :md="16"
-                :lg="18"
-                class="family-left">
-            <el-col :span="24">
-                <info-card />
+    <el-card class="family"
+             shadow="never">
+        <el-row :gutter="24">
+            <el-col :span="18"
+                    :md="16"
+                    :lg="18"
+                    class="family-left">
+                <el-col :span="24">
+                    <info-card />
+                </el-col>
+                <el-col :span="24">
+                    <rooms-info />
+                </el-col>
             </el-col>
-            <el-col :span="24">
-                <rooms-info />
+            <el-col :span="6"
+                    :md="8"
+                    :lg="6"
+                    class="family-right">
+                <member @addMember="addMember" />
             </el-col>
-        </el-col>
-        <el-col :span="6"
-                :md="8"
-                :lg="6"
-                class="family-right">
-            <member @addMember="addMember" />
-        </el-col>
-    </el-row>
+        </el-row>
+
+    </el-card>
 </template>
 
 <script>
@@ -45,6 +48,8 @@ export default {
 <style lang="scss" scoped>
 @import '~@/assets/scss/mixins';
 .family {
+	background-color: inherit;
+
 	.el-form {
 		display: flex;
 		padding: 0 20px;

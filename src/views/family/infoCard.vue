@@ -59,10 +59,7 @@ export default {
 			return 1;
 		},
 		deviceNum() {
-			if (this.$store.state.device) {
-				return this.$store.state.device.length;
-			}
-			return 0;
+			return this.$store.state.device.length;
 		},
 	},
 };
@@ -78,22 +75,27 @@ export default {
 		width: 50%;
 		height: 100px;
 
-		@include flex-around();
+		@include flex-between();
 
 		&-text {
+			width: 60%;
 			height: 100%;
+			margin-left: 5%;
 			color: rgba(48, 49, 51, 0.6);
-
 			@include flex-around(column);
 			align-items: flex-start;
 
 			li {
+				width: 100%;
 				@include flex-center();
+
 				i {
-					display: flex;
+					width: 50%;
+					@include ellipsis();
 				}
+
 				i:nth-of-type(1) {
-					width: 100px;
+					width: 80px;
 					color: rgba(48, 49, 51, 1);
 				}
 			}
@@ -102,6 +104,7 @@ export default {
 		&-icon {
 			height: 80px;
 			width: 80px;
+			margin-right: 5%;
 			font-size: 36px;
 			border-radius: 50%;
 			box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);

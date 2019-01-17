@@ -1,5 +1,6 @@
 <template>
-    <div id="app">
+    <div id="app"
+         ref="app">
         <router-view />
     </div>
 </template>
@@ -9,7 +10,14 @@ export default {
 		return {};
 	},
 	methods: {},
-	created() {},
+	created() {
+		setTimeout(() => {
+			const loading = document.querySelector('#loading');
+			if (loading) {
+				document.body.removeChild(loading);
+			}
+		}, 0);
+	},
 };
 </script>
 
@@ -17,5 +25,6 @@ export default {
 #app {
 	width: 100%;
 	height: 100%;
+	position: relative;
 }
 </style>

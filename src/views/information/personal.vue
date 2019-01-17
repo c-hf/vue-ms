@@ -11,13 +11,18 @@
                      v-if="dete.avatar.length"
                      alt="avatar">
                 <i v-else
-                   class="information-personal-avatar-text">上传头像</i>
+                   class="information-personal-avatar-text">
+                    上传头像
+                </i>
                 <i v-if="!dete.avatar.length"
-                   class="information-personal-avatar-icon el-icon-plus"></i>
+                   class="information-personal-avatar-icon el-icon-plus">
+                </i>
             </el-upload>
         </transition>
         <div class="information-personal-sex">
-            <span class="information-personal-sex-text">选择性别</span>
+            <span class="information-personal-sex-text">
+                选择性别
+            </span>
             <span class="information-personal-sex-icon">
                 <i class="information-personal-sex-icon-content"
                    :class="{'information-personal-sex-icon-active': male}"
@@ -33,7 +38,9 @@
             </span>
         </div>
         <div class="information-personal-birthday">
-            <span class="information-personal-birthday-text">选择生日</span>
+            <span class="information-personal-birthday-text">
+                选择生日
+            </span>
             <el-form :model="dete"
                      :rules="rules"
                      ref="birthdayForm">
@@ -51,7 +58,8 @@
         </div>
         <div class="information-personal-btn">
             <el-button type="success"
-                       @click="next('birthdayForm')">下一步
+                       @click="next('birthdayForm')">
+                下一步
                 <i class="el-icon-arrow-right el-icon--right"></i>
             </el-button>
         </div>

@@ -1,71 +1,43 @@
 <template>
     <div class="control">
-        <!-- <el-row v-loading="loading"
-                :gutter="24"> -->
-        <el-col :span="24">
-            <el-card class="control-menu"
-                     :body-style="{	width:'100%',display: 'flex',justifyContent: 'space-between', alignItems: 'center' }">
-                <el-input placeholder="请输入DeviceID..."
-                          suffix-icon="el-icon-search"
-                          v-model="searchInput">
-                </el-input>
-                <el-button size="small"
-                           icon="el-icon-plus"
-                           @click="routeAccess"
-                           plain>添加设备</el-button>
-            </el-card>
-        </el-col>
-        <el-card class="control-list">
-
-            <device-list @onEdit="onEdit"
-                         @onDelete="onDelete" />
+        <el-card class="control-card"
+                 shadow="never"
+                 v-loading="loading">
+            <el-row :gutter="24">
+                <el-col :span="24">
+                    <control-info />
+                </el-col>
+                <el-col :span="24">
+                    <control-list @onEdit="onEdit"
+                                  @onDelete="onDelete" />
+                </el-col>
+            </el-row>
         </el-card>
         <router-view />
-        <!-- </el-row> -->
     </div>
 </template>
 
 <script>
 import { deleteDevice } from '@/api/device';
-import DeviceList from './List';
+import ControlList from './controlList';
+import ControlInfo from './controlInfo';
 
 export default {
 	name: 'DeviceControl', // 设备接入
 	data() {
 		return {
-			groupId: this.$store.state.user.groupId,
 			searchInput: '',
 			loading: false,
 		};
 	},
 
+	computed: {
+		deviceNum() {
+			return this.$store.state.device.length;
+		},
+	},
+
 	methods: {
-		// 设备接入
-		routeAccess() {
-			this.$router.push({ name: 'access' });
-		},
-
-		// 获取设备信息
-		getDeviceInfo() {
-			if (!this.groupId) {
-				return;
-			}
-
-			this.loading = true;
-			this.tableData = this.$store.state.device;
-			if (this.tableData.length) {
-				this.loading = false;
-				return;
-			}
-			let timer = setInterval(() => {
-				if (this.tableData.length) {
-					this.loading = false;
-					clearInterval(timer);
-				}
-				this.tableData = this.$store.state.device;
-			}, 300);
-		},
-
 		// 编辑
 		onEdit(deviceId) {
 			console.log(deviceId);
@@ -74,9 +46,16 @@ export default {
 		// 删除
 		onDelete(deviceId) {
 			this.loading = true;
-			deleteDevice({ groupId: this.groupId, deviceId: deviceId })
+			deleteDevice({ deviceId: deviceId })
 				.then(resData => {
-					console.log(resData);
+					if (resData.ok) {
+						this.$message({
+							showClose: true,
+							center: true,
+							message: '删除成功！',
+							type: 'success',
+						});
+					}
 				})
 				.catch(error => {
 					this.$message({
@@ -93,19 +72,29 @@ export default {
 	},
 
 	components: {
-		DeviceList,
+		ControlList,
+		ControlInfo,
 	},
 };
 </script>
 
 <style lang="scss" scoped>
 @import '~@/assets/scss/mixins';
+
 .control {
 	position: relative;
-	&-menu {
-		@include flex-between();
-		margin-bottom: 20px;
+
+	&-card {
+		width: 100%;
+		min-height: 600px;
+		background-color: inherit;
+
+		&-menu {
+			@include flex-between();
+			margin-bottom: 20px;
+		}
 	}
+
 	&-list {
 		.clearfix {
 			display: flex;

@@ -8,13 +8,13 @@ export const RULES = {
 	groupId: [
 		{
 			required: true,
-			message: 'groupId 为必填项',
+			message: 'groupID 为必填项',
 		},
 	],
 	deviceId: [
 		{
 			required: true,
-			message: 'deviceId 为必填项',
+			message: 'DeviceID 为必填项',
 		},
 	],
 	name: [

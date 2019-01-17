@@ -1,7 +1,8 @@
 <template>
-    <div>
+    <el-card class="message"
+             shadow="never">
         Message
-    </div>
+    </el-card>
 </template>
 
 <script>
@@ -14,4 +15,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.message {
+	width: 100%;
+	min-height: 600px;
+	background-color: inherit;
+}
 </style>

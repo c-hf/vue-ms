@@ -104,6 +104,9 @@ export default {
 			if (path[path.length - 1] === 'access') {
 				return 'control';
 			}
+			if (path[path.length - 2] === 'details') {
+				return 'overview';
+			}
 			return path[path.length - 1];
 		},
 	},

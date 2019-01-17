@@ -1,80 +1,82 @@
 <template>
-    <el-row class="home"
-            :gutter="24">
-        <el-col :span="8">
-            <el-card class="home-card home-card-on-line-device"
-                     :body-style="{display: 'flex',
+    <el-card class="home"
+             shadow="never">
+        <el-row :gutter="24">
+            <el-col :span="8">
+                <el-card class="home-card home-card-on-line-device"
+                         :body-style="{display: 'flex',
                      'align-items': 'center',
                      'justify-content':'space-around'}">
-                <div class="home-card-item ">
-                    <span class="home-card-item-title">
-                        在线设备
-                    </span>
-                    <span class="home-card-item-num">
-                        {{ onLineDeviceNum }}
-                        <i>台</i>
-                    </span>
-                </div>
-                <div class="home-card-icon">
-                    <svg-icon iconClass="icon-zaixian" />
-                </div>
-            </el-card>
-        </el-col>
-        <el-col :span="8">
-            <el-card class="home-card home-card-line-device"
-                     :body-style="{display: 'flex',
+                    <div class="home-card-item ">
+                        <span class="home-card-item-title">
+                            在线设备
+                        </span>
+                        <span class="home-card-item-num">
+                            {{ onLineDeviceNum }}
+                            <i>台</i>
+                        </span>
+                    </div>
+                    <div class="home-card-icon">
+                        <svg-icon iconClass="icon-zaixian" />
+                    </div>
+                </el-card>
+            </el-col>
+            <el-col :span="8">
+                <el-card class="home-card home-card-line-device"
+                         :body-style="{display: 'flex',
                      'align-items': 'center',
                      'justify-content':'space-around'}">
-                <div class="home-card-item">
-                    <span class="home-card-item-title">
-                        离线设备
-                    </span>
-                    <span class="home-card-item-num">
-                        {{ lineDeviceNum }}
-                        <i>台</i>
-                    </span>
-                </div>
-                <div class="home-card-icon">
-                    <svg-icon iconClass="icon-lixian" />
-                </div>
-            </el-card>
-        </el-col>
-        <el-col :span="8">
-            <el-card class="home-card home-card-device-info"
-                     :body-style="{display: 'flex',
+                    <div class="home-card-item">
+                        <span class="home-card-item-title">
+                            离线设备
+                        </span>
+                        <span class="home-card-item-num">
+                            {{ lineDeviceNum }}
+                            <i>台</i>
+                        </span>
+                    </div>
+                    <div class="home-card-icon">
+                        <svg-icon iconClass="icon-lixian" />
+                    </div>
+                </el-card>
+            </el-col>
+            <el-col :span="8">
+                <el-card class="home-card home-card-device-info"
+                         :body-style="{display: 'flex',
                      'align-items': 'center',
                      'justify-content':'space-around'}">
-                <div class="home-card-item">
-                    <span class="home-card-item-title">
-                        <svg-icon iconClass="icon-tools" />
-                        信息概览
-                    </span>
-                    <span class="home-card-item-info device-info-num">
-                        <svg-icon iconClass="icon-device" />
-                        设备总数:
-                        <i class="num">{{ totalNum }}</i>
-                    </span>
-                    <span class="home-card-item-info device-info-warning">
-                        <svg-icon iconClass="icon-shebeigaojing" />
-                        告警信息:
-                        <i class="num">{{ warnNum }}</i>
-                    </span>
-                </div>
-                <div class="home-card-icon">
-                    <svg-icon iconClass="icon-document" />
-                </div>
-            </el-card>
-        </el-col>
-        <el-col :span="14"
-                :lg="12">
-            <home-weather />
+                    <div class="home-card-item">
+                        <span class="home-card-item-title">
+                            <svg-icon iconClass="icon-tools" />
+                            信息概览
+                        </span>
+                        <span class="home-card-item-info device-info-num">
+                            <svg-icon iconClass="icon-device" />
+                            设备总数:
+                            <i class="num">{{ totalNum }}</i>
+                        </span>
+                        <span class="home-card-item-info device-info-warning">
+                            <svg-icon iconClass="icon-shebeigaojing" />
+                            告警信息:
+                            <i class="num">{{ warnNum }}</i>
+                        </span>
+                    </div>
+                    <div class="home-card-icon">
+                        <svg-icon iconClass="icon-document" />
+                    </div>
+                </el-card>
+            </el-col>
+            <el-col :span="14"
+                    :lg="12">
+                <home-weather />
 
-            <home-map />
-        </el-col>
-        <el-col :span="10"
-                :lg="12">
-        </el-col>
-    </el-row>
+                <home-map />
+            </el-col>
+            <el-col :span="10"
+                    :lg="12">
+            </el-col>
+        </el-row>
+    </el-card>
 </template>
 
 <script>
@@ -87,10 +89,12 @@ export default {
 			warnNum: 0,
 		};
 	},
+
 	computed: {
 		totalNum() {
 			return this.$store.state.device.length;
 		},
+
 		onLineDeviceNum() {
 			let num = 0;
 			this.$store.state.device.forEach(el => {
@@ -100,10 +104,12 @@ export default {
 			});
 			return num;
 		},
+
 		lineDeviceNum() {
 			return this.totalNum - this.onLineDeviceNum;
 		},
 	},
+
 	components: {
 		HomeWeather,
 		HomeMap,
@@ -114,6 +120,8 @@ export default {
 <style lang="scss" scoped>
 @import '~@/assets/scss/mixins';
 .home {
+	background-color: inherit;
+
 	&-card {
 		margin-bottom: 20px;
 

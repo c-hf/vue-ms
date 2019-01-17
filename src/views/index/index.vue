@@ -1,42 +1,45 @@
 <template>
-    <div id="app">
-        <el-container class="app-container"
-                      ref="app">
-            <el-header class="app-header">
-                <app-header :user="user"
-                            :width="width"
-                            :disabled="setDisabled"
-                            @setCollapse="setCollapse"
-                            @signOut="signOut" />
-            </el-header>
-            <el-container class="app-content">
-                <el-aside :style="{width: `${width}px`}">
+    <el-container class="app-container"
+                  ref="app">
+        <el-header class="app-header">
+            <app-header :user="user"
+                        :width="width"
+                        :disabled="setDisabled"
+                        @setCollapse="setCollapse"
+                        @signOut="signOut" />
+        </el-header>
+        <el-container class="app-content">
+            <el-aside :style="{width: `${width}px`,height:'100%'}">
+                <el-scrollbar style="height:100%;">
                     <app-aside :isCollapse="isCollapse"
                                :user="user"
                                @signOut="signOut" />
-                </el-aside>
-                <el-main class="app-main">
-                    <div class="app-main-title">
-                        <span class="app-main-title-text">
-                            {{breadcrumb[breadcrumb.length-1].name}}
-                        </span>
-                        <el-breadcrumb separator-class="el-icon-arrow-right"
-                                       class="app-main-title-breadcrumb">
-                            <el-breadcrumb-item :to="{ path: '/home' }">
-                                智家
-                            </el-breadcrumb-item>
-                            <el-breadcrumb-item :to="{ path: item.path }"
-                                                v-for="(item, index) in breadcrumb"
-                                                :key="index">
-                                {{item.name}}
-                            </el-breadcrumb-item>
-                        </el-breadcrumb>
-                    </div>
-                    <router-view />
-                </el-main>
-            </el-container>
+                </el-scrollbar>
+            </el-aside>
+            <el-main class="app-main">
+                <div class="app-main-title">
+                    <span class="app-main-title-text">
+                        {{ breadcrumb.name }}
+                    </span>
+                    <el-breadcrumb separator-class="el-icon-arrow-right"
+                                   class="app-main-title-breadcrumb">
+                        <el-breadcrumb-item :to="{ path: '/home' }">
+                            智家
+                        </el-breadcrumb-item>
+                        <el-breadcrumb-item :to="{ path: item.path }"
+                                            v-for="(item, index) in breadcrumb.data"
+                                            :key="index">
+                            {{ item.name }}
+                        </el-breadcrumb-item>
+                        <el-breadcrumb-item>
+                            {{ breadcrumb.name }}
+                        </el-breadcrumb-item>
+                    </el-breadcrumb>
+                </div>
+                <router-view />
+            </el-main>
         </el-container>
-    </div>
+    </el-container>
 </template>
 <script>
 import AppHeader from '@/components/header';
@@ -44,6 +47,7 @@ import AppAside from '@/components/aside';
 import io from 'socket.io-client';
 import storage from '@/assets/js/storage';
 import { signOut } from '@/api/user';
+import { baseURL } from '@/config';
 
 export default {
 	name: 'Index',
@@ -53,13 +57,14 @@ export default {
 			setDisabled: false,
 			width: 220,
 			timer: null,
-			socket: io('http://localhost:3000', {
+			socket: io(baseURL, {
 				query: {
 					token: this.$store.state.token,
 				},
 			}),
 		};
 	},
+
 	computed: {
 		// 获取 User
 		user() {
@@ -73,23 +78,31 @@ export default {
 				family: { path: '/family', name: `${this.user.nickName} 的家` },
 				device: { path: '/device/overview', name: '控制台' },
 				overview: { path: '/device/overview', name: '概览' },
-				access: { path: '/device/control', name: '设备接入' },
 				control: { path: '/device/control', name: '设备管理' },
+				details: { path: '/device/overview', name: '设备详情' },
+				access: { path: '/device/control', name: '设备接入' },
 				message: { path: '/message', name: '消息中心' },
 				set: { path: '/set', name: '设置' },
 			};
+
 			const path = this.$route.path.split('/');
-			let breadcrumbArray = [];
-			path.forEach(el => {
-				if (menuRouterList[el]) {
-					breadcrumbArray.push({
+			let breadcrumb = {
+				name: '',
+				data: [],
+			};
+			path.forEach((el, index) => {
+				if (index === path.length - 1) {
+					menuRouterList[el]
+						? (breadcrumb.name = menuRouterList[el].name)
+						: (breadcrumb.name = this.$route.query.name);
+				} else if (menuRouterList[el]) {
+					breadcrumb.data.push({
 						path: menuRouterList[el].path,
 						name: menuRouterList[el].name,
 					});
 				}
 			});
-
-			return breadcrumbArray;
+			return breadcrumb;
 		},
 	},
 	methods: {
@@ -114,14 +127,14 @@ export default {
 			signOut()
 				.then(resData => {
 					if (resData === 'ok') {
+						this.$router.replace({
+							name: 'sign',
+						});
 						this.socket.disconnect();
 						storage.remove('token');
 						this.$store.dispatch('token', '');
 						this.$store.dispatch('user', {});
 						this.$store.dispatch('device', []);
-						this.$router.replace({
-							name: 'sign',
-						});
 					}
 				})
 				.catch(error => {
@@ -168,6 +181,7 @@ export default {
 		// 连接
 		this.socket.on('connect', () => {
 			console.log('connect');
+			this.$store.dispatch('socket', this.socket);
 		});
 
 		// 断开连接
@@ -209,7 +223,6 @@ export default {
 		});
 		this.socket.on('updateDeviceStatus', data => {
 			this.$store.dispatch('updateDeviceStatus', data);
-			console.log(data);
 		});
 	},
 
@@ -228,7 +241,6 @@ export default {
 		@include flex-between();
 
 		&-text {
-			font-size: 18px;
 			font-weight: bold;
 		}
 	}

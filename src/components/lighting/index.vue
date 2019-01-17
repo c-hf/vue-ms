@@ -1,79 +1,127 @@
 <template>
-    <el-card class="lighting-card">
-        <el-col :span="12"
-                class="lighting-card-left">
-            <span class="lighting-card-left-item lighting-card-left-room">
-                {{roomName}}
+    <el-card class="lighting-card"
+             :class="{'off-line':!device.onLine}"
+             body-style="display: flex; flex-direction: column; align-items: center;">
+        <div class="lighting-card-top">
+            <span class="lighting-card-top-icon"
+                  :class="{'off-line-icon': !device.onLine}"
+                  @click="routeDetails">
+                <svg-icon iconClass="icon-light_lamp" />
             </span>
-            <span class="lighting-card-left-item lighting-card-left-name">
+            <span class="lighting-card-top-set">
+                <svg-icon iconClass="icon-collection" />
+            </span>
+        </div>
+        <div class="lighting-card-bottom">
+            <span class="lighting-card-bottom-item name">
                 {{roomName}} - {{device.name}}
             </span>
-            <span class="lighting-card-left-item lighting-card-left-info">
-                <i v-if="deviceStatus.switch.value">
-                    {{device.categoryItemName}}
-                    开启
-                    {{ deviceStatus.switch.value}}
+            <span class="lighting-card-bottom-item info"
+                  :class="{'off-line-info': !device.onLine}">
+                <i v-if="!device.onLine">
+                    设备离线
                 </i>
-                <i v-else>
-                    已关闭
-                    {{ deviceStatus.switch.value}}
-                </i>
+                <el-button v-else
+                           @click="setSwitch"
+                           :loading="switchLoading"
+                           :type="type"
+                           plain
+                           circle>
+                    <svg-icon v-if="!switchLoading"
+                              iconClass="icon-guanbi" />
+                </el-button>
             </span>
-        </el-col>
-        <el-col :span="12"
-                class="lighting-card-right">
-            <span class="lighting-card-right-icon">
-                <svg-icon iconClass="icon-ceilingLamp" />
-            </span>
-            <span class="lighting-card-right-online"
-                  :class="{on: isOn}">
-            </span>
-        </el-col>
+        </div>
     </el-card>
 </template>
 
 <script>
+import { setDesired } from '@/api/device';
+
 export default {
 	name: 'CeilingLamp',
 	data() {
 		return {
-			isOn: false,
+			switchLoading: false,
+			timer: null,
 			luminance: 0,
 		};
 	},
+
 	computed: {
+		type() {
+			let type = 'primary';
+			this.status.switch ? (type = 'primary') : (type = 'info');
+			return type;
+		},
+
 		roomName() {
 			const index = this.$store.state.rooms.findIndex(value => {
 				return value.roomId === this.device.roomId;
 			});
 			return this.$store.state.rooms[index].name;
 		},
-		deviceStatus() {
-			let status = {};
-			this.device.status.forEach(el => {
-				status[el.id] = {
-					name: el.name,
-					value: el.value,
-					unit: el.unit,
-				};
-			});
-			let value = true;
-			console.log(status.switch.value);
-			if (
-				status.switch.value === 'true' ||
-				status.switch.value === true
-			) {
-				value = true;
-			} else {
-				value = false;
-			}
-			status.switch.value = value;
-			return status;
+
+		status() {
+			return this.$store.state.status[this.device.deviceId];
 		},
 	},
+
+	methods: {
+		setTimeOut() {
+			if (this.timer) {
+				clearTimeout(this.timer);
+				this.timer = null;
+			}
+			this.timer = setTimeout(() => {
+				if (this.switchLoading) {
+					this.$message({
+						showClose: true,
+						center: true,
+						message: '操作超时！请重试',
+						type: 'error',
+					});
+					this.switchLoading = false;
+				}
+			}, 2000);
+		},
+
+		// 设置开关
+		setSwitch() {
+			this.switchLoading = true;
+			this.setTimeOut();
+			setDesired({
+				deviceId: this.device.deviceId,
+				desired: { switch: !this.status.switch },
+			}).catch(error => {
+				console.log(error);
+			});
+		},
+
+		// 设备接入
+		routeDetails() {
+			this.$router.push({
+				name: 'details',
+				query: {
+					name: this.device.name,
+				},
+				params: { deviceId: this.device.deviceId },
+			});
+		},
+	},
+
 	props: {
 		device: {
 			type: Object,
+		},
+	},
+
+	watch: {
+		status() {
+			if (this.switchLoading) {
+				this.switchLoading = false;
+				this.timer ? clearTimeout(this.timer) : (this.timer = null);
+			}
 		},
 	},
 };
@@ -84,66 +132,65 @@ export default {
 
 .lighting-card {
 	margin-bottom: 20px;
-	height: 180px;
 	user-select: none;
-	cursor: pointer;
 
-	.el-card__body {
-		padding: 0;
-	}
-	.el-col {
+	position: relative;
+
+	&-top {
+		width: 100%;
 		height: 180px;
-	}
-
-	&-left {
-		padding: 20px 0;
-		@include flex-center(column);
-		align-items: flex-start;
-		justify-content: flex-start;
-
-		&-item {
-			margin-top: 10px;
-			margin-left: 20px;
-		}
-
-		// &-room {
-		// }
-		// &-name {
-		// 	margin-left: 10px;
-		// }
-		&-info {
-			width: 100%;
-			margin-top: 20px;
-			@include flex-center(column);
-
-			i {
-				width: 100%;
-				margin: 5px 0;
-
-				.el-progress {
-					margin-top: 10px;
-				}
-			}
-		}
-	}
-
-	&-right {
-		@include flex-center(column);
+		position: relative;
+		@include flex-center();
 
 		&-icon {
+			cursor: pointer;
 			font-size: 100px;
 		}
 
-		&-switch {
-			width: 20px;
-			height: 4px;
-			border-radius: 2px;
-			background-color: #909399;
+		&-warn {
+			position: absolute;
+			top: 0;
+			right: 0;
+			font-size: 24px;
+		}
+
+		&-set {
+			position: absolute;
+			top: 0;
+			left: 0;
+			font-size: 24px;
 		}
 	}
 
-	.on {
-		background-color: #67c23a;
+	&-bottom {
+		width: 100%;
+		height: 100px;
+		@include flex-start(column);
+
+		.info {
+			margin-top: 30px;
+			color: #909399;
+
+			i {
+				width: 100%;
+				font-weight: bold;
+			}
+
+			&-on-line {
+				border-color: #409eff;
+				color: #409eff;
+			}
+		}
+
+		.off-line-info {
+			i {
+				color: #c0c4cc;
+			}
+		}
 	}
+}
+
+.off-line {
+	color: #c0c4cc;
 }
 </style>

@@ -1,18 +1,24 @@
 <template>
-    <div class="access"
-         v-loading="loading">
-
-        <access-device-info @infoSubmit="infoSubmit"
-                            :data="data"
-                            v-if="info" />
-        <access-device-param v-else
-                             @showInfo="showInfo"
-                             @setLoading="setLoading"
-                             :data="data"
-                             :custom="custom"
-                             :deviceParam="deviceParam"
-                             :deviceAttr="deviceAttr" />
-    </div>
+    <el-card class="access"
+             shadow="never"
+             v-loading="loading">
+        <el-row>
+            <el-col :span="24"
+                    v-if="info">
+                <access-device-info @infoSubmit="infoSubmit"
+                                    :data="data" />
+            </el-col>
+            <el-col :span="24"
+                    v-else>
+                <access-device-param @showInfo="showInfo"
+                                     @setLoading="setLoading"
+                                     :data="data"
+                                     :custom="custom"
+                                     :deviceParam="deviceParam"
+                                     :deviceAttr="deviceAttr" />
+            </el-col>
+        </el-row>
+    </el-card>
 </template>
 
 <script>
@@ -88,11 +94,11 @@ export default {
 <style lang="scss" scoped>
 .access {
 	width: 100%;
+	min-height: 100%;
 	position: absolute;
 	top: 0;
 	left: 0;
 	background-color: #f3f6f8;
-	padding-bottom: 200px;
 	z-index: 99;
 }
 </style>

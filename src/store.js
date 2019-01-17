@@ -18,9 +18,10 @@ export default new Vuex.Store({
 		user: {},
 		group: {},
 		rooms: [],
-		device: new Map(),
-		status: new Map(),
+		device: [],
+		status: {},
 		homeData: {},
+		socket: {},
 	},
 	mutations: {
 		// 设置 token
@@ -43,45 +44,55 @@ export default new Vuex.Store({
 			state.rooms = val;
 		},
 
+		// 设置 homeData
 		setHomeData(state, val) {
 			state.homeData = val;
 		},
 
+		// 设置 socket
+		setSocket(state, val) {
+			state.socket = val;
+		},
+
 		// 设置设备列表
 		setDevice(state, val) {
+			state.device = [];
+			state.status = {};
 			val.forEach(el => {
-				// state.device.push(el.device);
-				// state.status[el.deviceId] = el.status;
-				state.device.set(el.deviceId, el.device);
-				state.status.set(el.deviceId, el.status);
+				el.device.createTime = new Date(
+					el.device.createTime
+				).toLocaleString('zh-CN', { hour12: false });
+				el.device.updateTime = new Date(
+					el.device.updateTime
+				).toLocaleString('zh-CN', { hour12: false });
+				state.device.push(el.device);
+				Vue.set(state.status, el.device.deviceId, el.status);
 			});
 		},
 
 		// 添加
 		addDevice(state, val) {
-			state.device.set(val.deviceId, val.device);
-			state.status.set(val.deviceId, val.status);
-			// state.device.push(val.device);
-			// state.status[val.deviceId] = val.status;
-			// Vue.set(state.status, val.deviceId, val.status);
+			val.device.createTime = new Date(
+				val.device.createTime
+			).toLocaleString('zh-CN', { hour12: false });
+			val.device.updateTime = new Date(
+				val.device.updateTime
+			).toLocaleString('zh-CN', { hour12: false });
+			state.device.push(val.device);
+			Vue.set(state.status, val.device.deviceId, val.status);
 		},
 
 		// 删除
 		deleteDevice(state, val) {
-			state.device.delete(val);
-			state.status.delete(val);
-			// const index = findIndex(state, val);
-			// state.device.splice(index, 1);
-			// delete state.status[val];
+			const index = findIndex(state, val);
+			state.device.splice(index, 1);
+			delete state.status[val];
 		},
 
 		// 设置设备列表
 		updateOnline(state, val) {
-			let el = state.device.get(val.deviceId);
-			el.onLine = val.onLine;
-			state.device.set(el);
-			// const index = findIndex(state, val.deviceId);
-			// state.device[index].onLine = val.onLine;
+			const index = findIndex(state, val.deviceId);
+			state.device[index].onLine = val.onLine;
 			// state.device
 		},
 
@@ -98,17 +109,7 @@ export default new Vuex.Store({
 
 		// 更新设备状态
 		updateDeviceStatus(state, val) {
-			const index = findIndex(state, val.deviceId);
-			let deviceItem = state.device[index];
-			val.status.forEach(el => {
-				const statusIndex = state.device[index].status.findIndex(
-					value => {
-						return value.id === el.id;
-					}
-				);
-				deviceItem.status[statusIndex].value = el.value;
-			});
-			state.device.splice(index, 1, deviceItem);
+			state.status[val.deviceId] = val.status;
 		},
 	},
 	actions: {
@@ -130,6 +131,10 @@ export default new Vuex.Store({
 
 		homeData({ commit }, obj) {
 			commit('setHomeData', obj);
+		},
+
+		socket({ commit }, obj) {
+			commit('setSocket', obj);
 		},
 
 		device({ commit }, obj) {

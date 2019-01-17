@@ -136,7 +136,7 @@ export default {
 
 	.el-card {
 		width: 60%;
-		height: 80%;
+		height: 560px;
 		min-width: 800px;
 		margin: auto;
 

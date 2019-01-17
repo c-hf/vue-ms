@@ -1,6 +1,8 @@
 <template>
     <div class="information">
-        <el-col :span="12"
+        <el-col :span="16"
+                :md="16"
+                :lg="12"
                 class="information-col">
             <el-steps :active="active"
                       simple
@@ -32,6 +34,7 @@
 import InformationPersonal from './personal';
 import InformationHousehold from './household';
 import InformationComplete from './complete';
+import { defaultImgUrl } from '@/config';
 
 export default {
 	name: 'Information',
@@ -39,7 +42,7 @@ export default {
 		return {
 			active: 0,
 			personalData: {
-				avatar: '',
+				avatar: defaultImgUrl,
 				sex: '',
 				birthday: '',
 			},
@@ -77,9 +80,9 @@ export default {
 
 .information {
 	width: 100%;
-	height: 100%;
+	min-height: 100%;
 	background-color: #f5f7fa;
-
+	overflow-y: scroll;
 	@include flex-center();
 
 	.information-col {
@@ -87,6 +90,7 @@ export default {
 
 		.information-card {
 			height: 580px;
+			width: 500px;
 			background-color: #fff;
 			border-radius: 6px;
 			box-shadow: 0 2px 24px 0 rgba(0, 0, 0, 0.2);

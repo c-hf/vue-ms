@@ -21,7 +21,8 @@
                       @change="searchUser"
                       placeholder="搜索">
                 <i slot="prefix"
-                   class="el-input__icon el-icon-search"></i>
+                   class="el-input__icon el-icon-search">
+                </i>
             </el-input>
         </div>
         <div class="member-list">
@@ -51,7 +52,8 @@
             <el-button class="add-member-btn"
                        type="text"
                        icon="el-icon-circle-plus-outline"
-                       @click="addMember"></el-button>
+                       @click="addMember">
+            </el-button>
         </div>
     </el-card>
 </template>
@@ -270,7 +272,7 @@ export default {
 	}
 
 	&-list {
-		height: 480px;
+		height: 440px;
 
 		&-create-group {
 			display: flex;

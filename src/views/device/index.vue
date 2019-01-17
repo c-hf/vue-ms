@@ -1,7 +1,5 @@
 <template>
-    <div class="device">
-        <router-view />
-    </div>
+    <router-view />
 </template>
 
 <script>
@@ -14,7 +12,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.device {
-	width: 100%;
-}
 </style>
