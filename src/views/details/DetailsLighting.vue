@@ -148,10 +148,11 @@
             <app-drawer-card v-if="show && !timedTask"
                              :deviceId="this.device.deviceId"
                              @deleteLogs="deleteLogs" />
-            <app-timed-task v-if="show && timedTask"
-                            :categoryItemId="device.categoryItemId">
-
-            </app-timed-task>
+            <app-drawer-task v-if="show && timedTask"
+                             :categoryItemId="device.categoryItemId"
+                             :deviceId="device.deviceId"
+                             @setShow="setShow">
+            </app-drawer-task>
         </app-drawer>
     </div>
 </template>
@@ -161,7 +162,7 @@ import AppDrawer from '@/components/appDrawer';
 import Lamp from '@/components/lamp';
 import AppLogCard from '@/components/appLogCard';
 import AppDrawerCard from '@/components/appDrawerCard';
-import AppTimedTask from '@/components/appTimedTask';
+import AppDrawerTask from '@/components/appDrawerTask';
 import { ICONS } from './config.js';
 import { setDesired, deleteDeviceLog } from '@/api/device';
 
@@ -213,6 +214,10 @@ export default {
 	},
 
 	methods: {
+		setShow(value) {
+			this.show = value;
+		},
+
 		// 防抖动
 		setTimeOut() {
 			if (this.timer) {
@@ -251,8 +256,6 @@ export default {
 			if (!this.device.onLine) {
 				return;
 			}
-			// this.switchLoading = true;
-			// this.setTimeOut();
 			this.setDesiredFn({
 				deviceId: this.device.deviceId,
 				desired: { luminance: this.luminance },
@@ -298,10 +301,23 @@ export default {
 				deviceId: this.device.deviceId,
 			})
 				.then(resData => {
-					console.log(resData);
+					if (resData.ok) {
+						console.log(resData);
+						this.$message({
+							showClose: true,
+							message: '删除成功！',
+							type: 'success',
+							center: true,
+						});
+					}
 				})
 				.catch(error => {
-					console.log(error);
+					this.$message({
+						showClose: true,
+						center: true,
+						message: error.message,
+						type: 'error',
+					});
 				});
 		},
 	},
@@ -349,7 +365,7 @@ export default {
 		AppDrawer,
 		AppDrawerCard,
 		AppLogCard,
-		AppTimedTask,
+		AppDrawerTask,
 		Lamp,
 	},
 };
