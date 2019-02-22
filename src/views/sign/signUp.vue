@@ -52,7 +52,7 @@
             </span>
         </el-form-item>
         <el-form-item>
-            Copyright © 2018-2018 CHF All Rights Reserved
+            Copyright © 2018-2019 CHF All Rights Reserved
         </el-form-item>
     </el-form>
 </template>
@@ -72,15 +72,15 @@ export default {
 				this.vNickName = false;
 				callback(new Error('请输入昵称'));
 			} else {
-				if (nameRegExp.test(this.data.name)) {
+				console.log(this.data.nickName);
+				console.log(nameRegExp.test(this.data.nickName));
+				if (nameRegExp.test(this.data.nickName)) {
 					this.vNickName = true;
 					callback();
 					return;
 				}
 				this.vNickName = false;
-				callback(
-					new Error('昵称为 4 - 18 个字，支持中、英文、数字及 _')
-				);
+				callback(new Error('4 - 18 个字，支持中、英文、数字及 _'));
 			}
 		};
 
@@ -193,7 +193,10 @@ export default {
 			let [restaurants, results, email] = [[], [], ''];
 			if (queryString.includes('@') && !queryString.startsWith('@')) {
 				const emailRegExp = /^([a-z0-9]+(?:[._-][a-z0-9]+)*)@/;
-				email = queryString.match(emailRegExp)[1];
+				const query = queryString.match(emailRegExp);
+				if (query) {
+					email = queryString.match(emailRegExp)[1];
+				}
 				Array.from(this.emailSuffix).forEach(item => {
 					restaurants.push({ value: `${email}${item.value}` });
 				});
@@ -206,6 +209,11 @@ export default {
 		},
 		createFilter(queryString) {
 			return restaurant => {
+				const emailRegExp = /^([a-zA-Z0-9]+(?:[._-][a-zA-Z0-9]+)*)@(\w+\.?\w+)/;
+				const query = queryString.match(emailRegExp);
+				if (query && query.length > 2) {
+					queryString = `${query[1]}@${query[2].toLowerCase()}`;
+				}
 				return restaurant.value.includes(queryString);
 			};
 		},
@@ -219,6 +227,9 @@ export default {
 				type: this.data.type,
 				id: this.data.id,
 			};
+			if (data.type === 'email') {
+				data.id = data.id.toLowerCase();
+			}
 			this.sendCodeBtn = true;
 			this.sendCodeMsg = `重新发送 ${this.sendCodeNum}s`;
 			this.setCodeTime().then(() => {
@@ -300,6 +311,9 @@ export default {
 		signUpFn() {
 			this.signUpBtn = true;
 			this.$emit('setLoad', true);
+			if (this.data.type === 'email') {
+				this.data.id = this.data.id.toLowerCase();
+			}
 			signUp(this.data)
 				.then(resData => {
 					storage.set('token', resData.token);

@@ -9,9 +9,7 @@ import echarts from 'echarts/lib/echarts';
 import 'echarts/lib/component/title';
 import 'echarts/lib/component/legend';
 
-import 'element-ui/lib/theme-chalk/index.css';
-import './assets/scss/index.scss';
-// import './assets/js/DrawSVGPlugin.min.js';
+import '@/assets/scss/index.scss';
 
 // import './assets/iconfont/iconfont.js';
 import SvgIcon from '@/components/svgIcon';
@@ -26,9 +24,9 @@ Vue.use(ElementUI);
 
 Vue.prototype.$echarts = echarts;
 
-/* global TweenMax Draggable */
-Vue.prototype.$TweenMax = TweenMax;
-Vue.prototype.$Draggable = Draggable;
+// /* global TweenMax Draggable */
+// Vue.prototype.$TweenMax = TweenMax;
+// Vue.prototype.$Draggable = Draggable;
 Vue.component('svg-icon', SvgIcon);
 
 // 路由守卫

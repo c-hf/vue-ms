@@ -93,10 +93,10 @@ export default {
 				.then(resData => {
 					this.$store.dispatch('user', resData);
 					this.loading = false;
-					if (!resData.groupId) {
-						console.log(resData.groupId);
-						this.$router.push({ name: 'information' });
-					}
+					// if (!resData.groupId) {
+					// 	console.log(resData.groupId);
+					// 	this.$router.push({ name: 'information' });
+					// }
 					this.$router.push({ name: 'home' });
 				})
 				.catch(error => {
@@ -122,6 +122,7 @@ export default {
 .sign {
 	width: 100%;
 	height: 100%;
+	max-height: 100vh;
 	min-width: 1024px;
 	position: absolute;
 	top: 0;

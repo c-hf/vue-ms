@@ -1,26 +1,28 @@
 <template>
-    <div class="control">
-        <el-card class="control-card"
-                 shadow="never"
-                 v-loading="loading">
-            <el-row :gutter="24">
-                <el-col :span="24">
-                    <control-info />
-                </el-col>
-                <el-col :span="24">
-                    <control-list @onEdit="onEdit"
-                                  @onDelete="onDelete" />
-                </el-col>
-            </el-row>
-        </el-card>
-        <router-view />
+    <div class="control"
+         v-loading="loading">
+        <!-- <el-card class="control-card"
+                 shadow="never"> -->
+        <el-row :gutter="24">
+            <el-col :span="24">
+                <view-control-info />
+            </el-col>
+            <el-col :span="24">
+                <view-control-list @onEdit="onEdit"
+                                   @onDelete="onDelete" />
+            </el-col>
+        </el-row>
+        <!-- </el-card> -->
+        <transition name="fade">
+            <router-view />
+        </transition>
     </div>
 </template>
 
 <script>
 import { deleteDevice } from '@/api/device';
-import ControlList from './controlList';
-import ControlInfo from './controlInfo';
+import ViewControlList from './viewControlList';
+import ViewControlInfo from './viewControlInfo';
 
 export default {
 	name: 'DeviceControl', // 设备接入
@@ -72,8 +74,8 @@ export default {
 	},
 
 	components: {
-		ControlList,
-		ControlInfo,
+		ViewControlList,
+		ViewControlInfo,
 	},
 };
 </script>
@@ -84,28 +86,36 @@ export default {
 .control {
 	position: relative;
 
-	&-card {
-		width: 100%;
-		min-height: 600px;
-		background-color: inherit;
+	// 	&-card {
+	// 		width: 100%;
+	// 		min-height: 600px;
+	// 		background-color: inherit;
 
-		&-menu {
-			@include flex-between();
-			margin-bottom: 20px;
-		}
-	}
+	// 		&-menu {
+	// 			@include flex-between();
+	// 			margin-bottom: 20px;
+	// 		}
+	// 	}
 
-	&-list {
-		.clearfix {
-			display: flex;
-			justify-content: space-between;
-			.header-item {
-				width: 100%;
-			}
-		}
-	}
-	.el-input {
-		width: 20%;
-	}
+	// 	&-list {
+	// 		.clearfix {
+	// 			display: flex;
+	// 			justify-content: space-between;
+	// 			.header-item {
+	// 				width: 100%;
+	// 			}
+	// 		}
+	// 	}
+	// 	.el-input {
+	// 		width: 20%;
+	// 	}
+}
+.fade-enter-active,
+.fade-leave-active {
+	transition: opacity 0.5s;
+}
+.fade-enter,
+.fade-leave-to {
+	opacity: 0;
 }
 </style>

@@ -1,12 +1,11 @@
 <template>
-    <el-card class="details"
-             shadow="never">
-        <details-lighting :device="device" />
-    </el-card>
+    <div class="details">
+        <view-lighting :device="device" />
+    </div>
 </template>
 
 <script>
-import DetailsLighting from './DetailsLighting';
+import ViewLighting from './viewLighting';
 
 export default {
 	name: 'Details',
@@ -34,7 +33,7 @@ export default {
 	},
 
 	components: {
-		DetailsLighting,
+		ViewLighting,
 	},
 
 	created() {
@@ -46,8 +45,6 @@ export default {
 <style lang="scss" scoped>
 .details {
 	width: 100%;
-	min-height: 600px;
-	min-width: 1000px;
 	background-color: inherit;
 }
 </style>

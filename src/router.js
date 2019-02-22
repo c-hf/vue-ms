@@ -15,11 +15,11 @@ export default new Router({
 			path: '/',
 			name: 'index',
 			component: index,
-			beforeEnter: (to, from, next) => {
-				store.state.user.groupId
-					? next()
-					: next({ path: '/information' });
-			},
+			// beforeEnter: (to, from, next) => {
+			// 	store.state.user.groupId
+			// 		? next()
+			// 		: next({ path: '/information' });
+			// },
 			children: [
 				{
 					path: '/home',
@@ -66,65 +66,65 @@ export default new Router({
 					},
 					component: () => import('./views/set'),
 				},
-				// 设备
+				// // 设备
+				// {
+				// 	path: '/device',
+				// 	name: 'device',
+				// 	meta: {
+				// 		requireAuth: true,
+				// 	},
+				// 	beforeEnter: (to, from, next) => {
+				// 		if (to.fullPath === '/device') {
+				// 			next({
+				// 				path: '/device/overview',
+				// 			});
+				// 		} else {
+				// 			next();
+				// 		}
+				// 	},
+				// 	component: () => import('./views/device'),
+
+				// 	children: [
+				// 概览
 				{
-					path: '/device',
-					name: 'device',
+					path: 'overview',
+					name: 'overview',
 					meta: {
 						requireAuth: true,
 					},
-					beforeEnter: (to, from, next) => {
-						if (to.fullPath === '/device') {
-							next({
-								path: '/device/overview',
-							});
-						} else {
-							next();
-						}
+					component: () => import('./views/overview'),
+				},
+				// 管理
+				{
+					path: 'control',
+					name: 'control',
+					meta: {
+						requireAuth: true,
 					},
-					component: () => import('./views/device'),
-
+					component: () => import('./views/control'),
 					children: [
-						// 概览
+						// 接入
 						{
-							path: 'overview',
-							name: 'overview',
+							path: 'access',
+							name: 'access',
 							meta: {
 								requireAuth: true,
 							},
-							component: () => import('./views/overview'),
-						},
-						// 管理
-						{
-							path: 'control',
-							name: 'control',
-							meta: {
-								requireAuth: true,
-							},
-							component: () => import('./views/control'),
-							children: [
-								// 接入
-								{
-									path: 'access',
-									name: 'access',
-									meta: {
-										requireAuth: true,
-									},
-									component: () => import('./views/access'),
-								},
-							],
-						},
-						// 概览
-						{
-							path: 'details/:deviceId',
-							name: 'details',
-							meta: {
-								requireAuth: true,
-							},
-							component: () => import('./views/details'),
+							component: () => import('./views/access'),
 						},
 					],
 				},
+				// 概览
+				{
+					path: 'details/:deviceId',
+					name: 'details',
+					meta: {
+						requireAuth: true,
+					},
+					component: () => import('./views/details'),
+				},
+				// ],
+				// },
 			],
 		},
 

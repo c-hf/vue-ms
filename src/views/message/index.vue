@@ -1,23 +1,267 @@
 <template>
-    <el-card class="message"
-             shadow="never">
-        Message
-    </el-card>
+    <div>
+        <el-card class="message"
+                 v-loading="loading">
+            <div slot="header">
+                <span class="title">
+                    消息中心
+                </span>
+                <el-checkbox v-model="unread"
+                             @change="messageChange">
+                    仅看未读消息
+                </el-checkbox>
+            </div>
+            <div class="message-menu">
+                <span class="message-menu-left">
+                    <el-radio-group v-model="category"
+                                    @change="messageChange">
+                        <el-radio label="ALL">
+                            全部类型
+                        </el-radio>
+                        <el-radio label="GROUP">
+                            家庭组
+                        </el-radio>
+                        <el-radio label="DEVICE">
+                            设备
+                        </el-radio>
+                    </el-radio-group>
+                    <el-button-group>
+                        <el-button :disabled="disabled"
+                                   plain
+                                   size="medium"
+                                   @click="setAsRead">
+                            标为已读
+                        </el-button>
+                        <el-button :disabled="disabled"
+                                   plain
+                                   size="medium"
+                                   @click="deleteMessage">
+                            删除
+                        </el-button>
+                    </el-button-group>
+                </span>
+                <span class="message-menu-right">
+                    <el-input placeholder="请输入内容"
+                              suffix-icon="el-icon-search"
+                              v-model="messageSeach">
+                    </el-input>
+                </span>
+            </div>
+            <view-message-list :messages="messages"
+                               @selectChange="selectChange"
+                               @updateMessageStatus="updateMessageStatusFn" />
+            <div class="message-footer">
+                <el-pagination background
+                               layout="prev, pager, next"
+                               :total="total"
+                               :current-page.sync="currentPage"
+                               @current-change="currentChange">
+                </el-pagination>
+            </div>
+        </el-card>
+    </div>
 </template>
 
 <script>
+import { getMessages, updateMessageStatus, deleteMessage } from '@/api/user';
+import ViewMessageList from './viewMessageList';
+
 export default {
 	name: 'Message',
 	data() {
-		return {};
+		return {
+			data: [],
+			loading: false,
+			disabled: true,
+			unread: false,
+			messageSeach: '',
+			category: 'ALL',
+			messages: [],
+			selectMessages: [],
+			total: 0,
+			currentPage: 1,
+		};
+	},
+
+	methods: {
+		// 设为已读
+		setAsRead() {
+			this.$confirm('确定要对选中消息设置已读吗？', '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning',
+			})
+				.then(() => {
+					let messages = [];
+					this.selectMessages.forEach(el => {
+						if (el.status === 'UNREAD') {
+							messages.push(el.messageId);
+						}
+					});
+					this.selectMessages = [];
+					this.updateMessageStatusFn(messages).then(resData => {
+						if (resData.ok) {
+							this.getMessagesFn(this.currentPage - 1, 10);
+						}
+					});
+				})
+				.catch(() => {});
+		},
+
+		// 删除消息
+		deleteMessage() {
+			this.$confirm('确定要删除已选中的站内信吗？', '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning',
+			})
+				.then(() => {
+					let messages = [];
+					this.selectMessages.forEach(el => {
+						messages.push(el.messageId);
+					});
+					this.selectMessages = [];
+					this.deleteMessageFn(messages);
+				})
+				.catch(() => {});
+		},
+
+		// 多选
+		selectChange(selectMessages, disabled) {
+			this.selectMessages = selectMessages;
+			this.disabled = disabled;
+		},
+
+		// 当前页
+		currentChange(value) {
+			this.getMessagesFn(value - 1, 10);
+		},
+
+		// 重新获取消息
+		messageChange() {
+			this.getMessagesFn(this.currentPage - 1, 10);
+		},
+
+		// 获取消息
+		getMessagesFn(pageNo, pageSize) {
+			this.loading = true;
+			let [status, category] = ['', ''];
+			this.unread ? (status = 'UNREAD') : (status = '');
+			this.category !== 'ALL'
+				? (category = this.category)
+				: (category = '');
+			getMessages({
+				status: status,
+				category: category,
+				pageNo: pageNo,
+				pageSize: pageSize,
+			})
+				.then(resData => {
+					this.total = resData.total;
+					this.messages = resData.page;
+				})
+				.catch(error => {
+					this.$message({
+						showClose: true,
+						center: true,
+						message: error.message,
+						type: 'error',
+					});
+				})
+				.then(() => {
+					this.loading = false;
+				});
+		},
+
+		// 设为已读封装
+		updateMessageStatusFn(messages) {
+			this.loading = true;
+			return updateMessageStatus(messages)
+				.catch(error => {
+					this.$message({
+						showClose: true,
+						center: true,
+						message: error.message,
+						type: 'error',
+					});
+				})
+				.then(resData => {
+					setTimeout(() => {
+						this.loading = false;
+						console.log('???');
+					}, 2000);
+
+					return resData;
+				});
+		},
+
+		// 删除消息封装
+		deleteMessageFn(messages) {
+			this.loading = true;
+			deleteMessage(messages)
+				.then(resData => {
+					if (resData.ok) {
+						this.getMessagesFn(this.currentPage - 1, 10);
+					}
+				})
+				.catch(error => {
+					this.$message({
+						showClose: true,
+						center: true,
+						message: error.message,
+						type: 'error',
+					});
+				})
+				.then(() => {
+					setTimeout(() => {
+						this.loading = false;
+						console.log('???');
+					}, 2000);
+				});
+		},
+	},
+
+	components: {
+		ViewMessageList,
+	},
+
+	created() {
+		this.getMessagesFn(0, 10);
 	},
 };
 </script>
 
 <style lang="scss" scoped>
+@import '~@/assets/scss/mixins';
+
 .message {
 	width: 100%;
-	min-height: 600px;
-	background-color: inherit;
+	min-height: calc(100vh - 150px);
+
+	.title {
+		font-size: 18px;
+		padding: 0 10px;
+	}
+
+	&-menu {
+		height: 100px;
+
+		@include flex-between();
+		align-items: flex-start;
+
+		&-left {
+			height: 100%;
+			@include flex-around(column);
+			align-items: flex-start;
+		}
+	}
+
+	&-footer {
+		width: 100%;
+		margin-top: 20px;
+		text-align: right;
+		padding: 0 40px;
+		box-sizing: border-box;
+	}
 }
 </style>

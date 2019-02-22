@@ -44,10 +44,48 @@ export const deleteDeviceLog = data => {
 	return axiosFn(getOptions);
 };
 
+// 删除定时任务
+export const deleteDeviceTimedTask = data => {
+	const getOptions = {
+		method: 'delete',
+		url: '/api/device/deleteDeviceTimedTask',
+		params: data,
+	};
+	return axiosFn(getOptions);
+};
+
 // 更新设备参数
 export const updateDevice = data => {
 	options.method = 'put';
 	options.url = '/api/device/updateDevice';
+	options.data = data;
+	return axiosFn(options);
+};
+
+// 取消定时
+export const canclDeviceTimedTask = timedTaskId => {
+	options.method = 'put';
+	options.url = '/api/device/canclDeviceTimedTask';
+	options.data = {
+		timedTaskId: timedTaskId,
+	};
+	return axiosFn(options);
+};
+
+// 开始定时
+export const startDeviceTimedTask = timedTaskId => {
+	options.method = 'put';
+	options.url = '/api/device/startDeviceTimedTask';
+	options.data = {
+		timedTaskId: timedTaskId,
+	};
+	return axiosFn(options);
+};
+
+// 重置定时任务
+export const updateDeviceTimedTask = data => {
+	options.method = 'put';
+	options.url = '/api/device/updateDeviceTimedTask';
 	options.data = data;
 	return axiosFn(options);
 };
@@ -78,6 +116,18 @@ export const getDeviceParamAndAttrById = categoryItemId => {
 	return axiosFn(getOptions);
 };
 
+// 获取定时任务
+export const getDeviceTimedTask = deviceId => {
+	const getOptions = {
+		method: 'get',
+		url: '/api/device/getDeviceTimedTask',
+		params: {
+			deviceId: deviceId,
+		},
+	};
+	return axiosFn(getOptions);
+};
+
 // 获取用户所有的设备信息
 export const getAllDeviceInfo = groupId => {
 	const getOptions = {
@@ -85,6 +135,18 @@ export const getAllDeviceInfo = groupId => {
 		url: '/api/device/getAllDeviceInfo',
 		params: {
 			groupId: groupId,
+		},
+	};
+	return axiosFn(getOptions);
+};
+
+// 获取定时任务
+export const getDeviceTimedTaskById = timedTaskId => {
+	const getOptions = {
+		method: 'get',
+		url: '/api/device/getDeviceTimedTaskById',
+		params: {
+			timedTaskId: timedTaskId,
 		},
 	};
 	return axiosFn(getOptions);

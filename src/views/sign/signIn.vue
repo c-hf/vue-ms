@@ -35,7 +35,7 @@
             </span>
         </el-form-item>
         <el-form-item>
-            Copyright © 2018-2018 CHF All Rights Reserved
+            Copyright © 2018-2019 CHF All Rights Reserved
         </el-form-item>
     </el-form>
 </template>
@@ -112,8 +112,11 @@ export default {
 		querySearch(queryString, callback) {
 			let [restaurants, results, email] = [[], [], ''];
 			if (queryString.includes('@') && !queryString.startsWith('@')) {
-				const emailRegExp = /^([a-z0-9]+(?:[._-][a-z0-9]+)*)@/;
-				email = queryString.match(emailRegExp)[1];
+				const emailRegExp = /^([a-zA-Z0-9]+(?:[._-][a-zA-Z0-9]+)*)@/;
+				const query = queryString.match(emailRegExp);
+				if (query) {
+					email = queryString.match(emailRegExp)[1];
+				}
 				Array.from(this.emailSuffix).forEach(item => {
 					restaurants.push({ value: `${email}${item.value}` });
 				});
@@ -127,6 +130,11 @@ export default {
 
 		createFilter(queryString) {
 			return restaurant => {
+				const emailRegExp = /^([a-zA-Z0-9]+(?:[._-][a-zA-Z0-9]+)*)@(\w+\.?\w+)/;
+				const query = queryString.match(emailRegExp);
+				if (query && query.length > 2) {
+					queryString = `${query[1]}@${query[2].toLowerCase()}`;
+				}
 				return restaurant.value.includes(queryString);
 			};
 		},
@@ -156,6 +164,9 @@ export default {
 
 		// getUserAvatar 封装
 		getUserAvatarFn() {
+			if (this.data.type === 'email') {
+				this.data.id = this.data.id.toLowerCase();
+			}
 			getUserAvatar({
 				id: this.data.id,
 				type: this.data.type,
@@ -178,6 +189,10 @@ export default {
 		// signIn 方法封装
 		signInFn() {
 			this.$emit('setLoad', true);
+			if (this.data.type === 'email') {
+				this.data.id = this.data.id.toLowerCase();
+			}
+
 			signIn(this.data)
 				.then(resData => {
 					storage.set('token', resData.token);

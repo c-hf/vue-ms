@@ -1,20 +1,19 @@
 <template>
-    <el-container class="app-container"
-                  ref="app">
+    <el-container class="app-container">
         <el-header class="app-header">
             <app-header :user="user"
                         :width="width"
                         :disabled="setDisabled"
                         @setCollapse="setCollapse"
+                        @routerMessage="setShow"
                         @signOut="signOut" />
         </el-header>
         <el-container class="app-content">
-            <el-aside :style="{width: `${width}px`,height:'100%'}">
-                <el-scrollbar style="height:100%;">
-                    <app-aside :isCollapse="isCollapse"
-                               :user="user"
-                               @signOut="signOut" />
-                </el-scrollbar>
+            <el-aside class="app-aside"
+                      :style="{width: `${width}px`}">
+                <app-aside :isCollapse="isCollapse"
+                           :user="user"
+                           @signOut="signOut" />
             </el-aside>
             <el-main class="app-main">
                 <div class="app-main-title">
@@ -36,14 +35,24 @@
                         </el-breadcrumb-item>
                     </el-breadcrumb>
                 </div>
-                <router-view />
+                <transition name="router">
+                    <router-view class="app-main-content" />
+                </transition>
             </el-main>
         </el-container>
+        <app-drawer :show.sync="show"
+                    :width="350">
+            <AppDrawerMessage @setShow="setShow"
+                              v-if="show" />
+        </app-drawer>
     </el-container>
 </template>
 <script>
-import AppHeader from '@/components/header';
-import AppAside from '@/components/aside';
+import AppHeader from '@/components/appHeader';
+import AppAside from '@/components/appAside';
+import AppDrawer from '@/components/appDrawer';
+import AppDrawerMessage from '@/components/appDrawerMessage';
+
 import io from 'socket.io-client';
 import storage from '@/assets/js/storage';
 import { signOut } from '@/api/user';
@@ -53,6 +62,7 @@ export default {
 	name: 'Index',
 	data() {
 		return {
+			show: false,
 			isCollapse: false,
 			setDisabled: false,
 			width: 220,
@@ -76,11 +86,11 @@ export default {
 			const menuRouterList = {
 				home: { path: '/home', name: '首页' },
 				family: { path: '/family', name: `${this.user.nickName} 的家` },
-				device: { path: '/device/overview', name: '控制台' },
+				// device: { path: '/device/overview', name: '控制台' },
 				overview: { path: '/device/overview', name: '概览' },
-				control: { path: '/device/control', name: '设备管理' },
-				details: { path: '/device/overview', name: '设备详情' },
-				access: { path: '/device/control', name: '设备接入' },
+				control: { path: '/control', name: '设备管理' },
+				details: { path: '/overview', name: '概览' },
+				access: { path: '/control', name: '设备接入' },
 				message: { path: '/message', name: '消息中心' },
 				set: { path: '/set', name: '设置' },
 			};
@@ -122,6 +132,11 @@ export default {
 			this.signOutFn();
 		},
 
+		// 打开消息列表
+		setShow(value) {
+			this.show = value;
+		},
+
 		// signOut 封装
 		signOutFn() {
 			signOut()
@@ -134,6 +149,9 @@ export default {
 						storage.remove('token');
 						this.$store.dispatch('token', '');
 						this.$store.dispatch('user', {});
+						this.$store.dispatch('group', {});
+						this.$store.dispatch('homeData', {});
+						this.$store.dispatch('rooms', []);
 						this.$store.dispatch('device', []);
 					}
 				})
@@ -175,6 +193,8 @@ export default {
 	components: {
 		AppHeader,
 		AppAside,
+		AppDrawer,
+		AppDrawerMessage,
 	},
 
 	created() {
@@ -224,6 +244,13 @@ export default {
 		this.socket.on('updateDeviceStatus', data => {
 			this.$store.dispatch('updateDeviceStatus', data);
 		});
+		this.socket.on('GroupMessage', data => {
+			this.$store.dispatch('modifyGroup', data);
+		});
+		this.socket.on('message', data => {
+			// this.$store.dispatch('modifyGroup', data);
+			console.log(data);
+		});
 	},
 
 	mounted() {
@@ -237,12 +264,40 @@ export default {
 @import '~@/assets/scss/mixins';
 .app-main {
 	&-title {
-		padding-bottom: 20px;
+		height: 40px;
+		margin: 0 20px;
+		box-sizing: border-box;
+		border-bottom: 1px solid #ebeef5;
 		@include flex-between();
 
 		&-text {
 			font-weight: bold;
 		}
 	}
+
+	&-content {
+		height: calc(100% - 40px);
+		padding: 20px;
+		box-sizing: border-box;
+		overflow-x: hidden;
+		transition: all 0.5s;
+	}
+}
+
+.router-leave-active,
+.router-enter-active {
+	// transition: all 0.5s;
+	opacity: 0;
+	transform: translateX(30px);
+}
+
+.router-enter {
+	opacity: 0;
+	transform: translateX(-30px);
+}
+
+.router-leave-to {
+	opacity: 0;
+	transform: translateX(30px);
 }
 </style>

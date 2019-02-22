@@ -1,19 +1,19 @@
 <template>
-    <el-card class="overview"
-             shadow="never">
-        <el-row :gutter="24">
+    <div>
+        <el-row class="overview"
+                :gutter="24">
             <el-col :span="6"
                     v-for="(item, index) in device"
                     :key="index">
-                <ceiling-lamp :device="item" />
+                <app-ceiling-lamp :device="item" />
             </el-col>
             <router-view />
         </el-row>
-    </el-card>
+    </div>
 </template>
 
 <script>
-import CeilingLamp from '@/components/lighting';
+import AppCeilingLamp from '@/components/appLighting';
 
 export default {
 	name: 'Overview', // 设备概览
@@ -33,7 +33,7 @@ export default {
 	methods: {},
 
 	components: {
-		CeilingLamp,
+		AppCeilingLamp,
 	},
 };
 </script>
@@ -42,6 +42,5 @@ export default {
 .overview {
 	width: 100%;
 	min-height: 600px;
-	background-color: inherit;
 }
 </style>

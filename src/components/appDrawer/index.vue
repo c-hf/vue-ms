@@ -12,7 +12,8 @@
                 <div class="drawer-content"
                      v-show="show"
                      :style="{width: `${width}px`}">
-                    <slot></slot>
+                    <slot>
+                    </slot>
                 </div>
             </transition>
         </div>
@@ -35,7 +36,7 @@ export default {
 	props: {
 		width: {
 			type: Number,
-			default: 460,
+			default: 480,
 		},
 
 		show: {

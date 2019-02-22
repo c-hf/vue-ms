@@ -1,131 +1,196 @@
 <template>
-    <el-card class="family"
-             shadow="never">
-        <el-row :gutter="24">
+    <div>
+        <el-row class="family"
+                :gutter="24">
             <el-col :span="18"
                     :md="16"
                     :lg="18"
                     class="family-left">
                 <el-col :span="24">
-                    <info-card />
+                    <view-group-info @displayGroupInfo="displayGroupInfo" />
                 </el-col>
                 <el-col :span="24">
-                    <rooms-info />
+                    <view-rooms-info />
                 </el-col>
             </el-col>
             <el-col :span="6"
                     :md="8"
                     :lg="6"
                     class="family-right">
-                <member @addMember="addMember" />
+                <view-member @addMember="addMember"
+                             @displayMemberInfo="displayMemberInfo"
+                             @displayGroupInfo="displayGroupInfo" />
             </el-col>
         </el-row>
-
-    </el-card>
+        <app-drawer :show.sync="show">
+            <view-drawer-member v-if="show"
+                                @setShow="setShow" />
+        </app-drawer>
+        <el-dialog class="app-user-info"
+                   :visible.sync="userVisible"
+                   width="360px">
+            <app-user-info :user="member"
+                           type="member"
+                           @setVisible="setUserVisible" />
+        </el-dialog>
+        <el-dialog class="app-group-info"
+                   :visible.sync="groupVisible"
+                   width="600px">
+            <app-group-info @setVisible="setGroupVisible"
+                            @addMember="addMember" />
+        </el-dialog>
+    </div>
 </template>
 
 <script>
-import Member from './member';
-import InfoCard from './infoCard';
-import RoomsInfo from './roomsInfo';
+import AppDrawer from '@/components/appDrawer';
+import AppUserInfo from '@/components/appUserInfo';
+import AppGroupInfo from '@/components/appGroupInfo';
+import ViewMember from './viewMember';
+import ViewGroupInfo from './viewGroupInfo';
+import ViewRoomsInfo from './viewRoomsInfo';
+import ViewDrawerMember from './viewDrawerMember';
 
 export default {
 	name: 'Family',
 	data() {
-		return {};
+		return {
+			show: false,
+			member: {},
+			userVisible: false,
+			groupVisible: false,
+		};
 	},
+
 	methods: {
-		addMember() {},
+		// 查看群信息
+		displayGroupInfo() {
+			this.groupVisible = true;
+		},
+
+		// 查看成员信息
+		displayMemberInfo(member) {
+			member.region = '';
+			let region = this.$store.state.group.region;
+			region = region.slice(0, 2);
+			region.forEach(el => {
+				member.region = `${member.region} ${el.name}`;
+			});
+			this.member = member;
+			this.userVisible = true;
+		},
+
+		// 添加成员
+		addMember() {
+			this.show = true;
+		},
+
+		// 显示抽屉组件
+		setShow(value) {
+			this.show = value;
+		},
+
+		setUserVisible(value) {
+			this.userVisible = value;
+		},
+
+		setGroupVisible(value) {
+			this.groupVisible = value;
+		},
 	},
 	components: {
-		Member,
-		InfoCard,
-		RoomsInfo,
+		AppDrawer,
+		AppUserInfo,
+		AppGroupInfo,
+		ViewMember,
+		ViewGroupInfo,
+		ViewRoomsInfo,
+		ViewDrawerMember,
 	},
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import '~@/assets/scss/mixins';
+
 .family {
 	background-color: inherit;
 
-	.el-form {
-		display: flex;
-		padding: 0 20px;
-
-		&-item:nth-of-type(1) {
-			width: 400px;
+	&-dialog {
+		.el-dialog__header,
+		.el-dialog__body {
+			padding: 0;
 		}
 
-		&-item:nth-of-type(2) {
-			width: 80px;
-			margin-left: 20px;
-		}
-	}
-
-	.search-result {
-		padding: 0 20px;
-
-		&-title {
+		.block {
 			display: block;
-			width: 100%;
+		}
+
+		.bottom {
 			padding-bottom: 20px;
 		}
-	}
 
-	.user {
-		height: 60px;
-		padding: 0 20px;
-		display: flex;
-		align-items: center;
-		justify-content: start;
-		position: relative;
-		cursor: pointer;
-
-		// 遮罩
-		&:hover .member-mask-layer {
-			width: 100%;
-			height: 100%;
-			background: #000;
-			opacity: 0.1;
-			position: absolute;
-			top: 0;
-			left: 0;
-			z-index: 12;
-		}
 		&-avatar {
-			width: 40px;
-			height: 40px;
-			border-radius: 50%;
-			display: block;
+			width: 100%;
+			height: 300px;
 			position: relative;
-			z-index: 15;
+			overflow: hidden;
 
 			img {
-				border-radius: 50%;
+				width: 100%;
+				height: 360px;
+				position: absolute;
+				top: -60px;
 			}
 		}
 
-		&-info {
-			width: 60%;
-			text-align: left;
-			margin-left: 5%;
-			position: relative;
-			z-index: 15;
+		&-nickName {
+			height: 50px;
+			font-size: 22px;
+			font-weight: bold;
+			text-align: center;
+			line-height: 50px;
+		}
 
-			&-nickName {
-				font-size: 16px;
+		&-intro {
+			width: 80%;
+			height: 30px;
+			line-height: 30px;
+			margin: 0 auto;
+			text-align: center;
+			font-size: 14px;
+			color: #99a9bf;
+			@include ellipsis();
+		}
+
+		&-item {
+			font-size: 14px;
+			text-align: center;
+			margin: 10px 0;
+			color: #303133;
+			@include flex-center();
+
+			i:nth-of-type(1) {
+				display: inline-block;
+				width: 50px;
+				color: #c0c4cc;
+				padding: 0 5px;
+				text-align: right;
 			}
-			&-id {
-				margin-left: 10px;
-				color: #99a9bf;
+
+			i:nth-of-type(2) {
+				display: inline-block;
+				width: 120px;
+				padding-left: 10px;
+				text-align: left;
 			}
 		}
-		&-btn {
+
+		&-delete {
 			position: absolute;
-			right: 20px;
-			z-index: 15;
+			top: 277px;
+			right: 15px;
+			font-size: 20px;
 		}
 	}
 }

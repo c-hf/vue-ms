@@ -1,39 +1,66 @@
 <template>
-    <div class="app-drawer-task-task">
-        <span class="app-drawer-task-task-title">
-            任务设置
+    <el-scrollbar class="app-drawer-task-task"
+                  style="height:80%">
+        <span v-if="!dataTasks.length"
+              class="app-drawer-task-task-error">
+            <svg-icon class="error-icon"
+                      iconClass="icon-File-Error" />
+            未设置任务
         </span>
-        <span class="app-drawer-task-task-item">
-            <i>开关</i>
-            <el-switch v-model="data.switch"
+        <span class="app-drawer-task-task-item"
+              v-for="(item, index) in dataTasks"
+              :key="index">
+            <i class="name">{{ item.name }}</i>
+            <el-switch v-if="item.el === 'switch'"
+                       v-model="item.value"
                        active-color="#13ce66"
                        inactive-color="#ff4949">
             </el-switch>
-        </span>
-        <span class="app-drawer-task-task-item">
-            <i>亮度</i>
-            <el-slider v-model="data.luminance"
-                       :step="10"
-                       :min="10"
-                       :disabled="!data.switch">
+            <el-slider v-else-if="item.el === 'slider'"
+                       v-model="item.value"
+                       :step="item.step"
+                       :min="item.min">
             </el-slider>
+            <el-button class="app-drawer-task-task-item-delete"
+                       icon="el-icon-close"
+                       size="mini"
+                       circle
+                       @click="deleteTask(index)">
+            </el-button>
         </span>
-    </div>
+    </el-scrollbar>
 </template>
 
 <script>
 export default {
 	name: 'CeilingLamp',
 	data() {
-		return {
-			data: {
-				switch: false,
-				luminance: 100,
-			},
-		};
+		return {};
+	},
+
+	methods: {
+		deleteTask(index) {
+			this.$emit('deleteTask', index);
+		},
+	},
+
+	props: {
+		dataTasks: {
+			type: Array,
+		},
 	},
 };
 </script>
 
 <style lang="scss" scoped>
+@import '~@/assets/scss/mixins';
+
+.el-slider {
+	width: 180px;
+}
+
+.button {
+	text-align: center;
+	line-height: 100%;
+}
 </style>

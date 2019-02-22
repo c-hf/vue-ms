@@ -17,11 +17,11 @@
                       now: index===0 && textIndex === 0}"
                       v-for="(item, textIndex) in logsText[item]"
                       :key="textIndex">
-                    <i>
+                    <i class="message">
                         {{ item.time }} {{ item.message }}
                     </i>
                     <i>
-                        操作来自 {{ item.source }}
+                        来自 {{ item.source }}
                     </i>
                 </span>
             </div>
@@ -39,15 +39,14 @@
 </template>
 
 <script>
-import { SOURCE, LOGWORD } from './config.js';
+import { source } from '@/config/index.js';
 import { getDeviceLogById } from '@/api/device';
 
 export default {
 	name: 'AppLogCard',
 	data() {
 		return {
-			logWord: LOGWORD,
-			source: SOURCE,
+			source: source,
 			logs: [],
 			socket: {},
 		};
@@ -57,17 +56,22 @@ export default {
 		logsText() {
 			let logs = {};
 			this.logs.forEach(el => {
-				let element = {};
-				element.source = this.source[el.source];
-				element.logType = el.logType;
-				element.message = el.message;
+				if (this.logType === 'warn' && el.logType === 'info') {
+					return;
+				}
+				let [element, date, time] = [{}, [], []];
 				const createTime = new Date(el.createTime)
 					.toLocaleString('zh-CN', { hour12: false })
 					.split(' ');
-				let date = createTime[0].split('/');
+				element.source = this.source[el.source];
+				element.logType = el.logType;
+				element.message = el.message;
+				date = createTime[0].split('/');
 				date.shift();
 				element.date = date.join('/');
-				element.time = createTime[1];
+				time = createTime[1].split(':');
+				time.splice(2, 1);
+				element.time = time.join(':');
 				if (!logs[element.date]) {
 					logs[element.date] = [];
 				}
@@ -98,11 +102,19 @@ export default {
 		socketOn() {
 			try {
 				this.socket = this.$store.state.socket;
+				if (!this.socket.on || this.logType === 'warn') {
+					return;
+				}
 				this.socket.on(`${this.deviceId}-updateDeviceLog`, data => {
 					this.logs.unshift(data);
 				});
 			} catch (error) {
-				console.log(error.message);
+				this.$message({
+					showClose: true,
+					center: true,
+					message: error.message,
+					type: 'error',
+				});
 			}
 		},
 
@@ -125,6 +137,10 @@ export default {
 		deviceId: {
 			type: String,
 		},
+		logType: {
+			type: String,
+			default: 'log',
+		},
 	},
 
 	watch: {
@@ -136,7 +152,16 @@ export default {
 
 	created() {
 		this.getDeviceLogByIdFn();
+	},
+
+	mounted() {
 		this.socketOn();
+	},
+
+	destroyed() {
+		if (this.socket.on) {
+			this.socket.off(`${this.deviceId}-updateDeviceLog`);
+		}
 	},
 };
 </script>
@@ -163,6 +188,11 @@ export default {
 		margin-left: 40px;
 		position: relative;
 		@include flex-between();
+
+		.message {
+			width: 70%;
+			@include ellipsis();
+		}
 
 		i:nth-of-type(2) {
 			font-size: 12px;

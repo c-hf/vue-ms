@@ -8,32 +8,35 @@
                       simple
                       finish-status="success"
                       style="margin: 30px 0;">
-                <el-step title="个人信息"></el-step>
-                <el-step title="创建家庭组"></el-step>
-                <el-step title="开始使用"></el-step>
+                <el-step title="个人信息">
+                </el-step>
+                <el-step title="创建家庭组">
+                </el-step>
+                <el-step title="开始使用">
+                </el-step>
             </el-steps>
 
             <el-col :span="16"
                     :offset="4"
                     class="information-card">
-                <information-personal @next="next"
-                                      :personalData="personalData"
-                                      v-if="active === 0" />
-                <information-household @next="next"
-                                       @prev="prev"
-                                       v-else-if="active === 1" />
-                <information-complete v-else
-                                      :personalData="personalData"
-                                      :householdGroupData="householdGroupData" />
+                <view-personal @next="next"
+                               :personalData="personalData"
+                               v-if="active === 0" />
+                <view-household @next="next"
+                                @prev="prev"
+                                v-else-if="active === 1" />
+                <view-complete v-else
+                               :personalData="personalData"
+                               :householdGroupData="householdGroupData" />
             </el-col>
         </el-col>
     </div>
 </template>
 
 <script>
-import InformationPersonal from './personal';
-import InformationHousehold from './household';
-import InformationComplete from './complete';
+import ViewPersonal from './viewPersonal';
+import ViewHousehold from './viewHousehold';
+import ViewComplete from './viewComplete';
 import { defaultImgUrl } from '@/config';
 
 export default {
@@ -68,9 +71,9 @@ export default {
 	},
 
 	components: {
-		InformationPersonal,
-		InformationHousehold,
-		InformationComplete,
+		ViewPersonal,
+		ViewHousehold,
+		ViewComplete,
 	},
 };
 </script>

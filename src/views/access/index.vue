@@ -5,25 +5,25 @@
         <el-row>
             <el-col :span="24"
                     v-if="info">
-                <access-device-info @infoSubmit="infoSubmit"
-                                    :data="data" />
+                <view-device-info :data="data"
+                                  @infoSubmit="infoSubmit" />
             </el-col>
             <el-col :span="24"
                     v-else>
-                <access-device-param @showInfo="showInfo"
-                                     @setLoading="setLoading"
-                                     :data="data"
-                                     :custom="custom"
-                                     :deviceParam="deviceParam"
-                                     :deviceAttr="deviceAttr" />
+                <view-device-param :data="data"
+                                   :custom="custom"
+                                   :deviceParam="deviceParam"
+                                   :deviceAttr="deviceAttr"
+                                   @showInfo="showInfo"
+                                   @setLoading="setLoading" />
             </el-col>
         </el-row>
     </el-card>
 </template>
 
 <script>
-import AccessDeviceInfo from './deviceInfo';
-import AccessDeviceParam from './deviceParam';
+import ViewDeviceInfo from './viewDeviceInfo';
+import ViewDeviceParam from './viewDeviceParam';
 
 import { getDeviceParamAndAttrById } from '@/api/device';
 
@@ -85,8 +85,8 @@ export default {
 		},
 	},
 	components: {
-		AccessDeviceInfo,
-		AccessDeviceParam,
+		ViewDeviceInfo,
+		ViewDeviceParam,
 	},
 };
 </script>

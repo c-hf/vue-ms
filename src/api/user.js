@@ -1,5 +1,6 @@
 import { options, axiosFn } from './config';
 
+// post
 // 验证码
 export const signSendCode = data => {
 	options.method = 'post';
@@ -32,26 +33,16 @@ export const perfectInformation = data => {
 	return axiosFn(options);
 };
 
-// 创建 group
-export const setGroup = data => {
-	options.method = 'post';
-	options.url = '/api/user/setGroup';
+// put
+// 更新用户信息
+export const updateUserInfo = data => {
+	options.method = 'put';
+	options.url = '/api/user/updateUserInfo';
 	options.data = data;
 	return axiosFn(options);
 };
 
-// 添加 group 成员
-export const addGroupMember = data => {
-	options.method = 'post';
-	options.url = '/api/user/addGroupMember';
-	options.data = data;
-	return axiosFn(options);
-};
-
-// delete
-// 删除 group 成员
-export const deleteGroupMember = () => {};
-
+// get
 // 登出
 export const signOut = () => {
 	options.method = 'get';
@@ -69,26 +60,14 @@ export const getUserAvatar = data => {
 	return axiosFn(getOptions);
 };
 
-// 获取 user info
+// 获取用户信息
 export const getUserInfo = () => {
 	options.method = 'get';
 	options.url = '/api/user/getUserInfo';
 	return axiosFn(options);
 };
 
-// 获取 group
-export const getGroupById = groupId => {
-	const getOptions = {
-		method: 'get',
-		url: '/api/user/getGroupById',
-		params: {
-			groupId: groupId,
-		},
-	};
-	return axiosFn(getOptions);
-};
-
-// 查找 user
+// 查找用户
 export const getUserById = data => {
 	const getOptions = {
 		method: 'get',
@@ -98,7 +77,7 @@ export const getUserById = data => {
 	return axiosFn(getOptions);
 };
 
-// 查找省
+// 获取省
 export const getProvinceInfo = () => {
 	const getOptions = {
 		method: 'get',
@@ -107,7 +86,7 @@ export const getProvinceInfo = () => {
 	return axiosFn(getOptions);
 };
 
-// 查找市
+// 获取市
 export const getCityInfo = data => {
 	const getOptions = {
 		method: 'get',
@@ -117,7 +96,7 @@ export const getCityInfo = data => {
 	return axiosFn(getOptions);
 };
 
-// 查找县/区
+// 获取县/区
 export const getDistrictInfo = data => {
 	const getOptions = {
 		method: 'get',

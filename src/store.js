@@ -89,7 +89,7 @@ export default new Vuex.Store({
 			delete state.status[val];
 		},
 
-		// 设置设备列表
+		// 更新在线/离线
 		updateOnline(state, val) {
 			const index = findIndex(state, val.deviceId);
 			state.device[index].onLine = val.onLine;
@@ -110,6 +110,18 @@ export default new Vuex.Store({
 		// 更新设备状态
 		updateDeviceStatus(state, val) {
 			state.status[val.deviceId] = val.status;
+		},
+
+		// 群组添加删除成员
+		modifyGroup(state, val) {
+			if (val.type === 'add') {
+				state.group.member.push({ userId: val.userId });
+			} else if (val.type === 'remove') {
+				const index = state.group.member.findIndex(value => {
+					return value.userId === val.userId;
+				});
+				state.group.member.splice(index, 1);
+			}
 		},
 	},
 	actions: {
@@ -159,6 +171,10 @@ export default new Vuex.Store({
 
 		updateDeviceStatus({ commit }, obj) {
 			commit('updateDeviceStatus', obj);
+		},
+
+		modifyGroup({ commit }, obj) {
+			commit('modifyGroup', obj);
 		},
 	},
 });

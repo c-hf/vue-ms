@@ -1,7 +1,8 @@
 <template>
-    <el-card class="home"
-             shadow="never">
-        <el-row :gutter="24">
+    <div>
+        <!-- <el-card shadow="never"> -->
+        <el-row class="home"
+                :gutter="24">
             <el-col :span="8">
                 <el-card class="home-card home-card-on-line-device"
                          :body-style="{display: 'flex',
@@ -68,20 +69,20 @@
             </el-col>
             <el-col :span="14"
                     :lg="12">
-                <home-weather />
-
-                <home-map />
+                <view-weather />
+                <view-map />
             </el-col>
             <el-col :span="10"
                     :lg="12">
             </el-col>
         </el-row>
-    </el-card>
+        <!-- </el-card> -->
+    </div>
 </template>
 
 <script>
-import HomeWeather from './weather';
-import HomeMap from './map';
+import ViewWeather from './viewWeather';
+import ViewMap from './viewMap';
 export default {
 	name: 'Home',
 	data() {
@@ -91,10 +92,12 @@ export default {
 	},
 
 	computed: {
+		// 总数
 		totalNum() {
 			return this.$store.state.device.length;
 		},
 
+		// 在线数
 		onLineDeviceNum() {
 			let num = 0;
 			this.$store.state.device.forEach(el => {
@@ -105,14 +108,15 @@ export default {
 			return num;
 		},
 
+		// 离线数
 		lineDeviceNum() {
 			return this.totalNum - this.onLineDeviceNum;
 		},
 	},
 
 	components: {
-		HomeWeather,
-		HomeMap,
+		ViewWeather,
+		ViewMap,
 	},
 };
 </script>
