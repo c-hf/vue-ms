@@ -10,36 +10,58 @@
                            :disabled="disabled"
                            class="left-menu-btn"
                            @click.stop="setCollapse">
-                    <svg-icon iconClass="icon-bars" />
+                    <svg-icon :iconClass="collapseIcon" />
+                    <!-- el-icon-close -->
                 </el-button>
+                <!-- <el-button type="text"
+                           :disabled="disabled"
+                           class="left-menu-btn"
+                           @click.stop="toggleFullScreen()">
+                    <svg-icon :iconClass="fullScreenIcon" />
+                </el-button> -->
             </div>
         </div>
         <div class="right">
-            <header-search />
-            <div class="right-item">
-                <el-tooltip effect="dark"
-                            content="告警信息"
-                            :open-delay="600"
-                            placement="bottom">
-                    <el-badge :value="promptBadge"
-                              class="right-prompt">
-                        <span>
-                            <svg-icon iconClass="icon-remind" />
-                        </span>
-                    </el-badge>
-                </el-tooltip>
-                <el-tooltip effect="dark"
-                            content="消息中心"
-                            :open-delay="600"
-                            placement="bottom">
-                    <el-badge :value="emailBadge"
-                              class="right-email">
-                        <span @click="routerMessage">
-                            <svg-icon iconClass="icon-message" />
-                        </span>
-                    </el-badge>
-                </el-tooltip>
-            </div>
+            <transition name="el-fade-in-linear"
+                        mode="out-in">
+                <el-input v-if="isSearch"
+                          placeholder="Search..."
+                          v-model="searchKey">
+                    <i slot="suffix"
+                       class="el-input__icon el-icon-search">
+                    </i>
+                </el-input>
+                <app-header-title v-else />
+            </transition>
+            <span class="right-prompt"
+                  @click="setSearch">
+                <!-- <transition name="el-fade-in-linear"
+                            mode="out-in">
+                    <svg-icon v-if="isSearch"
+                              iconClass="icon-close" /> -->
+                <svg-icon iconClass="icon-search" />
+                <!-- </transition> -->
+                <!-- icon-close -->
+                <!-- <i class="el-icon-close"></i> -->
+            </span>
+            <span class="right-prompt"
+                  :disabled="disabled"
+                  @click.stop="toggleFullScreen">
+                <svg-icon :iconClass="fullScreenIcon" />
+            </span>
+            <el-tooltip effect="dark"
+                        content="消息中心"
+                        :open-delay="600"
+                        placement="bottom">
+                <el-badge :value="messageUnread"
+                          class="right-message"
+                          type="primary"
+                          :hidden="!messageUnread">
+                    <span @click="routerMessage">
+                        <svg-icon iconClass="icon-message" />
+                    </span>
+                </el-badge>
+            </el-tooltip>
             <el-dropdown trigger="click"
                          @command='handleCommand'
                          placement="bottom">
@@ -71,27 +93,48 @@
         <el-dialog :visible.sync="visible"
                    :modal-append-to-body="false"
                    width="360px"
-                   class="app-user-info">
-            <app-user-info :user="user"
-                           type="own"
-                           @setVisible="setVisible" />
+                   class="app-dialog-user">
+            <app-dialog-user :user="user"
+                             type="own"
+                             @setVisible="setVisible" />
         </el-dialog>
     </div>
 </template>
 
 <script>
-import HeaderSearch from './search';
-import AppUserInfo from '@/components/appUserInfo';
+import AppDialogUser from '@/components/appDialogUser';
+import AppHeaderTitle from './headerTitle';
 
 export default {
 	name: 'AppHeader',
 	data() {
 		return {
+			searchKey: '',
+			isSearch: false,
+			isFullscreen: false,
 			visible: false,
+			collapseIcon: 'icon-menu-unfold',
+			fullScreenIcon: 'icon-jujiao',
 		};
 	},
 
+	computed: {
+		messageUnread() {
+			return this.$store.state.messageUnread;
+		},
+	},
+
 	methods: {
+		searchBlur() {
+			if (!this.searchKey) {
+				this.isSearch = false;
+			}
+		},
+
+		setSearch() {
+			this.isSearch = !this.isSearch;
+		},
+
 		// 设置折叠
 		setCollapse() {
 			this.$emit('setCollapse');
@@ -113,32 +156,79 @@ export default {
 			}
 		},
 
+		// 设置折叠按钮图标
+		setCollapseIcon(value) {
+			this.collapseIcon = value;
+		},
+
+		// 设置全屏按钮图标
+		setFullScreenIcon(value) {
+			if (this.isFullscreen === value) {
+				return;
+			}
+			this.isFullscreen = value;
+			if (value) {
+				this.fullScreenIcon = 'icon-suoxiao';
+			} else {
+				this.fullScreenIcon = 'icon-jujiao';
+			}
+		},
+
+		// 显示/关闭用户信息卡
 		setVisible(value) {
 			this.visible = value;
 		},
 
-		// 获取用户信息封装
-		// getUserInfoFn() {
-		// 	getUserInfo()
-		// 		.then(data => {
-		// 			if (data) {
-		// 				console.log(data);
-		// 			}
-		// 		})
-		// 		.catch(error => {
-		// 			this.$message({
-		// 				showClose: true,
-		// 				center: true,
-		// 				message: error.message,
-		// 				type: 'error',
-		// 			});
-		// 		});
-		// },
+		// H5 fullscreen Api实现全屏
+		fullScreen(el) {
+			if (!this.isFullscreen) {
+				//退出全屏
+				const exitMethod =
+					document.exitFullscreen || //W3C
+					document.mozCancelFullScreen || //FireFox
+					document.webkitExitFullscreen || //Chrome等
+					document.webkitExitFullscreen; //IE11
+				if (exitMethod) {
+					exitMethod.call(document);
+				} else if (typeof window.ActiveXObject !== 'undefined') {
+					//for Internet Explorer
+					/* global ActiveXObject  */
+					const wscript = new ActiveXObject('WScript.Shell');
+					if (wscript !== null) {
+						wscript.SendKeys('{F11}');
+					}
+				}
+			} else {
+				//进入全屏
+				const requestMethod =
+					el.requestFullScreen || //W3C
+					el.webkitRequestFullScreen || //FireFox
+					el.mozRequestFullScreen || //Chrome 等
+					el.msRequestFullScreen; //IE11
+				if (requestMethod) {
+					requestMethod.call(el);
+				} else if (typeof window.ActiveXObject !== 'undefined') {
+					//for Internet Explorer
+					const wscript = new ActiveXObject('WScript.Shell');
+					if (wscript !== null) {
+						wscript.SendKeys('{F11}');
+					}
+				}
+			}
+		},
+
+		// 切换全屏
+		toggleFullScreen() {
+			this.setFullScreenIcon(!this.isFullscreen);
+			const el = document.documentElement;
+			this.fullScreen(el);
+		},
 	},
 
 	components: {
-		HeaderSearch,
-		AppUserInfo,
+		AppDialogUser,
+		// AppHeaderSearch,
+		AppHeaderTitle,
 	},
 
 	props: {
@@ -189,9 +279,11 @@ export default {
 
 		&-menu {
 			height: 100%;
+			margin-right: 10px;
 			@include flex-center();
 
 			&-btn {
+				margin: 0 10px;
 				display: block;
 				color: #000;
 				cursor: pointer;
@@ -201,31 +293,32 @@ export default {
 	}
 
 	.right {
-		width: 500px;
 		height: 100%;
-		padding-right: 20px;
+		padding-right: 30px;
+		@include flex-center();
+		justify-content: flex-end;
 
 		.el-input {
-			flex: 5;
 			margin-right: 10px;
+			width: 300px;
 		}
 
 		&-prompt,
-		&-email {
-			font-size: 20px;
+		&-message {
+			font-size: 22px;
+			margin: 0 10px;
+			cursor: pointer;
 		}
+
 		&-item {
-			flex: 2;
+			flex: 4;
 			display: flex;
 			justify-content: space-around;
 			cursor: pointer;
 		}
 
-		.el-dropdown {
-			flex: 1;
-		}
-
 		&-user {
+			margin: 0 20px;
 			@include flex-around();
 			cursor: pointer;
 

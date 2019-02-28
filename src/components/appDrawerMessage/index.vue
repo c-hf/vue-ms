@@ -19,10 +19,10 @@
         </div>
         <ul class="app-drawer-message-content"
             v-else>
-            <!-- <el-collapse-transition> -->
             <li class="message"
                 v-for="(item, index) in messages"
                 :key="index"
+                @click="displayMessage(index)"
                 @mousemove="messagesActive(index)"
                 @mouseout="messagesActiveOut">
                 <span class="message-label">
@@ -51,13 +51,21 @@
                     {{ item.message.title }}
                 </span>
             </li>
-            <!-- </el-collapse-transition> -->
         </ul>
+        <el-dialog :visible.sync="visible"
+                   :modal-append-to-body="false"
+                   :modal="false"
+                   :title="messageData.title"
+                   width="680px"
+                   @close="dialogClose">
+            <app-message-group :messageData="messageData" />
+        </el-dialog>
     </el-scrollbar>
 </template>
 
 <script>
-import { getMessages, updateMessageStatus } from '@/api/user';
+import AppMessageGroup from '@/components/appMessageGroup';
+import { getMessages, updateMessageStatus } from '@/api/message';
 
 export default {
 	name: 'AppDrawerMessage',
@@ -66,18 +74,39 @@ export default {
 			loading: false,
 			messages: [],
 			isActive: -1,
+			visible: false,
+			messageData: {},
+			messageIndex: -1,
 		};
 	},
 
 	computed: {},
 
 	methods: {
+		// 鼠标滑过
 		messagesActive(index) {
 			this.isActive = index;
 		},
 
+		// 鼠标离开
 		messagesActiveOut() {
 			this.isActive = -1;
+		},
+
+		// 显示消息详情
+		displayMessage(index) {
+			this.messageData = this.messages[index].message;
+			this.visible = true;
+		},
+
+		// 对话框关闭
+		dialogClose() {
+			this.updateMessageStatusFn(
+				this.messageData.messageId,
+				this.messageIndex
+			);
+			// this.messageData = {};
+			this.messageIndex = -1;
 		},
 
 		// 导航至消息中心
@@ -90,7 +119,9 @@ export default {
 		getMessagesFn() {
 			this.loading = true;
 			getMessages({
-				status: 'UNREAD',
+				query: {
+					status: 'UNREAD',
+				},
 				pageNo: 0,
 				pageSize: 20,
 			})
@@ -134,6 +165,10 @@ export default {
 	},
 
 	props: {},
+
+	components: {
+		AppMessageGroup,
+	},
 
 	created() {
 		this.getMessagesFn();

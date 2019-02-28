@@ -3,6 +3,9 @@
         <el-row class="overview"
                 :gutter="24">
             <el-col :span="6"
+                    :sm="8"
+                    :lg="6"
+                    :xl="4"
                     v-for="(item, index) in device"
                     :key="index">
                 <app-ceiling-lamp :device="item" />

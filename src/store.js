@@ -2,7 +2,6 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 import storage from '@/assets/js/storage';
-import { Object } from 'core-js';
 
 Vue.use(Vuex);
 
@@ -20,8 +19,9 @@ export default new Vuex.Store({
 		rooms: [],
 		device: [],
 		status: {},
-		homeData: {},
+		weather: {},
 		socket: {},
+		messageUnread: 0,
 	},
 	mutations: {
 		// 设置 token
@@ -44,14 +44,19 @@ export default new Vuex.Store({
 			state.rooms = val;
 		},
 
-		// 设置 homeData
-		setHomeData(state, val) {
-			state.homeData = val;
+		// 设置 weather
+		setWeather(state, val) {
+			state.weather = val;
 		},
 
 		// 设置 socket
 		setSocket(state, val) {
 			state.socket = val;
+		},
+
+		// 设置未读消息数
+		setMessageUnread(state, val) {
+			state.messageUnread = val;
 		},
 
 		// 设置设备列表
@@ -70,41 +75,40 @@ export default new Vuex.Store({
 			});
 		},
 
-		// 添加
-		addDevice(state, val) {
-			val.device.createTime = new Date(
-				val.device.createTime
-			).toLocaleString('zh-CN', { hour12: false });
-			val.device.updateTime = new Date(
-				val.device.updateTime
-			).toLocaleString('zh-CN', { hour12: false });
-			state.device.push(val.device);
-			Vue.set(state.status, val.device.deviceId, val.status);
-		},
-
-		// 删除
-		deleteDevice(state, val) {
-			const index = findIndex(state, val);
-			state.device.splice(index, 1);
-			delete state.status[val];
-		},
-
 		// 更新在线/离线
 		updateOnline(state, val) {
 			const index = findIndex(state, val.deviceId);
 			state.device[index].onLine = val.onLine;
-			// state.device
 		},
 
-		// 更新设备参数
-		updateDevice(state, val) {
-			const index = findIndex(state, val.deviceId);
-			const keys = Object.keys(val);
-			let deviceItem = state.device[index];
-			for (let key of keys) {
-				deviceItem[key] = val[key];
+		// 设备增删改
+		updateDevices(state, val) {
+			if (val.type === 'add') {
+				val.data.device.createTime = new Date(
+					val.data.device.createTime
+				).toLocaleString('zh-CN', { hour12: false });
+				val.data.device.updateTime = new Date(
+					val.data.device.updateTime
+				).toLocaleString('zh-CN', { hour12: false });
+				state.device.push(val.data.device);
+				Vue.set(
+					state.status,
+					val.data.device.deviceId,
+					val.data.status
+				);
+			} else if (val.type === 'delete') {
+				const index = findIndex(state, val.deviceId);
+				state.device.splice(index, 1);
+				delete state.status[val.deviceId];
+			} else if (val.type === 'update') {
+				const index = findIndex(state, val.data.deviceId);
+				const keys = Object.keys(val.data);
+				let deviceItem = state.device[index];
+				for (let key of keys) {
+					deviceItem[key] = val.data[key];
+				}
+				state.device.splice(index, 1, deviceItem);
 			}
-			state.device.splice(index, 1, deviceItem);
 		},
 
 		// 更新设备状态
@@ -114,6 +118,9 @@ export default new Vuex.Store({
 
 		// 群组添加删除成员
 		modifyGroup(state, val) {
+			if (!state.user.groupId) {
+				return;
+			}
 			if (val.type === 'add') {
 				state.group.member.push({ userId: val.userId });
 			} else if (val.type === 'remove') {
@@ -137,36 +144,32 @@ export default new Vuex.Store({
 			commit('setGroup', obj);
 		},
 
+		devices({ commit }, obj) {
+			commit('setDevice', obj);
+		},
+
 		rooms({ commit }, obj) {
 			commit('setRooms', obj);
 		},
 
-		homeData({ commit }, obj) {
-			commit('setHomeData', obj);
+		weather({ commit }, obj) {
+			commit('setWeather', obj);
 		},
 
 		socket({ commit }, obj) {
 			commit('setSocket', obj);
 		},
 
-		device({ commit }, obj) {
-			commit('setDevice', obj);
-		},
-
-		addDevice({ commit }, obj) {
-			commit('addDevice', obj);
-		},
-
-		deleteDevice({ commit }, obj) {
-			commit('deleteDevice', obj);
+		messageUnread({ commit }, obj) {
+			commit('setMessageUnread', obj);
 		},
 
 		updateOnline({ commit }, obj) {
 			commit('updateOnline', obj);
 		},
 
-		updateDevice({ commit }, obj) {
-			commit('updateDevice', obj);
+		updateDevices({ commit }, obj) {
+			commit('updateDevices', obj);
 		},
 
 		updateDeviceStatus({ commit }, obj) {

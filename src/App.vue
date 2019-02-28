@@ -9,7 +9,9 @@ export default {
 	data() {
 		return {};
 	},
+
 	methods: {},
+
 	created() {
 		setTimeout(() => {
 			const loading = document.querySelector('#loading');

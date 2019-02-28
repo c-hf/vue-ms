@@ -6,11 +6,11 @@
              slot="header">
             <span class="view-weather-currentTime">
                 <svg-icon iconClass="icon-time" />
-                {{currentTime}}
+                {{ currentTime }}
             </span>
             <span class="view-weather-region">
                 <svg-icon iconClass="icon-weizhi" />
-                {{city}}，{{district}}
+                {{ city }}，{{ district }}
             </span>
         </div>
         <div class="view-weather-left">
@@ -23,16 +23,18 @@
                     {{data.temperature}}
                     <i class="view-weather-temperature-unit">&#8451;</i>
                 </span>
-                <span class="view-weather-weather">{{data.weather}}</span>
+                <span class="view-weather-weather">
+                    {{ data.weather }}
+                </span>
                 <span class="view-weather-humidity">
                     <svg-icon iconClass="icon-shidu" />
-                    湿度 {{data.humidity}} %
+                    湿度 {{ data.humidity }} %
                 </span>
             </div>
             <span class="view-weather-info">
                 <i>
                     <svg-icon iconClass="icon-fengxiang" />
-                    风向 {{data.winddirection}}
+                    风向 {{ data.winddirection }}
                 </i>
                 <i>
                     <svg-icon iconClass="icon-fengli" />
@@ -49,7 +51,7 @@
 
 <script>
 import { getWeatherInfo } from '@/api/user';
-import { WEATHERICON } from './config.js';
+import { WEATHERICON } from '@/config';
 
 export default {
 	name: 'ViewWeather',
@@ -72,6 +74,7 @@ export default {
 			},
 		};
 	},
+
 	computed: {
 		city() {
 			if (this.$store.state.group.region) {
@@ -88,9 +91,11 @@ export default {
 			return '东城区';
 		},
 	},
+
 	methods: {
+		// 获取天气
 		getWeather(adcode) {
-			const weather = this.$store.state.homeData;
+			const weather = this.$store.state.weather;
 			if (!weather.adcode) {
 				this.getWeatherInfoFn(adcode);
 				return;
@@ -112,7 +117,7 @@ export default {
 					this.data.icon = this.weatherIcon[resData.lives[0].weather];
 					const curTime = new Date().getTime();
 					this.data.updateTime = curTime;
-					this.$store.dispatch('homeData', this.data);
+					this.$store.dispatch('weather', this.data);
 				})
 				.catch(error => {
 					this.$message({
@@ -128,11 +133,11 @@ export default {
 		},
 
 		// 时间
-		dealWithTime(data) {
+		dealWithTime(date) {
 			let [H, Min, W, time] = [
-				data.getHours(),
-				data.getMinutes(),
-				data.getDay(),
+				date.getHours(),
+				date.getMinutes(),
+				date.getDay(),
 				'',
 			];
 			const Week = {
@@ -155,14 +160,17 @@ export default {
 			return time;
 		},
 	},
+
 	mounted() {
-		// 页面加载完后显示当前时间;
+		// 页面加载完后显示当前时间
 		this.currentTime = this.dealWithTime(new Date());
-		// 定时器;
+
+		// 定时器
 		this.timer = setInterval(() => {
 			this.currentTime = this.dealWithTime(new Date()); // 修改数据date
 		}, 1000);
 	},
+
 	destroyed() {
 		if (this.timer) {
 			clearInterval(this.timer);
@@ -238,6 +246,7 @@ export default {
 			margin-left: 10%;
 		}
 	}
+
 	&-reporttime {
 		width: 100%;
 		color: #909399;

@@ -57,16 +57,18 @@ export default {
 		};
 	},
 	methods: {
+		// 提交
 		submit() {
 			this.$router.push({ name: 'home' });
 		},
 
+		// 创建
 		perfectInformationFn() {
 			this.loading = true;
 			this.text = '正在创建...';
 			perfectInformation({
-				personalData: this.personalData,
-				householdGroupData: this.householdGroupData,
+				userData: this.userData,
+				groupData: this.groupData,
 			})
 				.then(resData => {
 					this.isSuccess = true;
@@ -80,7 +82,6 @@ export default {
 					this.loading = false;
 				})
 				.catch(error => {
-					console.log(error);
 					this.isSuccess = false;
 					this.loading = false;
 					this.text = error.message;
@@ -149,17 +150,21 @@ export default {
 			}, 35);
 		},
 	},
+
 	props: {
-		personalData: {
+		userData: {
 			type: Object,
 		},
-		householdGroupData: {
+
+		groupData: {
 			type: Object,
 		},
 	},
+
 	created() {
 		this.perfectInformationFn();
 	},
+
 	mounted() {
 		this.canvasInit();
 	},

@@ -1,32 +1,32 @@
 <template>
     <div v-loading="loading"
-         class="app-group-info-content">
-        <div class="app-group-info-left">
-            <span class="app-group-info-icon">
+         class="app-dialog-group-content">
+        <div class="app-dialog-group-left">
+            <span class="app-dialog-group-icon">
             </span>
-            <span class="app-group-info-left-name">
+            <span class="app-dialog-group-left-name">
                 {{ data.group.groupName }}
             </span>
-            <span class="app-group-info-left-id">
+            <span class="app-dialog-group-left-id">
                 {{ data.group.groupId }}
             </span>
-            <el-button class="app-group-info-left-btn"
+            <el-button class="app-dialog-group-left-btn"
                        plain
                        size="medium"
                        @click="addMember">
                 添加新成员
             </el-button>
         </div>
-        <div class="app-group-info-right">
-            <span class="app-group-info-right-title">
+        <div class="app-dialog-group-right">
+            <span class="app-dialog-group-right-title">
                 家庭组
-                <el-button class="app-group-info-right-edit"
+                <el-button class="app-dialog-group-right-edit"
                            type="text"
                            @click="routerSet">
                     编辑资料
                 </el-button>
             </span>
-            <span class="app-group-info-right-item height">
+            <span class="app-dialog-group-right-item height">
                 <i class="title">介绍&nbsp;</i>
                 <i>
                     创建于 {{ new Date(data.group.createTime).toLocaleDateString('zh-CN', {
@@ -34,37 +34,48 @@
                     }) }}
                 </i>
             </span>
-            <span class="app-group-info-right-item height">
+            <span class="app-dialog-group-right-item height">
                 <i class="title">
                     群主/成员（{{ members.length }}）
                 </i>
             </span>
-            <span class="app-group-info-right-item user">
-                <i class="user-item-avatar">
-                    <img :src="owner.avatar"
-                         :alt="owner.nickName">
-                </i>
+            <span class="app-dialog-group-right-item user">
+                <el-tooltip class="item"
+                            effect="light"
+                            :content="owner.nickName"
+                            placement="top">
+                    <i class="user-item-avatar">
+                        <img :src="owner.avatar"
+                             :alt="owner.nickName">
+                    </i>
+                </el-tooltip>
                 <i class="border"></i>
                 <i class="user-item-avatar"
                    v-for="(item, index) in members"
                    :key="index">
-                    <img :src="item.avatar"
-                         :alt="item.nickName">
+                    <el-tooltip class="item"
+                                effect="light"
+                                :content="item.nickName"
+                                placement="top">
+                        <img :src="item.avatar"
+                             :alt="item.nickName">
+                    </el-tooltip>
                 </i>
             </span>
-            <span class="app-group-info-right-item height">
+            <span class="app-dialog-group-right-item height">
                 <i class="title">房间数&nbsp;</i>
-                <el-tag>
+                <el-tag type="success"
+                        size="mini">
                     {{data.roomNum }} 间
                 </el-tag>
             </span>
-            <span class="app-group-info-right-item height">
+            <span class="app-dialog-group-right-item height">
                 <i class="title">拥有设备&nbsp;</i>
                 <i>
                     {{data.deviceNum }}
                 </i>
             </span>
-            <span class="app-group-info-right-item height">
+            <span class="app-dialog-group-right-item height">
                 <i class="title">所在地&nbsp;</i>
                 <i>
                     {{ data.group.region[0].name }},
@@ -72,13 +83,20 @@
                     {{ data.group.region[2].name }}
                 </i>
             </span>
-            <span class="app-group-info-right-item btn">
+            <span class="app-dialog-group-right-item btn">
                 <i class="title">
                     其他&nbsp;
                 </i>
-                <el-button plain
+                <el-button v-if="data.group.ownerId === data.userId"
+                           plain
                            size="small">
                     解散家庭组
+                </el-button>
+                <el-button v-else
+                           plain
+                           size="small"
+                           @click="setExitGroup">
+                    退出家庭组
                 </el-button>
             </span>
 
@@ -87,10 +105,11 @@
 </template>
 
 <script>
-import { getGroupById } from '@/api/user';
+import storage from '@/assets/js/storage';
+import { getGroupById, exitGroup } from '@/api/group';
 
 export default {
-	name: 'AppGroupInfo',
+	name: 'AppDialogGroup',
 	data() {
 		return {
 			loading: false,
@@ -102,16 +121,18 @@ export default {
 
 	computed: {
 		data() {
-			let [group = {}, roomNum = 0, deviceNum = 0] = [
+			let [group = {}, roomNum = 0, deviceNum = 0, userId = ''] = [
 				this.$store.state.group,
 				this.$store.state.rooms.length,
 				this.$store.state.device.length,
+				this.$store.state.user.userId,
 			];
 
 			return {
 				group: group,
 				roomNum: roomNum,
 				deviceNum: deviceNum,
+				userId: userId,
 			};
 		},
 	},
@@ -123,6 +144,19 @@ export default {
 			setTimeout(() => {
 				this.$router.push({ name: 'set' });
 			}, 300);
+		},
+
+		// 退出群组
+		setExitGroup() {
+			this.$confirm('确定要退出家庭组吗？', '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning',
+			})
+				.then(() => {
+					this.exitGroupFn();
+				})
+				.catch(() => {});
 		},
 
 		// 添加群成员
@@ -159,6 +193,47 @@ export default {
 					this.loading = false;
 				});
 		},
+
+		// 退出家庭组封装
+		exitGroupFn() {
+			this.loading = true;
+			exitGroup({
+				groupId: this.data.group.groupId,
+				userId: this.data.userId,
+			})
+				.then(resData => {
+					storage.set('token', resData.token);
+					this.$store.dispatch('token', resData.token);
+					this.$store.dispatch('user', resData.userInfo);
+					this.$store.dispatch('group', {});
+					this.$store.dispatch('homeData', {});
+					this.$store.dispatch('rooms', []);
+					this.$store.dispatch('device', []);
+					const socket = this.$store.state.socket;
+					socket.disconnect();
+					socket.io.opts.query = {
+						token: resData.token,
+					};
+					socket.open();
+					this.$store.dispatch('socket', socket);
+					this.$notify({
+						title: '家庭组',
+						message: '已退出家庭组，数据更新',
+					});
+				})
+				.catch(error => {
+					this.$message({
+						showClose: true,
+						center: true,
+						message: error.message,
+						type: 'error',
+					});
+				})
+				.then(() => {
+					this.loading = false;
+					this.$emit('setVisible', false);
+				});
+		},
 	},
 
 	created() {
@@ -170,7 +245,7 @@ export default {
 <style lang="scss">
 @import '~@/assets/scss/mixins';
 
-.app-group-info {
+.app-dialog-group {
 	.el-dialog__header,
 	.el-dialog__body {
 		padding: 0;
@@ -279,6 +354,7 @@ export default {
 			&-item-avatar {
 				width: 30px;
 				height: 30px;
+				margin: 0 2px;
 				border-radius: 50%;
 				display: block;
 

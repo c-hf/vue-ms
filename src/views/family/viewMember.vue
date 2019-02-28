@@ -20,6 +20,9 @@
                         暂无介绍 ┐(´∇｀)┌
                     </i>
                 </span>
+                <span class="hidden">
+                    {{ memberNum }}
+                </span>
             </div>
             <el-input class="user-search"
                       size="mini"
@@ -39,12 +42,25 @@
                 <i class="el-icon-star-on">
                 </i>
             </span>
-            <view-search :userList="searchList"
-                         v-if="isSearch"
-                         @displayMemberInfo="displayMemberInfo" />
-            <div class="user-item"
-                 v-else
-                 v-for="(item, index) in memberList"
+            <view-search v-if="isSearch"
+                         :userList="searchList"
+                         @displayMemberInfo="displaySearchMemberInfo" />
+            <div class="view-member-list-error"
+                 v-else-if="!members.length">
+                还未加入家庭组，你可以
+                <el-button type="text"
+                           @click="routerCreate">
+                    创建新家庭组
+                </el-button>
+                或者
+                <el-button type="text"
+                           @click="addMember('group')">
+                    加入家庭组
+                </el-button>
+            </div>
+            <div v-else
+                 class="user-item"
+                 v-for="(item, index) in members"
                  :key="index"
                  @click="displayMemberInfo(index)">
                 <span class="user-item-avatar">
@@ -73,26 +89,31 @@
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item command="info"
-                                      :disabled="!user.groupId">
+                                      :disabled="disabled">
                         查看群资料
                     </el-dropdown-item>
-                    <el-dropdown-item command="create">
+                    <el-dropdown-item command="create"
+                                      :disabled="!disabled">
                         创建群组
                     </el-dropdown-item>
-                    <el-dropdown-item command="add"
-                                      :disabled="!user.groupId">
-                        添加成员
+                    <el-dropdown-item command="add">
+                        添加成员/群
                     </el-dropdown-item>
-                    <el-dropdown-item command="unGroup"
-                                      :disabled="!user.groupId">
+                    <el-dropdown-item v-if="ownerId === user.userId"
+                                      command="unGroup"
+                                      :disabled="disabled">
                         解散群
+                    </el-dropdown-item>
+                    <el-dropdown-item v-else
+                                      command="exit"
+                                      :disabled="disabled">
+                        退出群组
                     </el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
             <el-button class="view-member-tool-btn"
                        type="text"
-                       @click="addMember"
-                       :disabled="!user.groupId">
+                       @click="addMember">
                 <svg-icon iconClass="icon-addpeople_fill" />
             </el-button>
         </div>
@@ -100,7 +121,8 @@
 </template>
 
 <script>
-import { getUserById, getGroupById } from '@/api/user';
+import { getUserById } from '@/api/user';
+import { getGroupById, exitGroup, unGroup } from '@/api/group';
 
 import ViewSearch from './viewSearch';
 
@@ -112,6 +134,7 @@ export default {
 			isSearch: false,
 			title: '群成员',
 			searchValue: '',
+			ownerId: '',
 			members: [],
 			searchList: [],
 			infoTimer: null,
@@ -124,16 +147,18 @@ export default {
 			return this.$store.state.user;
 		},
 
-		memberList() {
-			if (!this.members.length || !this.$store.state.group.member) {
-				return [];
+		memberNum() {
+			if (!this.$store.state.group.member) {
+				return 0;
 			}
+			return this.$store.state.group.member.length;
+		},
 
-			if (this.members.length === this.$store.state.group.member.length) {
-				return this.members;
+		disabled() {
+			if (this.user.groupId) {
+				return false;
 			} else {
-				this.getGrpupByIdFn();
-				return this.members;
+				return true;
 			}
 		},
 	},
@@ -144,13 +169,62 @@ export default {
 			const methods = {
 				add: this.addMember,
 				info: this.displayGroupInfo,
+				exit: this.setExitGroup,
+				unGroup: this.setUnGroup,
+				create: this.routerCreate,
 			};
 			methods[command]();
 		},
 
+		// 路由至创建群组页
+		routerCreate() {
+			if (this.$store.state.user.groupId) {
+				this.$message({
+					showClose: true,
+					center: true,
+					message: '已加入家庭组,无法创建新家庭组',
+					type: 'error',
+				});
+				return;
+			}
+			this.$router.push({ name: 'createGroup' });
+		},
+
+		// 退出群组
+		setExitGroup() {
+			this.$confirm('确定要退出家庭组吗？', '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning',
+			})
+				.then(() => {
+					this.exitGroupFn();
+				})
+				.catch(() => {});
+		},
+
+		// 解散群组
+		setUnGroup() {
+			this.$confirm('确定要解散家庭组吗？', '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning',
+			})
+				.then(() => {
+					this.unGroupFn();
+				})
+				.catch(() => {});
+		},
+
 		// 查看详细资料
 		displayMemberInfo(index) {
-			const data = this.memberList[index];
+			const data = this.members[index];
+			this.$emit('displayMemberInfo', data);
+		},
+
+		// 查看搜索项详细资料
+		displaySearchMemberInfo(index) {
+			const data = this.searchList[index];
 			this.$emit('displayMemberInfo', data);
 		},
 
@@ -160,8 +234,8 @@ export default {
 		},
 
 		// 添加群成员
-		addMember() {
-			this.$emit('addMember');
+		addMember(value) {
+			this.$emit('addMember', value);
 		},
 
 		// 获取用户信息封装
@@ -172,7 +246,7 @@ export default {
 					this.$emit('viewMemberInfo', resData.data);
 				})
 				.catch(error => {
-					this.$elementUI.Message({
+					this.$message({
 						showClose: true,
 						center: true,
 						message: error.message,
@@ -213,17 +287,69 @@ export default {
 		},
 
 		// 获取群组信息
-		getGrpupByIdFn() {
-			if (!this.user.groupId) {
+		getGrpupByIdFn(groupId) {
+			if (!groupId) {
 				return;
 			}
 			this.loading = true;
 
-			getGroupById(this.user.groupId)
+			getGroupById(groupId)
 				.then(resData => {
 					if (!resData.ok) {
 						this.members = resData.members;
+						this.ownerId = resData.ownerId;
 					}
+				})
+				.catch(error => {
+					this.$message({
+						showClose: true,
+						center: true,
+						message: error.message,
+						type: 'error',
+					});
+				})
+				.then(() => {
+					this.loading = false;
+				});
+		},
+
+		// 退出家庭组封装
+		exitGroupFn() {
+			this.loading = true;
+			exitGroup({
+				groupId: this.user.groupId,
+				userId: this.user.userId,
+			})
+				.then(resData => {
+					if (resData.ok) {
+						this.ownerId = null;
+						this.members = [];
+						this.searchList = [];
+						this.$notify({
+							title: '家庭组',
+							message: '已退出家庭组，数据更新',
+						});
+					}
+				})
+				.catch(error => {
+					this.$message({
+						showClose: true,
+						center: true,
+						message: error.message,
+						type: 'error',
+					});
+				})
+				.then(() => {
+					this.loading = false;
+				});
+		},
+
+		// 解散群组封装
+		unGroupFn() {
+			this.loading = true;
+			unGroup({ groupId: this.user.groupId })
+				.then(resData => {
+					console.log(resData);
 				})
 				.catch(error => {
 					this.$message({
@@ -243,8 +369,20 @@ export default {
 		ViewSearch,
 	},
 
+	watch: {
+		memberNum(newVal) {
+			if (newVal === 0) {
+				this.ownerId = null;
+				this.members = [];
+				this.searchList = [];
+			} else {
+				this.getGrpupByIdFn(this.user.groupId);
+			}
+		},
+	},
+
 	created() {
-		this.getGrpupByIdFn();
+		this.getGrpupByIdFn(this.user.groupId);
 	},
 };
 </script>
@@ -288,6 +426,10 @@ export default {
 		padding: 0;
 		position: relative;
 		z-index: 10;
+	}
+
+	.hidden {
+		display: none;
 	}
 
 	.user {
@@ -335,6 +477,7 @@ export default {
 
 		&-search {
 			input {
+				height: 30px;
 				background-color: rgba($color: #bbb, $alpha: 0.4);
 				color: #303133;
 				border: none;
@@ -353,7 +496,8 @@ export default {
 
 	&-list {
 		margin-top: 10px;
-		height: 480px;
+		min-height: 480px;
+		height: calc(100vh - 330px);
 
 		&-title {
 			display: block;
@@ -369,6 +513,14 @@ export default {
 
 		&-create-group {
 			@include flex-center(column);
+		}
+
+		&-error {
+			height: 100%;
+			margin-top: 5vh;
+			padding: 10px;
+			color: #606266;
+			text-align: center;
 		}
 
 		.user-item {
@@ -440,6 +592,14 @@ export default {
 			font-size: 20px;
 			padding: 5px;
 			// color: #909399;
+
+			// &:hover {
+			// 	color: #606266;
+			// }
+
+			// &:active {
+
+			// }
 		}
 	}
 }

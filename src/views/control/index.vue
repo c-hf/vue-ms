@@ -1,48 +1,50 @@
 <template>
     <div class="control"
          v-loading="loading">
-        <!-- <el-card class="control-card"
-                 shadow="never"> -->
         <el-row :gutter="24">
             <el-col :span="24">
                 <view-control-info />
             </el-col>
             <el-col :span="24">
-                <view-control-list @onEdit="onEdit"
-                                   @onDelete="onDelete" />
+                <view-control-table @onEdit="onEdit"
+                                    @onDelete="onDelete" />
             </el-col>
         </el-row>
-        <!-- </el-card> -->
-        <transition name="fade">
-            <router-view />
-        </transition>
+        <app-drawer :show.sync="show">
+            <app-drawer-device v-if="show"
+                               :deviceId="deviceId"
+                               @setShow="setShow" />
+        </app-drawer>
     </div>
 </template>
 
 <script>
-import { deleteDevice } from '@/api/device';
-import ViewControlList from './viewControlList';
+import AppDrawer from '@/components/appDrawer';
+import AppDrawerDevice from '@/components/appDrawerDevice';
+import ViewControlTable from './viewControlTable';
 import ViewControlInfo from './viewControlInfo';
+import { deleteDevice } from '@/api/device';
 
 export default {
 	name: 'DeviceControl', // 设备接入
 	data() {
 		return {
-			searchInput: '',
 			loading: false,
+			deviceId: '',
+			show: false,
 		};
 	},
 
-	computed: {
-		deviceNum() {
-			return this.$store.state.device.length;
-		},
-	},
-
 	methods: {
+		// 设置 show
+		setShow(value) {
+			this.show = value;
+		},
+
 		// 编辑
 		onEdit(deviceId) {
-			console.log(deviceId);
+			this.show = true;
+			this.deviceId = deviceId;
 		},
 
 		// 删除
@@ -74,7 +76,9 @@ export default {
 	},
 
 	components: {
-		ViewControlList,
+		AppDrawer,
+		AppDrawerDevice,
+		ViewControlTable,
 		ViewControlInfo,
 	},
 };
@@ -83,33 +87,6 @@ export default {
 <style lang="scss" scoped>
 @import '~@/assets/scss/mixins';
 
-.control {
-	position: relative;
-
-	// 	&-card {
-	// 		width: 100%;
-	// 		min-height: 600px;
-	// 		background-color: inherit;
-
-	// 		&-menu {
-	// 			@include flex-between();
-	// 			margin-bottom: 20px;
-	// 		}
-	// 	}
-
-	// 	&-list {
-	// 		.clearfix {
-	// 			display: flex;
-	// 			justify-content: space-between;
-	// 			.header-item {
-	// 				width: 100%;
-	// 			}
-	// 		}
-	// 	}
-	// 	.el-input {
-	// 		width: 20%;
-	// 	}
-}
 .fade-enter-active,
 .fade-leave-active {
 	transition: opacity 0.5s;

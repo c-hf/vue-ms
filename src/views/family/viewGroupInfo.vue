@@ -10,7 +10,9 @@
                     <i v-if="groupId">
                         {{ groupId }}
                     </i>
-                    <i v-else>无</i>
+                    <i v-else>
+                        无
+                    </i>
                 </li>
                 <li>
                     <i>家庭成员</i>

@@ -13,6 +13,11 @@
                      draggable
                      @node-drop="handleDrop">
             </el-tree>
+            <el-button class="view-rooms-info-tree-btn"
+                       icon="el-icon-plus"
+                       circle
+                       size="small">
+            </el-button>
         </div>
     </el-card>
 </template>
@@ -277,12 +282,21 @@ export default {
 .view-rooms-info {
 	&-echart {
 		width: 80%;
-		height: 408px;
+		height: calc(100vh - 400px);
+		min-height: 408px;
 	}
 
 	&-tree {
 		width: 20%;
-		height: 408px;
+		height: calc(100vh - 400px);
+		min-height: 408px;
+		position: relative;
+
+		&-btn {
+			position: absolute;
+			bottom: 10px;
+			right: 5px;
+		}
 	}
 }
 </style>

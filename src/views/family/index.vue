@@ -5,6 +5,7 @@
             <el-col :span="18"
                     :md="16"
                     :lg="18"
+                    :sm="16"
                     class="family-left">
                 <el-col :span="24">
                     <view-group-info @displayGroupInfo="displayGroupInfo" />
@@ -16,6 +17,7 @@
             <el-col :span="6"
                     :md="8"
                     :lg="6"
+                    :sm="8"
                     class="family-right">
                 <view-member @addMember="addMember"
                              @displayMemberInfo="displayMemberInfo"
@@ -23,33 +25,38 @@
             </el-col>
         </el-row>
         <app-drawer :show.sync="show">
-            <view-drawer-member v-if="show"
-                                @setShow="setShow" />
+            <view-drawer-user v-if="drawerType === 'user'"
+                              @setDrawerType="setDrawerType"
+                              @setShow="setShow" />
+            <view-drawer-group v-else
+                               @setDrawerType="setDrawerType"
+                               @setShow="setShow" />
         </app-drawer>
-        <el-dialog class="app-user-info"
+        <el-dialog class="app-dialog-user"
                    :visible.sync="userVisible"
                    width="360px">
-            <app-user-info :user="member"
-                           type="member"
-                           @setVisible="setUserVisible" />
+            <app-dialog-user :user="member"
+                             type="member"
+                             @setVisible="setUserVisible" />
         </el-dialog>
-        <el-dialog class="app-group-info"
+        <el-dialog class="app-dialog-group"
                    :visible.sync="groupVisible"
                    width="600px">
-            <app-group-info @setVisible="setGroupVisible"
-                            @addMember="addMember" />
+            <app-dialog-group @setVisible="setGroupVisible"
+                              @addMember="addMember" />
         </el-dialog>
     </div>
 </template>
 
 <script>
 import AppDrawer from '@/components/appDrawer';
-import AppUserInfo from '@/components/appUserInfo';
-import AppGroupInfo from '@/components/appGroupInfo';
+import AppDialogUser from '@/components/appDialogUser';
+import AppDialogGroup from '@/components/appDialogGroup';
 import ViewMember from './viewMember';
 import ViewGroupInfo from './viewGroupInfo';
 import ViewRoomsInfo from './viewRoomsInfo';
-import ViewDrawerMember from './viewDrawerMember';
+import ViewDrawerUser from './viewDrawerUser';
+import ViewDrawerGroup from './viewDrawerGroup';
 
 export default {
 	name: 'Family',
@@ -59,10 +66,15 @@ export default {
 			member: {},
 			userVisible: false,
 			groupVisible: false,
+			drawerType: 'user',
 		};
 	},
 
 	methods: {
+		setDrawerType(value) {
+			this.drawerType = value;
+		},
+
 		// 查看群信息
 		displayGroupInfo() {
 			this.groupVisible = true;
@@ -81,8 +93,11 @@ export default {
 		},
 
 		// 添加成员
-		addMember() {
+		addMember(value) {
 			this.show = true;
+			if (value) {
+				this.drawerType = value;
+			}
 		},
 
 		// 显示抽屉组件
@@ -100,12 +115,13 @@ export default {
 	},
 	components: {
 		AppDrawer,
-		AppUserInfo,
-		AppGroupInfo,
+		AppDialogUser,
+		AppDialogGroup,
 		ViewMember,
 		ViewGroupInfo,
 		ViewRoomsInfo,
-		ViewDrawerMember,
+		ViewDrawerUser,
+		ViewDrawerGroup,
 	},
 };
 </script>

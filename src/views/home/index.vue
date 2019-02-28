@@ -1,6 +1,5 @@
 <template>
     <div>
-        <!-- <el-card shadow="never"> -->
         <el-row class="home"
                 :gutter="24">
             <el-col :span="8">
@@ -74,15 +73,17 @@
             </el-col>
             <el-col :span="10"
                     :lg="12">
+                <view-todo-list />
             </el-col>
         </el-row>
-        <!-- </el-card> -->
     </div>
 </template>
 
 <script>
 import ViewWeather from './viewWeather';
 import ViewMap from './viewMap';
+import ViewTodoList from './viewTodoList';
+
 export default {
 	name: 'Home',
 	data() {
@@ -117,6 +118,7 @@ export default {
 	components: {
 		ViewWeather,
 		ViewMap,
+		ViewTodoList,
 	},
 };
 </script>

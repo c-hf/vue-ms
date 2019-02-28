@@ -1,44 +1,44 @@
 <template>
-    <div class="view-personal">
+    <div class="view-user">
         <transition name="fade">
-            <el-upload class="view-personal-avatar"
+            <el-upload class="view-user-avatar"
                        :action="uploadImgUrl"
                        :show-file-list="false"
                        :on-success="setAvatarSuccess"
                        :before-upload="beforeAvatarUpload"
-                       :class="{ 'view-personal-avatar-active': data.avatar.length,'view-personal-avatar-error': isAvatarError }">
+                       :class="{ 'view-user-avatar-active': data.avatar.length,'view-user-avatar-error': isAvatarError }">
                 <img :src="data.avatar"
                      v-if="data.avatar.length"
                      alt="avatar">
                 <i v-else
-                   class="view-personal-avatar-text">
+                   class="view-user-avatar-text">
                     上传头像
                 </i>
                 <i v-if="!data.avatar.length"
-                   class="view-personal-avatar-icon el-icon-plus">
+                   class="view-user-avatar-icon el-icon-plus">
                 </i>
             </el-upload>
         </transition>
-        <div class="view-personal-sex">
-            <span class="view-personal-sex-text">
+        <div class="view-user-sex">
+            <span class="view-user-sex-text">
                 选择性别
             </span>
-            <span class="view-personal-sex-icon">
-                <i class="view-personal-sex-icon-content"
-                   :class="{'view-personal-sex-icon-active': male}"
+            <span class="view-user-sex-icon">
+                <i class="view-user-sex-icon-content"
+                   :class="{'view-user-sex-icon-active': male}"
                    @click="changeSex(true)">
                     <svg-icon iconClass="icon-nan" />
                 </i>
                 <i>or</i>
-                <i class="view-personal-sex-icon-content"
-                   :class="{'view-personal-sex-icon-active': !male}"
+                <i class="view-user-sex-icon-content"
+                   :class="{'view-user-sex-icon-active': !male}"
                    @click="changeSex(false)">
                     <svg-icon iconClass="icon-nv" />
                 </i>
             </span>
         </div>
-        <div class="view-personal-birthday">
-            <span class="view-personal-birthday-text">
+        <div class="view-user-birthday">
+            <span class="view-user-birthday-text">
                 选择生日
             </span>
             <el-form :model="data"
@@ -56,7 +56,7 @@
                 </el-form-item>
             </el-form>
         </div>
-        <div class="view-personal-btn">
+        <div class="view-user-btn">
             <el-button type="success"
                        @click="next('birthdayForm')">
                 下一步
@@ -67,15 +67,15 @@
 </template>
 
 <script>
-import { uploadImgUrl } from '@/config';
+import { UPLOADIMGURL } from '@/config';
 
 export default {
 	name: 'ViewPersonal',
 	data() {
 		return {
-			uploadImgUrl: uploadImgUrl,
+			uploadImgUrl: UPLOADIMGURL,
 			imgUrl: '',
-			data: this.personalData,
+			data: this.userData,
 			male: true,
 			isAvatarError: false,
 			rules: {
@@ -92,7 +92,7 @@ export default {
 		// 性别选择
 		changeSex(value) {
 			this.male = value;
-			this.male ? (this.dete.sex = '男') : (this.dete.sex = '女');
+			this.male ? (this.data.sex = '男') : (this.data.sex = '女');
 		},
 
 		// 头像上传回调
@@ -114,7 +114,7 @@ export default {
 		// 下一步
 		next(formName) {
 			this.$refs[formName].validate(valid => {
-				if (!this.dete.avatar.length) {
+				if (!this.data.avatar.length) {
 					this.isAvatarError = true;
 					if (this.isAvatarError) {
 						this.isAvatarError = false;
@@ -123,27 +123,27 @@ export default {
 						}, 100);
 					}
 				} else if (valid) {
-					this.$emit('next', this.dete);
+					this.$emit('next', this.data);
 				}
 			});
 		},
 
 		// 选项初始化
 		sexInit() {
-			if (!this.personalData.sex.length) {
+			if (!this.userData.sex.length) {
 				this.changeSex(true);
 			} else {
 				const sex = {
 					男: true,
 					女: false,
 				};
-				this.changeSex(sex[this.personalData.sex]);
+				this.changeSex(sex[this.userData.sex]);
 			}
 		},
 	},
 
 	props: {
-		personalData: {
+		userData: {
 			type: Object,
 		},
 	},
@@ -157,7 +157,7 @@ export default {
 <style lang="scss">
 @import '~@/assets/scss/mixins';
 
-.view-personal {
+.view-user {
 	height: 100%;
 	position: relative;
 
@@ -273,7 +273,7 @@ export default {
 				}
 			}
 
-			.information-personal-sex-icon-active {
+			.view-user-sex-icon-active {
 				background-color: #409eff;
 				color: #fff;
 				box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.3);

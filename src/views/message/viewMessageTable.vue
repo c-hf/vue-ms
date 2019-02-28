@@ -1,7 +1,6 @@
 <template>
-    <div class="view-message-list">
-        <el-table class="view-message-list-table"
-                  :data="messages"
+    <div class="view-message-table">
+        <el-table :data="messages"
                   empty-text="暂无消息"
                   highlight-current-row
                   ref="multipleTable"
@@ -15,7 +14,9 @@
             <el-table-column type="expand">
                 <template slot-scope="props">
                     <view-group-message v-if="props.row.message.category === 'GROUP'"
-                                        :messageData="props.row.message" />
+                                        :messageData="props.row.message"
+                                        @refreshMessage="refreshMessage"
+                                        @setLoading="setLoading" />
                 </template>
             </el-table-column>
             <el-table-column label=""
@@ -56,17 +57,22 @@
 import ViewGroupMessage from './viewGroupMessage';
 
 export default {
-	name: 'ViewMessageList',
+	name: 'ViewMessageTable',
 	data() {
 		return {
 			categoryName: {
 				GROUP: '家庭组',
 				DEVICE: '设备消息',
 			},
+			expandRowKeys: [],
 		};
 	},
 
 	methods: {
+		// rowKey(row) {
+		// 	return row.messageId;
+		// },
+
 		// 单元格样式设置
 		cellStyle({ row, columnIndex }) {
 			if (columnIndex === 4 || columnIndex === 5) {
@@ -101,6 +107,14 @@ export default {
 				this.$emit('updateMessageStatus', [row.messageId]);
 			}
 		},
+
+		refreshMessage() {
+			this.$emit('refreshMessage');
+		},
+
+		setLoading(value) {
+			this.$emit('setLoading', value);
+		},
 	},
 
 	components: {
@@ -121,10 +135,7 @@ export default {
 <style lang="scss" scoped>
 @import '~@/assets/scss/mixins';
 
-.view-message-list {
-	&-table {
-		min-height: 400px;
-		min-height: calc(100vh - 400px);
-	}
+.view-message-table {
+	min-height: 360px;
 }
 </style>

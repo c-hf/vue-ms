@@ -1,11 +1,13 @@
 <template>
-    <el-container class="app-container">
+    <el-container class="app-container"
+                  v-loading="loading">
         <el-header class="app-header">
-            <app-header :user="user"
+            <app-header ref="appHeader"
+                        :user="user"
                         :width="width"
                         :disabled="setDisabled"
                         @setCollapse="setCollapse"
-                        @routerMessage="setShow"
+                        @routerMessage="setMessageShow"
                         @signOut="signOut" />
         </el-header>
         <el-container class="app-content">
@@ -15,35 +17,42 @@
                            :user="user"
                            @signOut="signOut" />
             </el-aside>
-            <el-main class="app-main">
-                <div class="app-main-title">
-                    <span class="app-main-title-text">
-                        {{ breadcrumb.name }}
-                    </span>
-                    <el-breadcrumb separator-class="el-icon-arrow-right"
-                                   class="app-main-title-breadcrumb">
-                        <el-breadcrumb-item :to="{ path: '/home' }">
-                            智家
-                        </el-breadcrumb-item>
-                        <el-breadcrumb-item :to="{ path: item.path }"
-                                            v-for="(item, index) in breadcrumb.data"
-                                            :key="index">
-                            {{ item.name }}
-                        </el-breadcrumb-item>
-                        <el-breadcrumb-item>
+            <el-scrollbar style="height:100%; width:100%;">
+                <el-main class="app-main">
+                    <div class="app-main-title">
+                        <span class="app-main-title-text">
                             {{ breadcrumb.name }}
-                        </el-breadcrumb-item>
-                    </el-breadcrumb>
-                </div>
-                <transition name="router">
-                    <router-view class="app-main-content" />
-                </transition>
-            </el-main>
+                        </span>
+                        <el-breadcrumb separator-class="el-icon-arrow-right"
+                                       class="app-main-title-breadcrumb">
+                            <el-breadcrumb-item :to="{ path: '/home' }">
+                                智家
+                            </el-breadcrumb-item>
+                            <el-breadcrumb-item :to="{ path: item.path }"
+                                                v-for="(item, index) in breadcrumb.data"
+                                                :key="index">
+                                {{ item.name }}
+                            </el-breadcrumb-item>
+                            <el-breadcrumb-item>
+                                {{ breadcrumb.name }}
+                            </el-breadcrumb-item>
+                        </el-breadcrumb>
+                    </div>
+                    <transition name="router"
+                                mode="out-in">
+                        <router-view class="app-main-content" />
+                    </transition>
+                    <!-- <router-view name="children" /> -->
+                </el-main>
+                <el-footer class="app-footer">
+                    Smart Home Admin &copy; 2019 chf
+                </el-footer>
+            </el-scrollbar>
         </el-container>
-        <app-drawer :show.sync="show"
+        <app-drawer :show.sync="messageShow"
                     :width="350">
-            <AppDrawerMessage @setShow="setShow"
-                              v-if="show" />
+            <AppDrawerMessage @setShow="setMessageShow"
+                              v-if="messageShow" />
         </app-drawer>
     </el-container>
 </template>
@@ -55,28 +64,25 @@ import AppDrawerMessage from '@/components/appDrawerMessage';
 
 import io from 'socket.io-client';
 import storage from '@/assets/js/storage';
-import { signOut } from '@/api/user';
-import { baseURL } from '@/config';
+import { signOut, getUserToken } from '@/api/user';
+import { BASEURL } from '@/config';
 
 export default {
 	name: 'Index',
 	data() {
 		return {
-			show: false,
+			loading: false,
+			messageShow: false,
 			isCollapse: false,
 			setDisabled: false,
 			width: 220,
 			timer: null,
-			socket: io(baseURL, {
-				query: {
-					token: this.$store.state.token,
-				},
-			}),
+			socket: {},
+			baseURL: BASEURL,
 		};
 	},
 
 	computed: {
-		// 获取 User
 		user() {
 			return this.$store.state.user;
 		},
@@ -86,7 +92,6 @@ export default {
 			const menuRouterList = {
 				home: { path: '/home', name: '首页' },
 				family: { path: '/family', name: `${this.user.nickName} 的家` },
-				// device: { path: '/device/overview', name: '控制台' },
 				overview: { path: '/device/overview', name: '概览' },
 				control: { path: '/control', name: '设备管理' },
 				details: { path: '/overview', name: '概览' },
@@ -119,10 +124,12 @@ export default {
 		// 侧边栏折叠
 		setCollapse() {
 			if (this.isCollapse) {
+				this.$refs.appHeader.setCollapseIcon('icon-menu-unfold');
 				this.isCollapse = false;
 				this.width = 220;
 				return;
 			}
+			this.$refs.appHeader.setCollapseIcon('icon-menu-fold');
 			this.isCollapse = true;
 			this.width = 64;
 		},
@@ -133,12 +140,13 @@ export default {
 		},
 
 		// 打开消息列表
-		setShow(value) {
-			this.show = value;
+		setMessageShow(value) {
+			this.messageShow = value;
 		},
 
-		// signOut 封装
+		// 登出封装
 		signOutFn() {
+			this.loading = true;
 			signOut()
 				.then(resData => {
 					if (resData === 'ok') {
@@ -148,11 +156,11 @@ export default {
 						this.socket.disconnect();
 						storage.remove('token');
 						this.$store.dispatch('token', '');
-						this.$store.dispatch('user', {});
 						this.$store.dispatch('group', {});
-						this.$store.dispatch('homeData', {});
+						this.$store.dispatch('weather', {});
 						this.$store.dispatch('rooms', []);
 						this.$store.dispatch('device', []);
+						this.$store.dispatch('socket', {});
 					}
 				})
 				.catch(error => {
@@ -162,7 +170,22 @@ export default {
 						message: error.message,
 						type: 'error',
 					});
+				})
+				.then(() => {
+					this.loading = false;
 				});
+		},
+
+		// 重新获取 token
+		getUserTokenFn() {
+			return getUserToken().catch(error => {
+				this.$message({
+					showClose: true,
+					center: true,
+					message: error.message,
+					type: 'error',
+				});
+			});
 		},
 
 		// 宽度设置
@@ -171,15 +194,39 @@ export default {
 				this.setDisabled = true;
 				this.isCollapse = true;
 				this.width = 64;
+				this.$refs.appHeader.setCollapseIcon('icon-menu-fold');
 			} else {
 				this.setDisabled = false;
 				this.isCollapse = false;
 				this.width = 220;
+				this.$refs.appHeader.setCollapseIcon('icon-menu-unfold');
 			}
+		},
+
+		checkFull() {
+			let isFull =
+				window.fullScreen ||
+				document.webkitIsFullScreen ||
+				document.mozIsFullScreen ||
+				document.msFullscreenEnabled;
+			// console.log(this.$refs.appHeader.isFullscreen);
+
+			// console.log(window.fullScreen);
+			// console.log(document.webkitIsFullScreen);
+			// console.log(document.isFullScreen);
+			// console.log(document.msFullscreenEnabled);
+
+			if (isFull === undefined) {
+				isFull = false;
+			}
+			return isFull;
 		},
 
 		// resize 监听回调
 		onResize() {
+			if (!this.checkFull()) {
+				this.$refs.appHeader.setFullScreenIcon(false);
+			}
 			if (this.timer) {
 				clearInterval(this.timer);
 			}
@@ -198,64 +245,117 @@ export default {
 	},
 
 	created() {
+		const socket = io(this.baseURL, {
+			query: {
+				token: this.$store.state.token,
+			},
+		});
+		this.socket = socket;
 		// 连接
-		this.socket.on('connect', () => {
+		socket.on('connect', () => {
 			console.log('connect');
-			this.$store.dispatch('socket', this.socket);
 		});
 
 		// 断开连接
-		this.socket.on('disconnect', () => {
+		socket.on('disconnect', () => {
 			console.log('disconnect');
 		});
 
 		// 重连
-		this.socket.on('reconnect', attemptNumber => {
+		socket.on('reconnect', attemptNumber => {
 			console.log(attemptNumber);
 		});
 
 		// 连接错误
-		this.socket.on('connect_error', error => {
+		socket.on('connect_error', error => {
 			console.log(error);
 		});
 
 		// 监听主题
-		this.socket.on('deviceList', data => {
-			this.$store.dispatch('device', data);
+		socket.on('devices', data => {
+			this.$store.dispatch('devices', data);
 		});
-		this.socket.on('group', data => {
+		socket.on('group', data => {
 			this.$store.dispatch('group', data);
 		});
-		this.socket.on('rooms', data => {
+		socket.on('rooms', data => {
 			this.$store.dispatch('rooms', data);
 		});
-		this.socket.on('updateOnline', data => {
+		socket.on('updateOnline', data => {
 			this.$store.dispatch('updateOnline', data);
 		});
-		this.socket.on('addDevice', data => {
-			this.$store.dispatch('addDevice', data);
+		socket.on('updateDevices', data => {
+			this.$store.dispatch('updateDevices', data);
 		});
-		this.socket.on('deleteDevice', data => {
-			this.$store.dispatch('deleteDevice', data.deviceId);
-		});
-		this.socket.on('updateDevice', data => {
-			console.log(data);
-		});
-		this.socket.on('updateDeviceStatus', data => {
+		socket.on('updateDeviceStatus', data => {
 			this.$store.dispatch('updateDeviceStatus', data);
 		});
-		this.socket.on('GroupMessage', data => {
+		socket.on('GroupMessage', data => {
+			console.log(data);
 			this.$store.dispatch('modifyGroup', data);
 		});
-		this.socket.on('message', data => {
-			// this.$store.dispatch('modifyGroup', data);
+
+		socket.on('joinGroup', data => {
 			console.log(data);
+			storage.set('token', data.token);
+			this.$store.dispatch('token', data.token);
+			this.$store.dispatch('user', data.userInfo);
+			socket.disconnect();
+			socket.io.opts.query = {
+				token: data.token,
+			};
+
+			socket.connect();
+			this.$store.dispatch('socket', socket);
+			this.$notify({
+				title: '家庭组',
+				message: '已加入新的家庭组，请刷新更新数据',
+			});
 		});
+
+		socket.on('exitGroup', data => {
+			console.log(data);
+			const user = this.$store.state.user;
+			user.groupId = '';
+			storage.set('token', data.token);
+			this.$store.dispatch('token', data.token);
+			this.$store.dispatch('user', user);
+			socket.disconnect();
+			socket.io.opts.query = {
+				token: data.token,
+			};
+			socket.connect();
+			this.$store.dispatch('socket', socket);
+			this.$store.dispatch('group', {});
+			this.$store.dispatch('weather', {});
+			this.$store.dispatch('rooms', []);
+			this.$store.dispatch('device', []);
+		});
+
+		socket.on('message', data => {
+			this.$store.dispatch('messageUnread', data.total);
+			if (data.message) {
+				this.$notify({
+					title: '消息中心',
+					message: data.message.title,
+					duration: 0,
+				});
+			}
+		});
+		this.$store.dispatch('socket', socket);
 	},
 
 	mounted() {
 		this.setWidth(document.body.clientWidth);
 		window.onresize = this.onResize;
+	},
+
+	destroyed() {
+		if (this.socket) {
+			this.socket.close();
+			this.$store.dispatch('socket', {});
+			this.socket = null;
+		}
 	},
 };
 </script>
@@ -276,24 +376,23 @@ export default {
 	}
 
 	&-content {
-		height: calc(100% - 40px);
+		width: 100%;
+		min-height: calc(100vh - 160px);
 		padding: 20px;
 		box-sizing: border-box;
-		overflow-x: hidden;
-		transition: all 0.5s;
+		overflow: hidden;
+		// transition: all 0.5s;
 	}
 }
 
 .router-leave-active,
 .router-enter-active {
-	// transition: all 0.5s;
-	opacity: 0;
-	transform: translateX(30px);
+	transition: all 0.5s;
 }
 
 .router-enter {
 	opacity: 0;
-	transform: translateX(-30px);
+	transform: translateX(30px);
 }
 
 .router-leave-to {

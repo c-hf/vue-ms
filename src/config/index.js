@@ -1,13 +1,13 @@
 // axios URL
-// const baseURL = 'http://localhost:3000';
-const baseURL = 'http://localhost:3000/';
+const BASEURL = 'http://localhost:3000/';
 
 // 上传头像 URL
-const uploadImgUrl = 'http://localhost:3000/api/user/setUserAvatar';
+const UPLOADIMGURL = 'http://localhost:3000/api/user/setUserAvatar';
+// 默认头像 URL
+const IMGURL = 'http://localhost:3000/static/avatar/1.jpg';
 
-const defaultImgUrl = 'http://localhost:3000/static/avatar/1.jpg';
-
-const source = {
+// 操作日志
+const DEVICESOURCE = {
 	User: '控制台',
 	WeChat: '小程序',
 	Voice: '语音',
@@ -15,4 +15,153 @@ const source = {
 	Schedule: '定时任务',
 };
 
-export { baseURL, uploadImgUrl, defaultImgUrl, source };
+// 添加设备验证规则
+export const DEVICERULES = {
+	groupId: [
+		{
+			required: true,
+			message: 'groupID 为必填项',
+		},
+	],
+	deviceId: [
+		{
+			required: true,
+			message: 'DeviceID 为必填项',
+		},
+	],
+	name: [
+		{
+			required: true,
+			message: '请输入设备名称',
+			trigger: 'blur',
+		},
+		{
+			min: 2,
+			max: 16,
+			message: '长度在 2 到 16 个字符',
+			trigger: 'blur',
+		},
+	],
+	type: [
+		{
+			required: true,
+			message: '请选择设备类型',
+			trigger: 'change',
+		},
+	],
+	roomId: [
+		{
+			required: true,
+			message: '请选择设备所在房间',
+			trigger: 'change',
+		},
+	],
+	desc: [
+		{
+			required: true,
+			message: '请输入设备描述',
+			trigger: 'blur',
+		},
+		{
+			min: 0,
+			max: 128,
+			message: '0 到 128 个字符',
+			trigger: 'blur',
+		},
+	],
+	os: [
+		{
+			required: true,
+			message: '请选择操作系统',
+			trigger: 'change',
+		},
+	],
+	networking: [
+		{
+			required: true,
+			message: '请选择联网方式',
+			trigger: 'change',
+		},
+	],
+	protocol: [
+		{
+			required: true,
+			message: '请选择设备接入协议',
+			trigger: 'change',
+		},
+	],
+};
+
+// 天气图标
+const WEATHERICON = {
+	晴: 'icon-sun',
+	少云: 'icon-cloud',
+	晴间多云: 'icon-multi-cloud',
+	多云: 'icon-multi-cloud',
+	阴: 'icon-cloud',
+	有风: 'icon-wind',
+	平静: 'icon-wind',
+	微风: 'icon-wind',
+	和风: 'icon-wind',
+	清风: 'icon-wind',
+	'强风/劲风': 'icon-gale',
+	疾风: 'icon-gale',
+	大风: 'icon-gale',
+	烈风: 'icon-gale',
+	风暴: 'icon-hurricane',
+	狂爆风: 'icon-hurricane',
+	飓风: 'icon-hurricane',
+	热带风暴: 'icon-hurricane',
+	阵雨: 'icon-cloudburst',
+	雷阵雨: 'icon-thundershower',
+	雷阵雨并伴有冰雹: 'icon-rain-hail',
+	小雨: 'icon-light-rain',
+	中雨: 'icon-moderate-rain',
+	大雨: 'icon-downpour',
+	暴雨: 'icon-cloudburst',
+	大暴雨: 'icon-extraordinary-rainstorm',
+	特大暴雨: 'icon-extraordinary-rainstorm',
+	强阵雨: 'icon-extraordinary-rainstorm',
+	强雷阵雨: 'icon-thundershower',
+	极端降雨: 'icon-extraordinary-rainstorm',
+	'毛毛雨/细雨': 'icon-light-rain',
+	雨: 'icon-light-rain',
+	'小雨-中雨': 'icon-moderate-rain',
+	'中雨-大雨': 'icon-downpour',
+	'大雨-暴雨': 'icon-cloudburst',
+	'暴雨-大暴雨': 'icon-extraordinary-rainstorm',
+	'大暴雨-特大暴雨': 'icon-extraordinary-rainstorm',
+	雨雪天气: 'icon-sleet',
+	雨夹雪: 'icon-sleet',
+	阵雨夹雪: 'icon-sleet',
+	冻雨: 'icon-sleet',
+	雪: 'icon-light-snow',
+	阵雪: 'icon-heavy-snow',
+	小雪: 'icon-light-snow',
+	中雪: 'icon-moderate-snow',
+	大雪: 'icon-heavy-snow',
+	暴雪: 'icon-blizzard',
+	'小雪-中雪': 'icon-moderate-snow',
+	'中雪-大雪': 'icon-heavy-snow',
+	'大雪-暴雪': 'icon-blizzard',
+	浮尘: 'icon-aerial-dust',
+	扬沙: 'icon-from-dust',
+	沙尘暴: 'icon-from-dust',
+	强沙尘暴: 'icon-from-dust',
+	龙卷风: 'icon-tornado',
+	雾: 'icon-fog',
+	浓雾: 'icon-fog',
+	强浓雾: 'icon-fog',
+	轻雾: 'icon-fog',
+	大雾: 'icon-fog',
+	特强浓雾: 'icon-fog',
+	霾: 'icon-haze',
+	中度霾: 'icon-haze',
+	重度霾: 'icon-haze',
+	严重霾: 'icon-haze',
+	热: 'icon-unknown',
+	冷: 'icon-unknown',
+	未知: 'icon-unknown',
+};
+
+export { BASEURL, UPLOADIMGURL, IMGURL, DEVICESOURCE, WEATHERICON };

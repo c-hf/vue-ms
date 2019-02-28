@@ -2,8 +2,14 @@
     <div class="view-drawer-member"
          v-loading="loading">
         <div class="view-drawer-member-title">
-            添加家庭成员
+            查找用户
         </div>
+        <el-button type="text"
+                   class="view-drawer-member-btn"
+                   icon="el-icon-arrow-left"
+                   @click="setDrawerType">
+            家庭组
+        </el-button>
         <el-form class="view-drawer-member-form"
                  :model="userData"
                  :rules="rules"
@@ -44,14 +50,23 @@
                                       iconClass="icon-male_color" />
                             <svg-icon v-else
                                       iconClass="icon-female_color" />
-                            {{ userFlagMsg }}
+                            <el-tag v-if="userFlag"
+                                    type="success"
+                                    size="mini">
+                                {{ userFlagMsg }}
+                            </el-tag>
+                            <el-tag v-else
+                                    type="info"
+                                    size="mini">
+                                {{ userFlagMsg }}
+                            </el-tag>
                         </i>
                     </span>
                     <el-button class="user-btn"
                                circle
                                size="small"
                                :disabled="userFlag"
-                               @click="addGroupMemberFn">
+                               @click="addGroupMemberMsgFn">
                         <svg-icon iconClass="icon-addpeople_fill" />
                     </el-button>
                 </div>
@@ -65,14 +80,15 @@
 </template>
 
 <script>
-import { addGroupMember, getUserById } from '@/api/user';
+import { getUserById } from '@/api/user';
+import { addGroupMemberMsg } from '@/api/group';
 
 export default {
-	name: 'ViewDrawerMember',
+	name: 'ViewDrawerUser',
 	data() {
 		const validateId = (rule, value, callback) => {
 			const [userIdRegExp, emailRegExp] = [
-				/^[0-9]{8}$/,
+				/^[0-9]{10}$/,
 				/^[a-z0-9]+(?:[._-][a-z0-9]+)*@[a-z0-9]+(?:[._-][a-z0-9]+)*\.[a-z]{2,4}$/i,
 			];
 			if (!value) {
@@ -116,6 +132,9 @@ export default {
 
 		// 用户标志
 		userFlag() {
+			if (!this.$store.state.group.groupId) {
+				return false;
+			}
 			const members = this.$store.state.group.member;
 			const index = members.findIndex(el => {
 				return el.userId === this.member.userId;
@@ -134,6 +153,10 @@ export default {
 	},
 
 	methods: {
+		setDrawerType() {
+			this.$emit('setDrawerType', 'group');
+		},
+
 		// 查找
 		findUser(formName) {
 			this.$refs[formName].validate(valid => {
@@ -178,9 +201,18 @@ export default {
 		},
 
 		// 添加家庭成员
-		addGroupMemberFn() {
+		addGroupMemberMsgFn() {
+			if (!this.$store.state.group.groupId) {
+				this.$message({
+					showClose: true,
+					center: true,
+					message: '还未加入家庭组，无法添加新成员',
+					type: 'warning',
+				});
+				return;
+			}
 			this.loading = true;
-			addGroupMember({
+			addGroupMemberMsg({
 				groupId: this.$store.state.group.groupId,
 				userId: this.member.userId,
 			})
@@ -192,7 +224,7 @@ export default {
 							message: '邀请已发送！',
 							type: 'success',
 						});
-						this.$emit('setShow', false);
+						// this.$emit('setShow', false);
 					}
 				})
 				.catch(error => {
@@ -219,6 +251,7 @@ export default {
 	padding: 50px 0;
 	box-sizing: border-box;
 	border-bottom: 1px solid #ebeef5;
+	position: relative;
 
 	@include flex-start(column);
 
@@ -228,6 +261,12 @@ export default {
 		color: #303133;
 		font-size: 20px;
 		border-bottom: 1px solid #ebeef5;
+	}
+
+	&-btn {
+		position: absolute;
+		top: 10px;
+		left: 10px;
 	}
 
 	&-form {

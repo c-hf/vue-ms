@@ -7,13 +7,11 @@
             <span class="control-info-left-title">
                 设备列表
             </span>
-            <!-- <span class="control-info-left-num">
-                设备总数：{{ deviceNum }}
-            </span> -->
         </div>
         <div class="control-info-right">
             <el-button type="primary"
                        icon="el-icon-plus"
+                       size="medium"
                        @click="routeAccess">
                 添加设备
             </el-button>
@@ -26,12 +24,6 @@ export default {
 	name: 'ViewControlInfo',
 	data() {
 		return {};
-	},
-
-	computed: {
-		deviceNum() {
-			return this.$store.state.device.length;
-		},
 	},
 
 	methods: {

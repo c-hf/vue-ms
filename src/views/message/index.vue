@@ -38,18 +38,29 @@
                                    @click="deleteMessage">
                             删除
                         </el-button>
+                        <el-button plain
+                                   size="medium"
+                                   @click="refreshMessage">
+                            刷新
+                        </el-button>
                     </el-button-group>
                 </span>
                 <span class="message-menu-right">
-                    <el-input placeholder="请输入内容"
-                              suffix-icon="el-icon-search"
-                              v-model="messageSeach">
+                    <el-input placeholder="请输入搜索的标题"
+                              v-model="keyword"
+                              @keyup.enter="searchMessages">
+                        <i slot="suffix"
+                           class="el-input__icon el-icon-search"
+                           @click="searchMessages">
+                        </i>
                     </el-input>
                 </span>
             </div>
-            <view-message-list :messages="messages"
-                               @selectChange="selectChange"
-                               @updateMessageStatus="updateMessageStatusFn" />
+            <view-message-table :messages="messages"
+                                @selectChange="selectChange"
+                                @updateMessageStatus="updateMessageStatusFn"
+                                @refreshMessage="refreshMessage"
+                                @setLoading="setLoading" />
             <div class="message-footer">
                 <el-pagination background
                                layout="prev, pager, next"
@@ -63,8 +74,13 @@
 </template>
 
 <script>
-import { getMessages, updateMessageStatus, deleteMessage } from '@/api/user';
-import ViewMessageList from './viewMessageList';
+import {
+	getMessages,
+	updateMessageStatus,
+	deleteMessage,
+	getSearchMessages,
+} from '@/api/message';
+import ViewMessageTable from './viewMessageTable';
 
 export default {
 	name: 'Message',
@@ -74,7 +90,7 @@ export default {
 			loading: false,
 			disabled: true,
 			unread: false,
-			messageSeach: '',
+			keyword: '',
 			category: 'ALL',
 			messages: [],
 			selectMessages: [],
@@ -86,7 +102,7 @@ export default {
 	methods: {
 		// 设为已读
 		setAsRead() {
-			this.$confirm('确定要对选中消息设置已读吗？', '提示', {
+			this.$confirm('确定要对选中站内信设置已读吗？', '提示', {
 				confirmButtonText: '确定',
 				cancelButtonText: '取消',
 				type: 'warning',
@@ -126,6 +142,21 @@ export default {
 				.catch(() => {});
 		},
 
+		// 搜索消息
+		searchMessages() {
+			let [status, category] = this.getReqData();
+			const data = {
+				query: {
+					status: status,
+					category: category,
+				},
+				keyword: this.keyword,
+				pageNo: 0,
+				pageSize: 20,
+			};
+			this.getSearchMessagesFn(data);
+		},
+
 		// 多选
 		selectChange(selectMessages, disabled) {
 			this.selectMessages = selectMessages;
@@ -142,20 +173,53 @@ export default {
 			this.getMessagesFn(this.currentPage - 1, 10);
 		},
 
-		// 获取消息
-		getMessagesFn(pageNo, pageSize) {
-			this.loading = true;
+		refreshMessage() {
+			this.getMessagesFn(this.currentPage - 1, 10);
+		},
+
+		getReqData() {
 			let [status, category] = ['', ''];
 			this.unread ? (status = 'UNREAD') : (status = '');
 			this.category !== 'ALL'
 				? (category = this.category)
 				: (category = '');
+			return [status, category];
+		},
+
+		// 获取消息
+		getMessagesFn(pageNo, pageSize) {
+			this.loading = true;
+			let [status, category] = this.getReqData();
 			getMessages({
-				status: status,
-				category: category,
+				query: {
+					status: status,
+					category: category,
+				},
 				pageNo: pageNo,
 				pageSize: pageSize,
 			})
+				.then(resData => {
+					this.total = resData.total;
+					this.messages = resData.page;
+				})
+				.catch(error => {
+					this.$message({
+						showClose: true,
+						center: true,
+						message: error.message,
+						type: 'error',
+					});
+				})
+				.then(() => {
+					this.loading = false;
+				});
+		},
+
+		// 查找消息封装
+		getSearchMessagesFn(data) {
+			this.loading = true;
+
+			getSearchMessages(data)
 				.then(resData => {
 					this.total = resData.total;
 					this.messages = resData.page;
@@ -186,11 +250,7 @@ export default {
 					});
 				})
 				.then(resData => {
-					setTimeout(() => {
-						this.loading = false;
-						console.log('???');
-					}, 2000);
-
+					this.loading = false;
 					return resData;
 				});
 		},
@@ -215,14 +275,17 @@ export default {
 				.then(() => {
 					setTimeout(() => {
 						this.loading = false;
-						console.log('???');
 					}, 2000);
 				});
+		},
+
+		setLoading(value) {
+			this.loading = value;
 		},
 	},
 
 	components: {
-		ViewMessageList,
+		ViewMessageTable,
 	},
 
 	created() {
@@ -236,7 +299,7 @@ export default {
 
 .message {
 	width: 100%;
-	min-height: calc(100vh - 150px);
+	// min-height: calc(100vh - 150px);
 
 	.title {
 		font-size: 18px;

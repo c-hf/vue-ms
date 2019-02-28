@@ -1,8 +1,8 @@
 <template>
     <el-scrollbar style="height:100%;"
-                  class="app-drawer-card"
-                  v-loading="loading">
-        <div class="app-drawer-card-title">
+                  class="app-drawer-card">
+        <div class="app-drawer-card-title"
+             v-loading="loading">
             <span class="app-drawer-card-title-text">
                 操作日志
             </span>
@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import { source } from '@/config/index.js';
+import { DEVICESOURCE } from '@/config/index.js';
 import { getDeviceLogById, deleteDeviceLog } from '@/api/device';
 
 export default {
@@ -66,7 +66,7 @@ export default {
 	data() {
 		return {
 			loading: false,
-			source: source,
+			source: DEVICESOURCE,
 			radio: '2',
 			logs: [],
 		};
@@ -196,7 +196,11 @@ export default {
 .app-drawer-card {
 	&-title {
 		@include flex-start(column);
+		margin-top: 20px;
 		padding: 20px;
+		color: #303133;
+		font-size: 20px;
+		border-bottom: 1px solid #ebeef5;
 		&-text {
 			color: #303133;
 			font-size: 20px;

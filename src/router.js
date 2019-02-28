@@ -102,18 +102,18 @@ export default new Router({
 						requireAuth: true,
 					},
 					component: () => import('./views/control'),
-					children: [
-						// 接入
-						{
-							path: 'access',
-							name: 'access',
-							meta: {
-								requireAuth: true,
-							},
-							component: () => import('./views/access'),
-						},
-					],
 				},
+
+				// 接入
+				{
+					path: 'control/access',
+					name: 'access',
+					meta: {
+						requireAuth: true,
+					},
+					component: () => import('./views/access'),
+				},
+
 				// 概览
 				{
 					path: 'details/:deviceId',
@@ -123,8 +123,6 @@ export default new Router({
 					},
 					component: () => import('./views/details'),
 				},
-				// ],
-				// },
 			],
 		},
 
@@ -148,6 +146,18 @@ export default new Router({
 					: next('home');
 			},
 			component: () => import('./views/information'),
+		},
+		// 创建群组
+		{
+			path: '/createGroup',
+			name: 'createGroup',
+			meta: {
+				requireAuth: true,
+			},
+			beforeEnter: (to, from, next) => {
+				!store.state.user.groupId ? next() : next('home');
+			},
+			component: () => import('./views/createGroup'),
 		},
 	],
 });

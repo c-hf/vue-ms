@@ -39,14 +39,14 @@
 </template>
 
 <script>
-import { source } from '@/config/index.js';
+import { DEVICESOURCE } from '@/config/index.js';
 import { getDeviceLogById } from '@/api/device';
 
 export default {
 	name: 'AppLogCard',
 	data() {
 		return {
-			source: source,
+			source: DEVICESOURCE,
 			logs: [],
 			socket: {},
 		};

@@ -109,15 +109,15 @@
         <el-dialog :visible.sync="visible"
                    :modal-append-to-body="false"
                    width="360px"
-                   class="app-user-info">
-            <app-user-info :user="user"
-                           type="own" />
+                   class="app-dialog-user">
+            <app-dialog-user :user="user"
+                             type="own" />
         </el-dialog>
     </div>
 </template>
 
 <script>
-import AppUserInfo from '@/components/appUserInfo';
+import AppDialogUser from '@/components/appDialogUser';
 
 export default {
 	name: 'AppAside',
@@ -164,7 +164,7 @@ export default {
 	},
 
 	components: {
-		AppUserInfo,
+		AppDialogUser,
 	},
 
 	props: {

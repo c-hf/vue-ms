@@ -2,8 +2,6 @@
     <el-row class="view-user"
             :gutter="24">
         <el-col :span="14"
-                :md="14"
-                :lg="14"
                 class="view-user-left">
             <el-form class="view-user-left-form"
                      :model="user"
@@ -17,7 +15,7 @@
                     </el-input>
                 </el-form-item>
                 <el-form-item label="介绍"
-                              prop="">
+                              prop="intro">
                     <el-input type="textarea"
                               :autosize="{ minRows: 4, maxRows: 6}"
                               resize="none"
@@ -60,8 +58,6 @@
         </el-col>
         <el-col :offset="2"
                 :span="8"
-                :md="8"
-                :lg="8"
                 class="view-user-right">
             <span class="view-user-right-avatar">
                 <img :src="user.avatar"
@@ -84,7 +80,7 @@
 
 <script>
 import { updateUserInfo } from '@/api/user';
-import { uploadImgUrl } from '@/config';
+import { UPLOADIMGURL } from '@/config';
 
 export default {
 	name: 'ViewUser',
@@ -119,14 +115,19 @@ export default {
 		};
 		return {
 			disabled: true,
-			uploadImgUrl: uploadImgUrl,
+			uploadImgUrl: UPLOADIMGURL,
 			rules: {
-				nickName: [
-					{
-						validator: validateNickName,
-						required: true,
-					},
-				],
+				nickName: {
+					validator: validateNickName,
+					required: true,
+				},
+
+				intro: {
+					min: 1,
+					max: 64,
+					message: '长度在 1 到 64 个字符',
+					trigger: 'blur',
+				},
 
 				birthday: {
 					validator: validateBirthday,

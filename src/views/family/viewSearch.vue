@@ -4,7 +4,7 @@
             <div class="view-search-user"
                  v-for="(item, index) in userList"
                  :key="index"
-                 @click="displayMemberInfo(item.userId)">
+                 @click="displayMemberInfo(index)">
                 <span class="view-search-user-avatar">
                     <img :src="item.avatar"
                          :alt="item.nickName">
@@ -48,8 +48,8 @@ export default {
 
 	methods: {
 		// 查看详细资料
-		displayMemberInfo(userId) {
-			this.$emit('displayMemberInfo', userId);
+		displayMemberInfo(index) {
+			this.$emit('displayMemberInfo', index);
 		},
 	},
 };

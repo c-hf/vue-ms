@@ -6,8 +6,7 @@
                     class="view-lighting-left">
                 <el-col :span="24"
                         class="view-lighting-left-top">
-                    <el-tabs type="card"
-                             v-model="activeName"
+                    <el-tabs v-model="activeName"
                              class="view-lighting-info">
                         <el-tab-pane label="设备信息"
                                      name="first">
@@ -21,7 +20,7 @@
                                 <span class="view-lighting-info-content-item">
                                     <i>分类</i>
                                     <i>
-                                        {{ device.categoryId }}
+                                        {{ device.categoryName }}
                                     </i>
                                 </span>
                                 <span class="view-lighting-info-content-item">

@@ -1,16 +1,16 @@
 <template>
-    <div class="view-household">
-        <div class="view-household-title">
-            <span class="view-household-title-icon">
+    <div class="view-group">
+        <div class="view-group-title">
+            <span class="view-group-title-icon">
             </span>
         </div>
         <el-form :model="group"
                  :rules="rules"
                  ref="groupForm"
-                 class="view-household-form"
+                 class="view-group-form"
                  label-position="top"
                  label-width="0">
-            <span class="view-household-form-text">
+            <span class="view-group-form-text">
                 家庭名称
             </span>
             <el-form-item prop="groupName">
@@ -20,7 +20,7 @@
                           style="width: 240px;">
                 </el-input>
             </el-form-item>
-            <span class="view-household-form-text">
+            <span class="view-group-form-text">
                 选择居住地
             </span>
             <el-form-item prop="region">
@@ -30,13 +30,15 @@
                              @active-item-change="regionItemChange"
                              style="width: 240px;"></el-cascader>
             </el-form-item>
-            <el-form-item class="view-household-form-btn">
+            <el-form-item class="view-group-form-btn">
                 <el-button type="info"
-                           @click="prev">上一步
+                           @click="prev">
+                    上一步
                     <i class="el-icon-arrow-left el-icon--right"></i>
                 </el-button>
                 <el-button type="success"
-                           @click="next('groupForm')">下一步
+                           @click="next('groupForm')">
+                    下一步
                     <i class="el-icon-arrow-right el-icon--right"></i>
                 </el-button>
             </el-form-item>
@@ -50,7 +52,7 @@ import { getProvinceInfo, getCityInfo, getDistrictInfo } from '@/api/user';
 import { RULES } from './config.js';
 
 export default {
-	name: 'ViewHousehold',
+	name: 'ViewGroup',
 	data() {
 		return {
 			group: {
@@ -82,7 +84,7 @@ export default {
 				if (!valid) {
 					return;
 				}
-				this.setRegion();
+				this.getRegion();
 				this.$emit('next', this.group);
 			});
 		},
@@ -132,8 +134,8 @@ export default {
 			});
 		},
 
-		// 设置 region
-		setRegion() {
+		// 处理 region
+		getRegion() {
 			const districtIndex = this.regionOptions[
 				this.provinceindex
 			].children[this.cityindex].children.findIndex(el => {
@@ -160,6 +162,7 @@ export default {
 			this.group.region = reqion;
 		},
 	},
+
 	created() {
 		this.getProvinceInfoFn();
 	},
@@ -169,7 +172,7 @@ export default {
 <style lang="scss" scoped>
 @import '~@/assets/scss/mixins';
 
-.view-household {
+.view-group {
 	height: 100%;
 	position: relative;
 

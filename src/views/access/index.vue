@@ -1,8 +1,8 @@
 <template>
-    <el-card class="access"
-             shadow="never"
-             v-loading="loading">
-        <el-row>
+    <div>
+        <el-row class="access"
+                shadow="never"
+                v-loading="loading">
             <el-col :span="24"
                     v-if="info">
                 <view-device-info :data="data"
@@ -18,7 +18,7 @@
                                    @setLoading="setLoading" />
             </el-col>
         </el-row>
-    </el-card>
+    </div>
 </template>
 
 <script>
@@ -94,11 +94,5 @@ export default {
 <style lang="scss" scoped>
 .access {
 	width: 100%;
-	min-height: 100%;
-	position: absolute;
-	top: 0;
-	left: 0;
-	background-color: #f3f6f8;
-	z-index: 99;
 }
 </style>

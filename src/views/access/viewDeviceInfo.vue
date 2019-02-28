@@ -15,7 +15,7 @@
                  :rules="rules"
                  label-position="left"
                  label-width="120px">
-            <el-form-item label="家庭组 ID:"
+            <el-form-item label="家庭组 ID"
                           prop="groupId"
                           class="group-id">
                 <el-col :lg="8"
@@ -26,7 +26,7 @@
                     </span>
                 </el-col>
             </el-form-item>
-            <el-form-item label="DeviceID:"
+            <el-form-item label="DeviceID"
                           prop="deviceId">
                 <el-col :lg="8"
                         :md="10"
@@ -44,29 +44,27 @@
                     </el-button>
                 </el-col>
             </el-form-item>
-            <el-form-item label="设备名称:"
-                          prop="name">
-                <el-col :lg="8"
-                        :md="10"
-                        :span="14">
-                    <el-input v-model="deviceData.name"
-                              placeholder="最多输入 16 个字符">
-                    </el-input>
-                </el-col>
-            </el-form-item>
-
-            <el-form-item label="设备类型:"
+            <el-form-item label="设备类型"
                           prop="type">
                 <el-col :lg="8"
                         :md="8"
                         :span="14">
                     <el-cascader :options="options"
                                  :show-all-levels="true"
-                                 v-model="deviceData.type">
+                                 v-model="deviceData.type"
+                                 @change="typeChange">
                     </el-cascader>
                 </el-col>
             </el-form-item>
-            <el-form-item label="设备所在房间:"
+            <el-form-item label="设备名称"
+                          prop="name">
+                <el-col :lg="8"
+                        :md="10"
+                        :span="14">
+                    {{ deviceData.name }}
+                </el-col>
+            </el-form-item>
+            <el-form-item label="设备所在房间"
                           prop="roomId">
                 <el-col :lg="8"
                         :md="10"
@@ -81,7 +79,7 @@
                     </el-select>
                 </el-col>
             </el-form-item>
-            <el-form-item label="设备描述:"
+            <el-form-item label="设备描述"
                           prop="desc">
                 <el-col :lg="8"
                         :md="10"
@@ -155,10 +153,10 @@
 
 <script>
 import {
-	RULES,
 	INFORMATION_DATA_KEY,
 	CATEGORY_CONTENT_UPDATE_TIME_INTERVAL,
 } from './config.js';
+import { DEVICERULES } from '@/config';
 
 import { getAllDeviceCategory, getDeviceId } from '@/api/device';
 import storage from '@/assets/js/storage';
@@ -167,24 +165,36 @@ export default {
 	name: 'ViewDeviceInfo',
 	data() {
 		return {
-			// 表单信息
 			deviceData: this.data,
-			// 验证规则
-			rules: RULES,
-			// 数据源
-			options: [],
+			rules: DEVICERULES,
+			options: [], // 数据源
 			protocolIntro: '',
 			loading: false,
 			getIdLoading: false,
 			custom: false,
 		};
 	},
+
 	computed: {
 		roomOptions() {
 			return this.$store.state.rooms;
 		},
 	},
+
 	methods: {
+		typeChange(value) {
+			console.log(this.options);
+			this.options.forEach((el, index) => {
+				if (el.value === value[0]) {
+					this.deviceData.name = this.options[index].children.find(
+						el => {
+							return el.value === value[1];
+						}
+					).label;
+				}
+			});
+		},
+
 		goBack() {
 			this.$router.push({ name: 'control' });
 		},

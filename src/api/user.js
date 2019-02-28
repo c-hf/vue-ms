@@ -50,7 +50,7 @@ export const signOut = () => {
 	return axiosFn(options);
 };
 
-// 头像
+// 获取头像
 export const getUserAvatar = data => {
 	const getOptions = {
 		method: 'get',
@@ -73,6 +73,15 @@ export const getUserById = data => {
 		method: 'get',
 		url: '/api/user/getUserById',
 		params: data,
+	};
+	return axiosFn(getOptions);
+};
+
+// 获取 Token
+export const getUserToken = () => {
+	const getOptions = {
+		method: 'get',
+		url: '/api/user/getUserToken',
 	};
 	return axiosFn(getOptions);
 };

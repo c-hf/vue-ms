@@ -90,6 +90,16 @@ export const updateDeviceTimedTask = data => {
 	return axiosFn(options);
 };
 
+// 获取设备信息
+export const getDeviceInfo = data => {
+	const getOptions = {
+		method: 'get',
+		url: '/api/device/getDeviceInfo',
+		params: data,
+	};
+	return axiosFn(getOptions);
+};
+
 // 获取分类
 export const getAllDeviceCategory = () => {
 	options.method = 'get';

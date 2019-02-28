@@ -1,13 +1,13 @@
 <template>
     <div v-loading="loading">
-        <span class="app-user-info-avatar block">
+        <span class="app-dialog-user-avatar block">
             <img :src="user.avatar"
                  alt="头像">
         </span>
-        <span class="app-user-info-nickName block">
+        <span class="app-dialog-user-nickName block">
             {{ user.nickName }}
         </span>
-        <span class="app-user-info-intro block">
+        <span class="app-dialog-user-intro block">
             <i v-if="!user.intro">
                 暂无介绍 ┐(´∇｀)┌
             </i>
@@ -15,25 +15,25 @@
                 {{ user.intro }}
             </i>
         </span>
-        <span class="app-user-info-item">
+        <span class="app-dialog-user-item">
             <i>账号</i>
             <i>
                 {{ user.userId }}
             </i>
         </span>
-        <span class="app-user-info-item">
+        <span class="app-dialog-user-item">
             <i>昵称</i>
             <i>
                 {{ user.nickName }}
             </i>
         </span>
-        <span class="app-user-info-item">
+        <span class="app-dialog-user-item">
             <i>性别</i>
             <i>
                 {{ user.sex }}
             </i>
         </span>
-        <span class="app-user-info-item"
+        <span class="app-dialog-user-item"
               :class="{bottom: type !== 'member'}">
             <i>年龄</i>
             <i>
@@ -41,21 +41,21 @@
             </i>
         </span>
         <span v-show="type === 'member'"
-              class="app-user-info-item bottom">
+              class="app-dialog-user-item bottom">
             <i>所在地</i>
             <i>
                 {{ user.region }}
             </i>
         </span>
         <el-button v-show="type === 'member'"
-                   class="app-user-info-delete"
+                   class="app-dialog-user-delete"
                    type="danger"
                    icon="el-icon-delete"
                    circle
                    @click="deleteMember(user.userId)">
         </el-button>
         <el-button v-show="type === 'own'"
-                   class="app-user-info-delete"
+                   class="app-dialog-user-delete"
                    type="primary"
                    icon="el-icon-edit"
                    circle
@@ -66,10 +66,10 @@
 </template>
 
 <script>
-import { deleteGroupMember } from '@/api/user';
+import { deleteGroupMember } from '@/api/group';
 
 export default {
-	name: 'AppUserInfo',
+	name: 'AppDialogUser',
 	data() {
 		return {
 			loading: false,
@@ -92,7 +92,7 @@ export default {
 					showClose: true,
 					center: true,
 					type: 'warning',
-					message: '不具备删除成员权限！',
+					message: '没有删除成员的权限！',
 				});
 				return;
 			} else if (id === userId) {
@@ -112,14 +112,7 @@ export default {
 				.then(() => {
 					this.deleteGroupMemberFn(id);
 				})
-				.catch(() => {
-					this.$message({
-						showClose: true,
-						center: true,
-						type: 'info',
-						message: '已取消删除',
-					});
-				});
+				.catch(() => {});
 		},
 
 		// 删除成员封装
@@ -171,7 +164,7 @@ export default {
 <style lang="scss">
 @import '~@/assets/scss/mixins';
 
-.app-user-info {
+.app-dialog-user {
 	.el-dialog__header,
 	.el-dialog__body {
 		padding: 0;
@@ -190,6 +183,7 @@ export default {
 		height: 300px;
 		position: relative;
 		overflow: hidden;
+		box-shadow: 0 0 24px 1px rgba(0, 0, 0, 0.02);
 
 		img {
 			width: 100%;

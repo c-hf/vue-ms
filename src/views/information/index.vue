@@ -19,37 +19,37 @@
             <el-col :span="16"
                     :offset="4"
                     class="information-card">
-                <view-personal @next="next"
-                               :personalData="personalData"
-                               v-if="active === 0" />
-                <view-household @next="next"
-                                @prev="prev"
-                                v-else-if="active === 1" />
+                <view-user @next="next"
+                           :userData="userData"
+                           v-if="active === 0" />
+                <view-group @next="next"
+                            @prev="prev"
+                            v-else-if="active === 1" />
                 <view-complete v-else
-                               :personalData="personalData"
-                               :householdGroupData="householdGroupData" />
+                               :userData="userData"
+                               :groupData="groupData" />
             </el-col>
         </el-col>
     </div>
 </template>
 
 <script>
-import ViewPersonal from './viewPersonal';
-import ViewHousehold from './viewHousehold';
+import ViewUser from './viewUser';
+import ViewGroup from './viewGroup';
 import ViewComplete from './viewComplete';
-import { defaultImgUrl } from '@/config';
+import { IMGURL } from '@/config';
 
 export default {
 	name: 'Information',
 	data() {
 		return {
 			active: 0,
-			personalData: {
-				avatar: defaultImgUrl,
+			userData: {
+				avatar: IMGURL,
 				sex: '',
 				birthday: '',
 			},
-			householdGroupData: {
+			groupData: {
 				groupName: '',
 				region: [],
 			},
@@ -60,19 +60,20 @@ export default {
 		prev() {
 			if (this.active-- < 0) this.active = 0;
 		},
+
 		next(data) {
 			if (this.active === 0) {
-				this.personalData = data;
+				this.userData = data;
 			} else if (this.active === 1) {
-				this.householdGroupData = data;
+				this.groupData = data;
 			}
 			if (this.active++ > 2) this.active = 0;
 		},
 	},
 
 	components: {
-		ViewPersonal,
-		ViewHousehold,
+		ViewUser,
+		ViewGroup,
 		ViewComplete,
 	},
 };

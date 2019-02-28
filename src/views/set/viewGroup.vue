@@ -21,7 +21,7 @@
                              v-model="group.region"
                              @active-item-change="regionItemChange">
                 </el-cascader>
-                <span v-else>
+                <span v-else-if="group.region">
                     {{group.region[0].name}},
                     {{group.region[1].name}},
                     {{group.region[2].name}}
@@ -47,13 +47,8 @@
 </template>
 
 <script>
-import {
-	getGroupInfo,
-	getProvinceInfo,
-	getCityInfo,
-	getDistrictInfo,
-	updateGroupInfo,
-} from '@/api/user';
+import { getProvinceInfo, getCityInfo, getDistrictInfo } from '@/api/user';
+import { getGroupInfo, updateGroupInfo } from '@/api/group';
 
 import { RULES } from './config.js';
 
@@ -88,10 +83,16 @@ export default {
 					this.$store.state.user.userId !==
 					this.$store.state.group.ownerId
 				) {
-					this.$notify({
-						title: '警告',
-						message: '没有权限修改群信息 ╮(╯﹏╰）╭',
+					// this.$notify({
+					// 	title: '警告',
+					// 	message: '没有权限修改群信息 ╮(╯﹏╰）╭',
+					// 	type: 'warning',
+					// });
+					this.$message({
+						showClose: true,
+						center: true,
 						type: 'warning',
+						message: '没有修改群信息的权限 ╮(╯﹏╰）╭',
 					});
 					return false;
 				}

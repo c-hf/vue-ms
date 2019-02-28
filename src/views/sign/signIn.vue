@@ -58,7 +58,6 @@ export default {
 				this.vId = false;
 				callback(new Error('请输入邮箱'));
 			} else {
-				// this.showCode = true;
 				if (phoneRegExp.test(this.data.id)) {
 					this.data.type = 'phone';
 					this.getUserAvatarFn();

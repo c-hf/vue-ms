@@ -1,6 +1,6 @@
 <template>
-    <div class="view-group-message">
-        <div class="view-group-message-content"
+    <div class="app-message-group">
+        <div class="app-message-group-content"
              v-if="content_type_first[messageData.operation.groupType]">
             <p class="content-title">
                 尊敬的用户，
@@ -45,7 +45,11 @@
                 。
             </p>
             <p class="content-result"
-               v-if="messageData.operation.error">
+               v-if="type === 'drawer'">
+                请在消息中心进行处理
+            </p>
+            <p class="content-result"
+               v-else-if="messageData.operation.error">
                 {{ messageData.operation.error }}
             </p>
             <p class="content-btn"
@@ -69,7 +73,7 @@
                 </span>
             </p>
         </div>
-        <div class="view-group-message-content"
+        <div class="app-message-group-content"
              v-else-if="content_type_second[messageData.operation.groupType]">
             <p class="content-title">
                 尊敬的用户，
@@ -119,7 +123,7 @@
                 。
             </p>
         </div>
-        <div class="view-group-message-content"
+        <div class="app-message-group-content"
              v-else-if="content_type_third[messageData.operation.groupType]">
             <p class="content-title">
                 尊敬的用户，
@@ -128,7 +132,7 @@
                 {{ messageData.content }}
             </p>
         </div>
-        <div class="view-group-message-footer">
+        <div class="app-message-group-footer">
             <span class="">
 
             </span>
@@ -138,6 +142,7 @@
         </div>
         <el-dialog class="app-dialog-user"
                    :visible.sync="visible"
+                   :modal-append-to-body="false"
                    width="360px">
             <app-dialog-user :user="userInfo" />
         </el-dialog>
@@ -154,7 +159,7 @@ import { getUserById } from '@/api/user';
 import AppDialogUser from '@/components/appDialogUser';
 
 export default {
-	name: 'ViewGroupMessage',
+	name: 'AppMessageGroup',
 	data() {
 		return {
 			groupInfo: {},
@@ -338,6 +343,11 @@ export default {
 		messageData: {
 			type: Object,
 		},
+
+		type: {
+			type: String,
+			default: 'drawer',
+		},
 	},
 
 	created() {
@@ -349,7 +359,7 @@ export default {
 <style lang="scss" scoped>
 @import '~@/assets/scss/mixins';
 
-.view-group-message {
+.app-message-group {
 	padding: 20px;
 
 	&-content {
