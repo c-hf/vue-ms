@@ -1,6 +1,10 @@
 module.exports = {
 	// baseUrl: process.env.NODE_ENV === 'production' ? './' : '/',
-	outputDir: process.env.outputDir,
+	// baseUrl: '/smartHome/',
+	// outputDir: 'dist',
+	// outputDir: process.env.outputDir,
+	// publicPath: '/smartHome/',
+	// productionSourceMap: false,
 	configureWebpack: {
 		externals: {
 			vue: 'Vue',

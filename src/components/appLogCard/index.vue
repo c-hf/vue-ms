@@ -40,22 +40,22 @@
 
 <script>
 import { DEVICESOURCE } from '@/config/index.js';
-import { getDeviceLogById } from '@/api/device';
+// import { getDeviceLogById } from '@/api/device';
 
 export default {
 	name: 'AppLogCard',
 	data() {
 		return {
 			source: DEVICESOURCE,
-			logs: [],
-			socket: {},
+			// logs: [],
+			// socket: {},
 		};
 	},
 
 	computed: {
 		logsText() {
 			let logs = {};
-			this.logs.forEach(el => {
+			this.deviceLogs.forEach(el => {
 				if (this.logType === 'warn' && el.logType === 'info') {
 					return;
 				}
@@ -99,70 +99,78 @@ export default {
 		},
 
 		// 监听日志更新
-		socketOn() {
-			try {
-				this.socket = this.$store.state.socket;
-				if (!this.socket.on || this.logType === 'warn') {
-					return;
-				}
-				this.socket.on(`${this.deviceId}-updateDeviceLog`, data => {
-					this.logs.unshift(data);
-				});
-			} catch (error) {
-				this.$message({
-					showClose: true,
-					center: true,
-					message: error.message,
-					type: 'error',
-				});
-			}
-		},
+		// socketOn() {
+		// 	try {
+		// 		this.socket = this.$store.state.socket;
+		// 		if (!this.socket.on || this.logType === 'warn') {
+		// 			return;
+		// 		}
+		// 		this.socket.on(`${this.deviceId}-updateDeviceLog`, data => {
+		// 			this.logs.unshift(data);
+		// 		});
+		// 	} catch (error) {
+		// 		this.$message({
+		// 			showClose: true,
+		// 			center: true,
+		// 			message: error.message,
+		// 			type: 'error',
+		// 		});
+		// 	}
+		// },
 
 		// 获取日志
-		getDeviceLogByIdFn() {
-			if (!this.deviceId) {
-				return;
-			}
+		// getDeviceLogByIdFn() {
+		// 	if (!this.deviceId) {
+		// 		return;
+		// 	}
 
-			getDeviceLogById({
-				deviceId: this.deviceId,
-				dayNum: 0,
-			}).then(resData => {
-				this.logs = resData;
-			});
-		},
+		// 	getDeviceLogById({
+		// 		deviceId: this.deviceId,
+		// 		dayNum: 0,
+		// 	}).then(resData => {
+		// 		this.logs = resData;
+		// 	});
+		// },
 	},
 
 	props: {
-		deviceId: {
-			type: String,
-		},
+		// deviceId: {
+		// 	type: String,
+		// },
+
 		logType: {
 			type: String,
 			default: 'log',
 		},
-	},
 
-	watch: {
-		deviceId() {
-			this.getDeviceLogByIdFn();
-			this.socketOn();
+		deviceLogs: {
+			type: Array,
+			default: () => {
+				return [];
+			},
 		},
 	},
 
-	created() {
-		this.getDeviceLogByIdFn();
-	},
+	// watch: {
+	// 	deviceId() {
+	// 		this.getDeviceLogByIdFn();
+	// 		this.socketOn();
+	// 	},
+	// },
 
-	mounted() {
-		this.socketOn();
-	},
+	// created() {
+	// 	this.getDeviceLogByIdFn();
+	// },
 
-	destroyed() {
-		if (this.socket.on) {
-			this.socket.off(`${this.deviceId}-updateDeviceLog`);
-		}
-	},
+	// mounted() {
+	// 	this.socketOn();
+	// },
+
+	// destroyed() {
+	// 	if (this.socket.on) {
+	// 		this.socket.off(`${this.deviceId}-updateDeviceLog`);
+	// 	}
+	// },
 };
 </script>
 

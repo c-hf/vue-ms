@@ -42,7 +42,6 @@
                                 mode="out-in">
                         <router-view class="app-main-content" />
                     </transition>
-                    <!-- <router-view name="children" /> -->
                 </el-main>
                 <el-footer class="app-footer">
                     Smart Home Admin &copy; 2019 chf
@@ -65,7 +64,7 @@ import AppDrawerMessage from '@/components/appDrawerMessage';
 import io from 'socket.io-client';
 import storage from '@/assets/js/storage';
 import { signOut, getUserToken } from '@/api/user';
-import { BASEURL } from '@/config';
+import { BASEURL, SOCKETURL } from '@/config';
 
 export default {
 	name: 'Index',
@@ -79,6 +78,7 @@ export default {
 			timer: null,
 			socket: {},
 			baseURL: BASEURL,
+			socketURL: SOCKETURL,
 		};
 	},
 
@@ -159,7 +159,7 @@ export default {
 						this.$store.dispatch('group', {});
 						this.$store.dispatch('weather', {});
 						this.$store.dispatch('rooms', []);
-						this.$store.dispatch('device', []);
+						this.$store.dispatch('devices', []);
 						this.$store.dispatch('socket', {});
 					}
 				})
@@ -209,12 +209,6 @@ export default {
 				document.webkitIsFullScreen ||
 				document.mozIsFullScreen ||
 				document.msFullscreenEnabled;
-			// console.log(this.$refs.appHeader.isFullscreen);
-
-			// console.log(window.fullScreen);
-			// console.log(document.webkitIsFullScreen);
-			// console.log(document.isFullScreen);
-			// console.log(document.msFullscreenEnabled);
 
 			if (isFull === undefined) {
 				isFull = false;
@@ -245,31 +239,31 @@ export default {
 	},
 
 	created() {
-		const socket = io(this.baseURL, {
+		const socket = io(this.socketURL, {
 			query: {
 				token: this.$store.state.token,
 			},
 		});
 		this.socket = socket;
 		// 连接
-		socket.on('connect', () => {
-			console.log('connect');
-		});
+		// socket.on('connect', () => {
+		// 	console.log('connect');
+		// });
 
 		// 断开连接
-		socket.on('disconnect', () => {
-			console.log('disconnect');
-		});
+		// socket.on('disconnect', () => {
+		// 	console.log('disconnect');
+		// });
 
 		// 重连
-		socket.on('reconnect', attemptNumber => {
-			console.log(attemptNumber);
-		});
+		// socket.on('reconnect', attemptNumber => {
+		// 	console.log(attemptNumber);
+		// });
 
 		// 连接错误
-		socket.on('connect_error', error => {
-			console.log(error);
-		});
+		// socket.on('connect_error', error => {
+		// 	console.log(error);
+		// });
 
 		// 监听主题
 		socket.on('devices', data => {
@@ -281,6 +275,9 @@ export default {
 		socket.on('rooms', data => {
 			this.$store.dispatch('rooms', data);
 		});
+		socket.on('updateRooms', data => {
+			this.$store.dispatch('updateRooms', data);
+		});
 		socket.on('updateOnline', data => {
 			this.$store.dispatch('updateOnline', data);
 		});
@@ -291,12 +288,12 @@ export default {
 			this.$store.dispatch('updateDeviceStatus', data);
 		});
 		socket.on('GroupMessage', data => {
-			console.log(data);
+			// console.log(data);
 			this.$store.dispatch('modifyGroup', data);
 		});
 
 		socket.on('joinGroup', data => {
-			console.log(data);
+			// console.log(data);
 			storage.set('token', data.token);
 			this.$store.dispatch('token', data.token);
 			this.$store.dispatch('user', data.userInfo);
@@ -314,7 +311,7 @@ export default {
 		});
 
 		socket.on('exitGroup', data => {
-			console.log(data);
+			// console.log(data);
 			const user = this.$store.state.user;
 			user.groupId = '';
 			storage.set('token', data.token);
@@ -329,7 +326,7 @@ export default {
 			this.$store.dispatch('group', {});
 			this.$store.dispatch('weather', {});
 			this.$store.dispatch('rooms', []);
-			this.$store.dispatch('device', []);
+			this.$store.dispatch('devices', []);
 		});
 
 		socket.on('message', data => {

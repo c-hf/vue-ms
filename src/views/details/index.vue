@@ -1,6 +1,7 @@
 <template>
     <div class="details">
-        <view-lighting :device="device" />
+        <view-lighting :device="device"
+                       :deviceId="deviceId" />
     </div>
 </template>
 

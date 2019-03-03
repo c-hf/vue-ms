@@ -1,5 +1,5 @@
 <template>
-    <div class="information">
+    <el-row class="information">
         <el-col :span="16"
                 :md="16"
                 :lg="12"
@@ -30,7 +30,7 @@
                                :groupData="groupData" />
             </el-col>
         </el-col>
-    </div>
+    </el-row>
 </template>
 
 <script>
@@ -86,7 +86,6 @@ export default {
 	width: 100%;
 	min-height: 100%;
 	background-color: #f5f7fa;
-	overflow-y: scroll;
 	@include flex-center();
 
 	.information-col {

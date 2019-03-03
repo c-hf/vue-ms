@@ -13,7 +13,7 @@
                 :key="index"
                 v-else>
                 <span class="app-task-card-time"
-                      @click="routerToTask(item.timedTaskId)">
+                      @click="elitTask(item.timedTaskId)">
                     <i class="time"
                        v-if="!item.perform">
                         定时
@@ -90,6 +90,15 @@ export default {
 	},
 
 	methods: {
+		// 转到编辑
+		elitTask(timedTaskId) {
+			if (!this.onLine) {
+				return;
+			}
+			this.$emit('elitTask', timedTaskId);
+		},
+
+		// 开始/暂停任务
 		setPerform(index) {
 			const task = this.tasks[index];
 			if (task.perform) {
@@ -99,15 +108,47 @@ export default {
 			}
 		},
 
-		// 转到编辑
-		routerToTask(timedTaskId) {
-			if (!this.onLine) {
-				return;
-			}
-			this.$emit('routerToTask', timedTaskId);
+		// 获取执行时间
+		getExecuteTime(executeTime) {
+			const date = new Date(executeTime)
+				.toLocaleString('zh-CN', { hour12: false })
+				.split(' ');
+			return [date[1], date[0].split('/').slice(1)];
 		},
 
-		// 获取定时任务
+		// 监听任务完成
+		socketOn(deviceId) {
+			try {
+				this.socket = this.$store.state.socket;
+				if (!this.socket.on) {
+					return;
+				}
+				this.socket.on(`${deviceId}-updateDeviceTimedTask`, data => {
+					const index = this.tasks.findIndex(el => {
+						return el.timedTaskId === data.timedTaskId;
+					});
+					if (index === -1) {
+						return;
+					}
+					let item = this.tasks[index];
+					item.finish = data.finish;
+					this.tasks.splice(index, 1, item);
+					this.$notify({
+						title: item.name,
+						message: '任务执行完成！',
+					});
+				});
+			} catch (error) {
+				this.$message({
+					showClose: true,
+					center: true,
+					message: error.message,
+					type: 'error',
+				});
+			}
+		},
+
+		// 获取定时任务封装
 		getDeviceTimedTaskFn() {
 			if (!this.deviceId) {
 				return;
@@ -117,7 +158,7 @@ export default {
 				.then(resData => {
 					this.tasks = [];
 					resData.forEach(el => {
-						const [time, date] = this.setExecuteTime(
+						const [time, date] = this.getExecuteTime(
 							el.executeTime
 						);
 						this.tasks.push({
@@ -151,14 +192,14 @@ export default {
 				});
 		},
 
-		// 开始定时
+		// 开始定时封装
 		startDeviceTimedTaskFn(timedTaskId, index) {
 			this.$emit('setLoading', true);
 			startDeviceTimedTask(timedTaskId)
 				.then(resData => {
 					if (resData) {
 						const item = this.tasks[index];
-						const [time, date] = this.setExecuteTime(
+						const [time, date] = this.getExecuteTime(
 							resData.executeTime
 						);
 						item.sortIndex = resData.executeTime;
@@ -192,7 +233,7 @@ export default {
 				});
 		},
 
-		// 取消定时
+		// 取消定时封装
 		canclDeviceTimedTaskFn(timedTaskId) {
 			this.$emit('setLoading', true);
 			canclDeviceTimedTask(timedTaskId)
@@ -219,50 +260,6 @@ export default {
 					this.$emit('setLoading', false);
 				});
 		},
-
-		// 监听任务完成
-		socketOn() {
-			try {
-				this.socket = this.$store.state.socket;
-				if (!this.socket.on) {
-					return;
-				}
-				console.log('a');
-				this.socket.on(
-					`${this.deviceId}-updateDeviceTimedTask`,
-					data => {
-						console.log(data);
-						const index = this.tasks.findIndex(el => {
-							return el.timedTaskId === data.timedTaskId;
-						});
-						if (index === -1) {
-							return;
-						}
-						let item = this.tasks[index];
-						item.finish = data.finish;
-						this.tasks.splice(index, 1, item);
-						this.$notify({
-							title: item.name,
-							message: '任务执行完成！',
-						});
-					}
-				);
-			} catch (error) {
-				this.$message({
-					showClose: true,
-					center: true,
-					message: error.message,
-					type: 'error',
-				});
-			}
-		},
-
-		setExecuteTime(executeTime) {
-			const date = new Date(executeTime)
-				.toLocaleString('zh-CN', { hour12: false })
-				.split(' ');
-			return [date[1], date[0].split('/').slice(1)];
-		},
 	},
 
 	props: {
@@ -278,11 +275,6 @@ export default {
 	},
 
 	watch: {
-		deviceId() {
-			this.socketOn();
-			this.getDeviceTimedTaskFn();
-		},
-
 		onLine(newVal) {
 			if (!newVal) {
 				this.getDeviceTimedTaskFn();
@@ -295,7 +287,7 @@ export default {
 	},
 
 	mounted() {
-		this.socketOn();
+		this.socketOn(this.deviceId);
 	},
 
 	destroyed() {

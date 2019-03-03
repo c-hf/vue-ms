@@ -64,11 +64,11 @@
              v-if="taskType === 'new'">
             <el-button type="primary"
                        plain
-                       @click="onSubmit">
+                       @click="submit">
                 确定
             </el-button>
             <el-button plain
-                       @click="onReset">
+                       @click="reset">
                 重置
             </el-button>
         </div>
@@ -113,56 +113,6 @@ export default {
 	},
 
 	methods: {
-		// 小时选择
-		hourChange(value) {
-			if (value >= 24) {
-				this.minute = 0;
-			}
-		},
-
-		// 分钟选择
-		minuteChange(value) {
-			if (value === 60) {
-				this.hour = this.hour + 1;
-				this.minute = 0;
-			}
-			if (this.hour >= 24) {
-				this.minute = 0;
-			}
-		},
-
-		// statusItems 初始化
-		statusInit(deviceId) {
-			this.statusItems = [];
-			Object.keys(this.$store.state.status[deviceId]).forEach(el => {
-				this.statusItems.push(this.tasks.get(el));
-			});
-		},
-
-		// dataTasks 初始化
-		dataTasksInit(desired) {
-			this.dataTasks = [];
-			Object.keys(desired).forEach(key => {
-				const item = this.statusItems.find(el => el.id === key);
-				item.value = desired[key];
-				this.dataTasks.push(item);
-			});
-		},
-
-		setNotify(data) {
-			const executeTime = new Date(data.executeTime)
-				.toLocaleString('zh-CN', { hour12: false })
-				.split(' ');
-
-			this.$notify({
-				title: data.name,
-				message: `任务将在 ${executeTime[0].split('/')[1]}月${
-					executeTime[0].split('/')[2]
-				}日 ${executeTime[1].split(':').join(':')} 执行`,
-			});
-			this.$emit('setShow', false);
-		},
-
 		// 添加任务
 		commandEvent(value) {
 			const item = this.statusItems.find(el => el.id === value);
@@ -184,15 +134,8 @@ export default {
 			this.dataTasks.splice(index, 1);
 		},
 
-		// 重置
-		onReset() {
-			this.hour = 0;
-			this.minute = 0;
-			this.dataTasks = [];
-		},
-
 		// 提交
-		onSubmit() {
+		submit() {
 			if (!this.name.length) {
 				this.$message({
 					showClose: true,
@@ -219,6 +162,13 @@ export default {
 				return;
 			}
 			this.setDeviceTimedTaskFn();
+		},
+
+		// 重置
+		reset() {
+			this.hour = 0;
+			this.minute = 0;
+			this.dataTasks = [];
 		},
 
 		// 设置定时任务封装
@@ -282,7 +232,7 @@ export default {
 							type: 'success',
 							center: true,
 						});
-						this.$emit('setShow', false);
+						this.$emit('setVisible', false);
 					}
 				})
 				.catch(error => {
@@ -326,11 +276,63 @@ export default {
 					});
 				});
 		},
+
+		// 小时选择
+		hourChange(value) {
+			if (value >= 24) {
+				this.minute = 0;
+			}
+		},
+
+		// 分钟选择
+		minuteChange(value) {
+			if (value === 60) {
+				this.hour = this.hour + 1;
+				this.minute = 0;
+			}
+			if (this.hour >= 24) {
+				this.minute = 0;
+			}
+		},
+
+		// statusItems 初始化
+		statusInit(deviceId) {
+			this.statusItems = [];
+			Object.keys(this.$store.state.status[deviceId]).forEach(el => {
+				this.statusItems.push(this.tasks.get(el));
+			});
+		},
+
+		// dataTasks 初始化
+		dataTasksInit(desired) {
+			this.dataTasks = [];
+			Object.keys(desired).forEach(key => {
+				const item = this.statusItems.find(el => el.id === key);
+				item.value = desired[key];
+				this.dataTasks.push(item);
+			});
+		},
+
+		// 设置提醒信息
+		setNotify(data) {
+			const executeTime = new Date(data.executeTime)
+				.toLocaleString('zh-CN', { hour12: false })
+				.split(' ');
+
+			this.$notify({
+				title: data.name,
+				message: `任务将在 ${executeTime[0].split('/')[1]}月${
+					executeTime[0].split('/')[2]
+				}日 ${executeTime[1].split(':').join(':')} 执行`,
+			});
+			this.$emit('setVisible', false);
+		},
 	},
 
 	props: {
 		deviceId: {
 			type: String,
+			default: '',
 		},
 
 		taskType: {

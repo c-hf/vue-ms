@@ -16,7 +16,8 @@
             <el-button class="view-rooms-info-tree-btn"
                        icon="el-icon-plus"
                        circle
-                       size="small">
+                       size="small"
+                       @click="addRoom">
             </el-button>
         </div>
     </el-card>
@@ -41,6 +42,7 @@ export default {
 			},
 		};
 	},
+
 	computed: {
 		rooms() {
 			return this.$store.state.rooms;
@@ -133,6 +135,10 @@ export default {
 	},
 
 	methods: {
+		addRoom() {
+			this.$emit('addRoom');
+		},
+
 		// 随机数坐标
 		randomNum(max) {
 			return Math.floor(Math.random() * (max + 1));
@@ -249,7 +255,14 @@ export default {
 			this.loading = true;
 			updateDevice({ deviceId: deviceId, data: data })
 				.then(resData => {
-					this.$store.dispatch('updateDevice', resData);
+					if (resData.ok) {
+						this.$message({
+							showClose: true,
+							center: true,
+							message: '修改成功',
+							type: 'success',
+						});
+					}
 				})
 				.catch(error => {
 					this.$message({

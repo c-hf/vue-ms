@@ -2,6 +2,7 @@
     <div class="view-group">
         <div class="view-group-title">
             <span class="view-group-title-icon">
+                <svg-icon iconClass="icon-house" />
             </span>
         </div>
         <el-form :model="group"
@@ -190,14 +191,12 @@ export default {
 			display: block;
 			width: 120px;
 			height: 120px;
+			font-size: 80px;
 			border-radius: 50%;
 			border: 2px solid rgba(151, 140, 140, 0.4);
 			box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.2);
-			background-image: url(~@/assets/img/information/house.svg);
 			background-color: rgba($color: #d7dada, $alpha: 0.3);
-			background-size: 70% 70%;
-			background-position: center center;
-			background-repeat: no-repeat;
+			@include flex-center();
 		}
 
 		&-text {

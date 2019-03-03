@@ -39,7 +39,20 @@
                         </el-tab-pane>
                         <el-tab-pane label="配置管理"
                                      name="second">
-                            配置管理
+                            <el-card class="view-lighting-info-content">
+                                <span class="view-lighting-info-content-id">
+                                    <i>群组 ID</i>
+                                    <i>
+                                        {{ device.groupId }}
+                                    </i>
+                                </span>
+                                <span class="view-lighting-info-content-id">
+                                    <i>DeviceID</i>
+                                    <i>
+                                        {{ device.deviceId }}
+                                    </i>
+                                </span>
+                            </el-card>
                         </el-tab-pane>
                     </el-tabs>
                     <div class="view-lighting-lamp">
@@ -54,11 +67,11 @@
                         <el-tab-pane class="log-card">
                             <span slot="label">
                                 <svg-icon iconClass="icon-document" />
-                                操作日志
+                                设备日志
                             </span>
                             <app-log-card ref="log-card"
-                                          :deviceId="this.device.deviceId"
-                                          @more="more" />
+                                          :deviceLogs="deviceLogs"
+                                          @more="moreDeviceLogs" />
                         </el-tab-pane>
                         <el-tab-pane class="log-card">
                             <span slot="label">
@@ -66,9 +79,9 @@
                                 设备告警
                             </span>
                             <app-log-card ref="warn-card"
-                                          :deviceId="this.device.deviceId"
+                                          :deviceLogs="deviceLogs"
                                           logType="warn"
-                                          @more="more" />
+                                          @more="moreDeviceLogs" />
                         </el-tab-pane>
                     </el-tabs>
                 </el-col>
@@ -143,26 +156,27 @@
                         </el-button>
                     </div>
                     <div class="content">
-                        <app-task-card ref="taskCard"
-                                       :deviceId="device.deviceId"
+                        <app-task-card ref="appTaskCard"
+                                       :deviceId="deviceId"
                                        :onLine="device.onLine"
-                                       @routerToTask="routerToTask"
+                                       @elitTask="elitTask"
                                        @setLoading="setLoading" />
                     </div>
                 </el-card>
             </el-col>
         </el-row>
-        <app-drawer :show.sync="show">
-            <app-drawer-log v-if="show && !timedTask"
-                            :deviceId="this.device.deviceId"
+        <app-drawer :show.sync="drawerVisible">
+            <app-drawer-log v-if="drawerVisible && drawerType === 'log'"
+                            :deviceId="deviceId"
                             @deleteLogs="deleteLogs" />
-            <app-drawer-task v-if="show && timedTask"
+
+            <app-drawer-task v-else-if="drawerVisible && drawerType === 'task'"
                              :categoryItemId="device.categoryItemId"
-                             :deviceId="device.deviceId"
+                             :deviceId="deviceId"
                              :status="status"
                              :taskType="taskType"
                              :timedTaskId="timedTaskId"
-                             @setShow="setShow">
+                             @setVisible="setVisible">
             </app-drawer-task>
         </app-drawer>
     </div>
@@ -175,8 +189,7 @@ import AppLogCard from '@/components/appLogCard';
 import AppDrawerLog from '@/components/appDrawerLog';
 import AppDrawerTask from '@/components/appDrawerTask';
 import AppTaskCard from '@/components/appTaskCard';
-import { ICONS } from './config.js';
-import { setDesired, deleteDeviceLog } from '@/api/device';
+import { setDesired, deleteDeviceLog, getDeviceLogById } from '@/api/device';
 
 export default {
 	name: 'ViewLighting',
@@ -185,16 +198,14 @@ export default {
 			activeName: 'first',
 			switchLoading: false,
 			timedTaskloading: false,
-			timer: null,
-			show: false,
 			timedTask: false,
-			taskType: 'new',
+			drawerVisible: false,
+			timer: null,
+			deviceLogs: [],
 			timedTaskId: '',
 			luminance: 0,
-			icons: ICONS,
-			modeIcon: 'icon-zidong-',
-			swingIcon: 'icon-zuoyoubaifeng',
-			speedIcon: 'icon-xiaofeng',
+			drawerType: 'log',
+			taskType: 'new',
 		};
 	},
 
@@ -229,30 +240,6 @@ export default {
 	},
 
 	methods: {
-		setShow(value) {
-			this.show = value;
-			this.$refs.taskCard.getDeviceTimedTaskFn();
-		},
-
-		// 防抖动
-		setTimeOut() {
-			if (this.timer) {
-				clearTimeout(this.timer);
-				this.timer = null;
-			}
-			this.timer = setTimeout(() => {
-				if (this.switchLoading) {
-					this.$message({
-						showClose: true,
-						center: true,
-						message: '操作超时！请重试',
-						type: 'error',
-					});
-					this.switchLoading = false;
-				}
-			}, 2000);
-		},
-
 		// 设置设备开关
 		setSwitch() {
 			if (!this.device.onLine) {
@@ -282,6 +269,82 @@ export default {
 			this.luminance = status.luminance;
 		},
 
+		// 防抖动
+		setTimeOut() {
+			if (this.timer) {
+				clearTimeout(this.timer);
+				this.timer = null;
+			}
+			this.timer = setTimeout(() => {
+				if (this.switchLoading) {
+					this.$message({
+						showClose: true,
+						center: true,
+						message: '操作超时！请重试',
+						type: 'error',
+					});
+					this.switchLoading = false;
+				}
+			}, 2000);
+		},
+
+		// 隐藏抽屉
+		setVisible(value) {
+			this.drawerVisible = value;
+			this.$refs.appTaskCard.getDeviceTimedTaskFn();
+		},
+
+		// 查看更多日志
+		moreDeviceLogs() {
+			this.drawerVisible = true;
+			this.drawerType = 'log';
+		},
+
+		// 显示定时任务
+		setTimedTask() {
+			this.drawerType = 'task';
+			this.taskType = 'new';
+			this.drawerVisible = true;
+		},
+
+		// 编辑定时任务
+		elitTask(timedTaskId) {
+			this.taskType = 'edit';
+			this.drawerType = 'task';
+			this.timedTaskId = timedTaskId;
+			this.drawerVisible = true;
+		},
+
+		// 设置定时任务 Loading
+		setLoading(value) {
+			this.timedTaskloading = value;
+		},
+
+		// 侧边栏删除日志
+		deleteLogs() {
+			this.getDeviceLogByIdFn(this.deviceId);
+		},
+
+		// 监听日志更新
+		socketOn(deviceId) {
+			try {
+				this.socket = this.$store.state.socket;
+				if (!this.socket.on) {
+					return;
+				}
+				this.socket.on(`${deviceId}-updateDeviceLog`, data => {
+					this.deviceLogs.unshift(data);
+				});
+			} catch (error) {
+				this.$message({
+					showClose: true,
+					center: true,
+					message: error.message,
+					type: 'error',
+				});
+			}
+		},
+
 		// 操作设备封装
 		setDesiredFn(data) {
 			setDesired(data).catch(error => {
@@ -294,22 +357,23 @@ export default {
 			});
 		},
 
-		// 显示定时任务
-		setTimedTask() {
-			this.taskType = 'new';
-			this.show = true;
-			this.timedTask = true;
-		},
-
-		// 查看更多
-		more() {
-			this.show = true;
-		},
-
-		// 删除日志
-		deleteLogs() {
-			this.$refs['log-card'].getDeviceLogByIdFn();
-			this.$refs['warn-card'].getDeviceLogByIdFn();
+		// 获取日志封装
+		getDeviceLogByIdFn(deviceId) {
+			getDeviceLogById({
+				deviceId: deviceId,
+				dayNum: 0,
+			})
+				.then(resData => {
+					this.deviceLogs = resData;
+				})
+				.catch(error => {
+					this.$message({
+						showClose: true,
+						center: true,
+						message: error.message,
+						type: 'error',
+					});
+				});
 		},
 
 		// 删除日志封装
@@ -326,6 +390,7 @@ export default {
 							center: true,
 						});
 					}
+					this.getDeviceLogByIdFn(this.deviceId);
 				})
 				.catch(error => {
 					this.$message({
@@ -336,22 +401,14 @@ export default {
 					});
 				});
 		},
-
-		// 编辑任务
-		routerToTask(timedTaskId) {
-			this.taskType = 'edit';
-			this.timedTaskId = timedTaskId;
-			this.show = true;
-			this.timedTask = true;
-		},
-
-		// 设置 Loading
-		setLoading(value) {
-			this.timedTaskloading = value;
-		},
 	},
 
 	props: {
+		deviceId: {
+			type: String,
+			default: '',
+		},
+
 		device: {
 			type: Object,
 			default: () => {
@@ -382,12 +439,6 @@ export default {
 				this.timer ? clearTimeout(this.timer) : (this.timer = null);
 			}
 		},
-
-		show(newVal) {
-			if (!newVal) {
-				this.timedTask = false;
-			}
-		},
 	},
 
 	components: {
@@ -397,6 +448,20 @@ export default {
 		AppDrawerTask,
 		AppTaskCard,
 		AppLamp,
+	},
+
+	created() {
+		this.getDeviceLogByIdFn(this.deviceId);
+	},
+
+	mounted() {
+		this.socketOn(this.deviceId);
+	},
+
+	destroyed() {
+		if (this.socket.on) {
+			this.socket.off(`${this.deviceId}-updateDeviceLog`);
+		}
 	},
 };
 </script>
@@ -421,19 +486,38 @@ export default {
 	&-info {
 		width: 30%;
 		height: 350px;
+		min-width: 220px;
 
 		&-content {
+			padding: 10px;
+
 			&-item {
 				width: 100%;
 				height: 50px;
 				line-height: 50px;
 				color: #909399;
-
 				@include flex-start();
 
 				i:nth-of-type(1) {
 					width: 80px;
 					display: block;
+				}
+				i:nth-of-type(2) {
+					color: #606266;
+				}
+			}
+
+			&-id {
+				width: 100%;
+				height: 50px;
+				line-height: 50px;
+				color: #909399;
+
+				i {
+					display: block;
+				}
+				i:nth-of-type(2) {
+					color: #606266;
 				}
 			}
 		}

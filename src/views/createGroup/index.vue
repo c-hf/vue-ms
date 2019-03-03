@@ -5,6 +5,7 @@
              v-if="!group.groupId">
             <div class="create-group-title">
                 <span class="create-group-title-icon">
+                    <svg-icon iconClass="icon-house" />
                 </span>
             </div>
             <el-form :model="group"
@@ -48,9 +49,8 @@
         </div>
         <div class="create-group-content result"
              v-else>
-            <span class="create-group-content-icon"
-                  :class="{'create-group-content-icon-success':isSuccess,'create-group-content-icon-error': !isSuccess}">
-            </span>
+            <svg-icon class="create-group-content-icon"
+                      :iconClass="iconClass" />
             <span class="create-group-content-text">
                 {{ text }}
             </span>
@@ -98,7 +98,7 @@ export default {
 			provinceindex: null,
 			cityindex: null,
 			text: '',
-			isSuccess: false,
+			iconClass: 'icon-success_info',
 		};
 	},
 
@@ -141,27 +141,12 @@ export default {
 			this.loading = true;
 			createGroup(data)
 				.then(resData => {
-					console.log(resData);
 					storage.set('token', resData.token);
 					this.$store.dispatch('token', resData.token);
 					this.$store.dispatch('user', resData.userInfo);
 					this.group.groupId = resData.userInfo.groupId;
 					this.text = '创建成功！';
-					this.isSuccess = true;
-					// const socket = this.$store.state.socket;
-					// if (socket.disconnect) {
-					// 	socket.disconnect();
-					// 	socket.io.opts.query = {
-					// 		token: resData.token,
-					// 	};
-					// 	socket.open();
-					// 	this.$store.dispatch('socket', socket);
-					// }
-
-					// this.$notify({
-					// 	title: '家庭组',
-					// 	message: '创建新的家庭组，数据更新',
-					// });
+					this.iconClass = 'icon-success_info';
 				})
 				.catch(error => {
 					this.$message({
@@ -170,7 +155,7 @@ export default {
 						message: error.message,
 						type: 'error',
 					});
-					this.isSuccess = false;
+					this.iconClass = 'icon-error';
 					this.text = error.message;
 				})
 				.then(() => {
@@ -315,13 +300,11 @@ export default {
 			width: 120px;
 			height: 120px;
 			border-radius: 50%;
+			font-size: 80px;
 			border: 2px solid rgba(151, 140, 140, 0.4);
 			box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.2);
-			background-image: url(~@/assets/img/information/house.svg);
 			background-color: rgba($color: #d7dada, $alpha: 0.3);
-			background-size: 70% 70%;
-			background-position: center center;
-			background-repeat: no-repeat;
+			@include flex-center();
 		}
 
 		&-text {
@@ -367,13 +350,6 @@ export default {
 			background-size: 100% 100%;
 			background-position: center center;
 			background-repeat: no-repeat;
-
-			&-success {
-				background-image: url(~@/assets/img/information/success.svg);
-			}
-			&-error {
-				background-image: url(~@/assets/img/information/error.svg);
-			}
 		}
 
 		&-text {

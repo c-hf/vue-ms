@@ -41,6 +41,14 @@ export const applyMembershipHandle = data => {
 	return axiosFn(options);
 };
 
+// 添加房间
+export const addRoom = data => {
+	options.method = 'post';
+	options.url = '/api/group/addRoom';
+	options.data = data;
+	return axiosFn(options);
+};
+
 // delete
 // 删除成员
 export const deleteGroupMember = data => {
@@ -52,11 +60,29 @@ export const deleteGroupMember = data => {
 	return axiosFn(deleteOptions);
 };
 
+// 删除房间
+export const deleteHouse = data => {
+	const deleteOptions = {
+		method: 'delete',
+		url: '/api/group/deleteHouse',
+		params: data,
+	};
+	return axiosFn(deleteOptions);
+};
+
 // put
 // 更新群信息
 export const updateGroupInfo = data => {
 	options.method = 'put';
 	options.url = '/api/group/updateGroupInfo';
+	options.data = data;
+	return axiosFn(options);
+};
+
+// 更新房间
+export const updateHouse = data => {
+	options.method = 'put';
+	options.url = '/api/group/updateHouse';
 	options.data = data;
 	return axiosFn(options);
 };
@@ -82,6 +108,16 @@ export const getGroupInfo = groupId => {
 		params: {
 			groupId: groupId,
 		},
+	};
+	return axiosFn(getOptions);
+};
+
+// 获取房间信息
+export const getHouse = data => {
+	const getOptions = {
+		method: 'get',
+		url: '/api/group/getHouse',
+		params: data,
 	};
 	return axiosFn(getOptions);
 };

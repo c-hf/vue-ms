@@ -76,6 +76,7 @@ export default {
 		height: 100%;
 		z-index: 2200;
 		background-color: #fff;
+		overflow: hidden;
 	}
 }
 

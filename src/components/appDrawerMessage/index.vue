@@ -1,5 +1,5 @@
 <template>
-    <el-scrollbar style="height:100%;"
+    <el-scrollbar style="height:100%; width:100%;"
                   class="app-drawer-message"
                   v-loading="loading">
         <div class="app-drawer-message-title">
@@ -76,7 +76,6 @@ export default {
 			isActive: -1,
 			visible: false,
 			messageData: {},
-			messageIndex: -1,
 		};
 	},
 
@@ -101,12 +100,7 @@ export default {
 
 		// 对话框关闭
 		dialogClose() {
-			this.updateMessageStatusFn(
-				this.messageData.messageId,
-				this.messageIndex
-			);
-			// this.messageData = {};
-			this.messageIndex = -1;
+			this.updateMessageStatusFn(this.messageData.messageId);
 		},
 
 		// 导航至消息中心
@@ -142,12 +136,12 @@ export default {
 		},
 
 		// 设为已读
-		updateMessageStatusFn(messageId, index) {
+		updateMessageStatusFn(messageId) {
 			this.loading = true;
 			updateMessageStatus([messageId])
 				.then(resData => {
 					if (resData.ok) {
-						this.messages.splice(index, 1);
+						this.getMessagesFn();
 					}
 				})
 				.catch(error => {
@@ -184,6 +178,10 @@ export default {
 		padding: 20px;
 		border-bottom: 1px solid #ebeef5;
 		@include flex-between();
+
+		span {
+			color: #606266;
+		}
 	}
 
 	&-warn {

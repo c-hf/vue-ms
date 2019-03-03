@@ -12,6 +12,11 @@
                          :disabled="disabled">
                 <view-group />
             </el-tab-pane>
+            <el-tab-pane label="房间管理"
+                         name="room"
+                         :disabled="disabled">
+                <view-room />
+            </el-tab-pane>
         </el-tabs>
     </div>
 </template>
@@ -19,6 +24,7 @@
 <script>
 import ViewUser from './viewUser';
 import ViewGroup from './viewGroup';
+import ViewRoom from './viewRoom';
 
 export default {
 	name: 'Set',
@@ -42,6 +48,7 @@ export default {
 	components: {
 		ViewUser,
 		ViewGroup,
+		ViewRoom,
 	},
 
 	created() {},

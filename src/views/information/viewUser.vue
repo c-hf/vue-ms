@@ -72,6 +72,21 @@ import { UPLOADIMGURL } from '@/config';
 export default {
 	name: 'ViewPersonal',
 	data() {
+		const validateBirthday = (rule, value, callback) => {
+			if (value === '') {
+				callback(new Error('请选择生日'));
+			} else {
+				const time = Math.floor(
+					(Date.now() - new Date(this.data.birthday).getTime()) /
+						(1000 * 60 * 60)
+				);
+				if (time > 24) {
+					callback();
+					return;
+				}
+				callback(new Error('请选择正确的日期'));
+			}
+		};
 		return {
 			uploadImgUrl: UPLOADIMGURL,
 			imgUrl: '',
@@ -80,9 +95,8 @@ export default {
 			isAvatarError: false,
 			rules: {
 				birthday: {
+					validator: validateBirthday,
 					required: true,
-					message: '请选择生日',
-					trigger: 'change',
 				},
 			},
 		};

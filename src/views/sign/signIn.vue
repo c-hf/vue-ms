@@ -8,7 +8,7 @@
              @keyup.enter.native="onEnter('signInForm')"
              class="form-sign-in">
         <el-form-item>
-            <h1 class="main-title">登录 XXX</h1>
+            <h1 class="main-title">登录 智家</h1>
             <h2 class="subtitle">开启智慧生活</h2>
         </el-form-item>
         <el-form-item prop="id">

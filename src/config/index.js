@@ -1,10 +1,19 @@
 // axios URL
-const BASEURL = 'http://localhost:3000/';
+// const BASEURL = 'http://118.24.169.3/v1';
+// const SOCKETURL = 'http://118.24.169.3';
+
+// // 上传头像 URL
+// const UPLOADIMGURL = 'http://118.24.169.3/v1/api/user/setUserAvatar';
+// // 默认头像 URL
+// const IMGURL = 'http://118.24.169.3/v1/static/avatar/1.jpg';
+
+const BASEURL = 'http://10.10.72.4:3000';
+const SOCKETURL = 'http://10.10.72.4:3000';
 
 // 上传头像 URL
-const UPLOADIMGURL = 'http://localhost:3000/api/user/setUserAvatar';
+const UPLOADIMGURL = 'http://10.10.72.4:3000/api/user/setUserAvatar';
 // 默认头像 URL
-const IMGURL = 'http://localhost:3000/static/avatar/1.jpg';
+const IMGURL = 'http://10.10.72.4:3000/static/avatar/1.jpg';
 
 // 操作日志
 const DEVICESOURCE = {
@@ -164,4 +173,29 @@ const WEATHERICON = {
 	未知: 'icon-unknown',
 };
 
-export { BASEURL, UPLOADIMGURL, IMGURL, DEVICESOURCE, WEATHERICON };
+const ROOMICONS = [
+	'icon-keting',
+	'icon-woshi',
+	'icon-cangting-1',
+	'icon-canting-2',
+	'icon-weishengjian',
+	'icon-yushi',
+	'icon-chufang',
+	'icon-yingerfang',
+	'icon-children',
+	'icon-diannaozhuo',
+	'icon-shafa',
+	'icon-shufang',
+	'icon-work',
+	'icon-yangtai',
+];
+
+export {
+	BASEURL,
+	SOCKETURL,
+	UPLOADIMGURL,
+	IMGURL,
+	DEVICESOURCE,
+	WEATHERICON,
+	ROOMICONS,
+};

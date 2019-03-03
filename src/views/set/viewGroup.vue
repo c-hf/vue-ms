@@ -242,14 +242,11 @@ export default {
 			if (!this.edit) {
 				return this.data.region;
 			}
-			console.log(this.provinceindex);
-			console.log(this.cityindex);
 			const districtIndex = this.regionOptions[
 				this.provinceindex
 			].children[this.cityindex].children.findIndex(el => {
 				return el.value === this.group.region[2];
 			});
-			console.log(districtIndex);
 			return [
 				{
 					adcode: this.group.region[0],

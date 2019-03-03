@@ -3,6 +3,7 @@
          class="app-dialog-group-content">
         <div class="app-dialog-group-left">
             <span class="app-dialog-group-icon">
+                <svg-icon iconClass="icon-house" />
             </span>
             <span class="app-dialog-group-left-name">
                 {{ data.group.groupName }}
@@ -261,13 +262,11 @@ export default {
 		width: 110px;
 		height: 110px;
 		border-radius: 50%;
+		font-size: 70px;
 		border: 2px solid rgba(151, 140, 140, 0.4);
 		box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.2);
-		background-image: url(~@/assets/img/information/house.svg);
 		background-color: rgba($color: #d7dada, $alpha: 0.3);
-		background-size: 70% 70%;
-		background-position: center center;
-		background-repeat: no-repeat;
+		@include flex-center();
 	}
 
 	&-left {
@@ -275,7 +274,6 @@ export default {
 		height: 100%;
 		padding-top: 40px;
 		box-sizing: border-box;
-		color: #fff;
 		background-color: #909399;
 		position: relative;
 
@@ -284,6 +282,7 @@ export default {
 		&-name {
 			width: 100%;
 			margin-top: 30px;
+			color: #fff;
 			font-size: 20px;
 			text-align: center;
 
@@ -292,6 +291,7 @@ export default {
 
 		&-id {
 			margin-top: 10px;
+			color: #fff;
 			font-size: 14px;
 		}
 

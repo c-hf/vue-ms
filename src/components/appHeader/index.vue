@@ -3,7 +3,12 @@
         <div class="left">
             <div class="left-logo"
                  :style="{width: `${width}px`}">
-                Logo
+                <svg-icon iconClass="icon-logo" />
+                <transition name="el-fade-in-linear">
+                    <span v-if="width === 220">
+                        智家
+                    </span>
+                </transition>
             </div>
             <div class="left-menu">
                 <el-button type="text"
@@ -11,14 +16,7 @@
                            class="left-menu-btn"
                            @click.stop="setCollapse">
                     <svg-icon :iconClass="collapseIcon" />
-                    <!-- el-icon-close -->
                 </el-button>
-                <!-- <el-button type="text"
-                           :disabled="disabled"
-                           class="left-menu-btn"
-                           @click.stop="toggleFullScreen()">
-                    <svg-icon :iconClass="fullScreenIcon" />
-                </el-button> -->
             </div>
         </div>
         <div class="right">
@@ -35,14 +33,7 @@
             </transition>
             <span class="right-prompt"
                   @click="setSearch">
-                <!-- <transition name="el-fade-in-linear"
-                            mode="out-in">
-                    <svg-icon v-if="isSearch"
-                              iconClass="icon-close" /> -->
                 <svg-icon iconClass="icon-search" />
-                <!-- </transition> -->
-                <!-- icon-close -->
-                <!-- <i class="el-icon-close"></i> -->
             </span>
             <span class="right-prompt"
                   :disabled="disabled"
@@ -275,6 +266,16 @@ export default {
 			height: 100%;
 			transition: all 0.5s;
 			@include flex-center();
+
+			font-size: 36px;
+			svg {
+				margin: 0 10px;
+			}
+
+			span {
+				font-size: 16px;
+				margin: 0 10px;
+			}
 		}
 
 		&-menu {

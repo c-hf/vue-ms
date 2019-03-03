@@ -1,6 +1,7 @@
 <template>
     <el-row class="view-user"
-            :gutter="24">
+            :gutter="24"
+            v-loading="loading">
         <el-col :span="14"
                 class="view-user-left">
             <el-form class="view-user-left-form"
@@ -114,6 +115,7 @@ export default {
 			}
 		};
 		return {
+			loading: false,
 			disabled: true,
 			uploadImgUrl: UPLOADIMGURL,
 			rules: {
@@ -187,6 +189,7 @@ export default {
 
 		// 更新用户信息
 		updateUserInfoFn() {
+			this.loading = true;
 			updateUserInfo(this.user)
 				.then(resData => {
 					if (resData.userId) {
@@ -206,6 +209,9 @@ export default {
 						message: error.message,
 						type: 'error',
 					});
+				})
+				.then(() => {
+					this.loading = false;
 				});
 		},
 	},

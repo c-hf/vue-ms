@@ -6,7 +6,10 @@
             <span class="app-lighting-card-top-icon"
                   :class="{'off-line-icon': !device.onLine}"
                   @click="routeDetails">
-                <svg-icon iconClass="icon-light_lamp" />
+                <svg-icon v-if="device.categoryItemId  === 'ceilingLamp'"
+                          iconClass="icon-light_lamp" />
+                <svg-icon v-else
+                          iconClass="icon-light" />
             </span>
             <span class="app-lighting-card-top-set">
                 <svg-icon iconClass="icon-collection" />
@@ -95,7 +98,12 @@ export default {
 				deviceId: this.device.deviceId,
 				desired: { switch: !this.status.switch },
 			}).catch(error => {
-				console.log(error);
+				this.$message({
+					showClose: true,
+					center: true,
+					message: error.message,
+					type: 'error',
+				});
 			});
 		},
 
@@ -132,10 +140,10 @@ export default {
 @import '~@/assets/scss/mixins';
 
 .app-lighting-card {
-	margin-bottom: 20px;
-	user-select: none;
+	// margin-bottom: 20px;
+	// user-select: none;
 
-	position: relative;
+	// position: relative;
 
 	&-top {
 		width: 100%;

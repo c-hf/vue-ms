@@ -11,7 +11,7 @@
                     <view-group-info @displayGroupInfo="displayGroupInfo" />
                 </el-col>
                 <el-col :span="24">
-                    <view-rooms-info />
+                    <view-rooms-info @addRoom="addRoom" />
                 </el-col>
             </el-col>
             <el-col :span="6"
@@ -28,9 +28,12 @@
             <view-drawer-user v-if="drawerType === 'user'"
                               @setDrawerType="setDrawerType"
                               @setShow="setShow" />
-            <view-drawer-group v-else
+            <view-drawer-group v-else-if="drawerType === 'group'"
                                @setDrawerType="setDrawerType"
                                @setShow="setShow" />
+            <app-drawer-room v-else
+                             type="new"
+                             @setShow="setShow" />
         </app-drawer>
         <el-dialog class="app-dialog-user"
                    :visible.sync="userVisible"
@@ -42,7 +45,8 @@
         <el-dialog class="app-dialog-group"
                    :visible.sync="groupVisible"
                    width="600px">
-            <app-dialog-group @setVisible="setGroupVisible"
+            <app-dialog-group v-if="groupVisible"
+                              @setVisible="setGroupVisible"
                               @addMember="addMember" />
         </el-dialog>
     </div>
@@ -52,6 +56,8 @@
 import AppDrawer from '@/components/appDrawer';
 import AppDialogUser from '@/components/appDialogUser';
 import AppDialogGroup from '@/components/appDialogGroup';
+import AppDrawerRoom from '@/components/appDrawerRoom';
+
 import ViewMember from './viewMember';
 import ViewGroupInfo from './viewGroupInfo';
 import ViewRoomsInfo from './viewRoomsInfo';
@@ -73,6 +79,11 @@ export default {
 	methods: {
 		setDrawerType(value) {
 			this.drawerType = value;
+		},
+
+		addRoom() {
+			this.drawerType = 'room';
+			this.show = true;
 		},
 
 		// 查看群信息
@@ -100,7 +111,7 @@ export default {
 			}
 		},
 
-		// 显示抽屉组件
+		// 抽屉组件
 		setShow(value) {
 			this.show = value;
 		},
@@ -117,6 +128,7 @@ export default {
 		AppDrawer,
 		AppDialogUser,
 		AppDialogGroup,
+		AppDrawerRoom,
 		ViewMember,
 		ViewGroupInfo,
 		ViewRoomsInfo,

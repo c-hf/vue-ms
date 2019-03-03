@@ -8,7 +8,7 @@
              @keyup.enter.native="onEnter('signUpForm')"
              class="form-sign-up">
         <el-form-item>
-            <h1 class="main-title">欢迎注册 XXX</h1>
+            <h1 class="main-title">欢迎注册 智家</h1>
             <h2 class="subtitle">开启智慧生活</h2>
         </el-form-item>
         <el-form-item prop="nickName">
@@ -72,8 +72,6 @@ export default {
 				this.vNickName = false;
 				callback(new Error('请输入昵称'));
 			} else {
-				console.log(this.data.nickName);
-				console.log(nameRegExp.test(this.data.nickName));
 				if (nameRegExp.test(this.data.nickName)) {
 					this.vNickName = true;
 					callback();

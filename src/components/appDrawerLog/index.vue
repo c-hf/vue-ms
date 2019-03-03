@@ -1,8 +1,8 @@
 <template>
     <el-scrollbar style="height:100%;"
-                  class="app-drawer-card">
-        <div class="app-drawer-card-title"
-             v-loading="loading">
+                  class="app-drawer-card"
+                  v-loading="loading">
+        <div class="app-drawer-card-title">
             <span class="app-drawer-card-title-text">
                 操作日志
             </span>
@@ -110,6 +110,11 @@ export default {
 	},
 
 	methods: {
+		// 查看更多
+		more() {
+			this.$emit('more');
+		},
+
 		// 删除日志
 		deleteLogs() {
 			this.loading = true;
@@ -138,11 +143,6 @@ export default {
 				.then(() => {
 					this.loading = false;
 				});
-		},
-
-		// 查看更多
-		more() {
-			this.$emit('more');
 		},
 
 		// 获取日志
@@ -175,12 +175,6 @@ export default {
 	props: {
 		deviceId: {
 			type: String,
-		},
-	},
-
-	watch: {
-		deviceId() {
-			this.getDeviceLogByIdFn();
 		},
 	},
 

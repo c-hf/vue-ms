@@ -113,7 +113,7 @@
             </el-dropdown>
             <el-button class="view-member-tool-btn"
                        type="text"
-                       @click="addMember">
+                       @click="addMember('user')">
                 <svg-icon iconClass="icon-addpeople_fill" />
             </el-button>
         </div>
@@ -349,7 +349,9 @@ export default {
 			this.loading = true;
 			unGroup({ groupId: this.user.groupId })
 				.then(resData => {
-					console.log(resData);
+					if (resData.ok) {
+						return;
+					}
 				})
 				.catch(error => {
 					this.$message({

@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import AppCeilingLamp from '@/components/appLighting';
+import AppCeilingLamp from '@/components/appLighting/appCeilingLamp';
 
 export default {
 	name: 'Overview', // 设备概览

@@ -75,6 +75,26 @@ export default new Vuex.Store({
 			});
 		},
 
+		// 更新房间
+		updateRooms(state, val) {
+			if (val.type === 'add') {
+				state.rooms.push(val.data);
+			} else if (val.type === 'delete') {
+				const index = state.rooms.findIndex(el => {
+					return el.roomId === val.data.roomId;
+				});
+				state.rooms.splice(index, 1);
+			} else if (val.type === 'update') {
+				const index = state.rooms.findIndex(el => {
+					return el.roomId === val.data.roomId;
+				});
+				const item = state.rooms[index];
+				item.name = val.data.name;
+				item.icon = val.data.icon;
+				state.rooms.splice(index, 1, item);
+			}
+		},
+
 		// 更新在线/离线
 		updateOnline(state, val) {
 			const index = findIndex(state, val.deviceId);
@@ -162,6 +182,10 @@ export default new Vuex.Store({
 
 		messageUnread({ commit }, obj) {
 			commit('setMessageUnread', obj);
+		},
+
+		updateRooms({ commit }, obj) {
+			commit('updateRooms', obj);
 		},
 
 		updateOnline({ commit }, obj) {

@@ -46,7 +46,6 @@
 <script>
 import SignUp from './signUp';
 import SignIn from './signIn';
-import { getUserInfo } from '@/api/user';
 
 import avatar from '@//assets/img/avatar/avatar.jpg';
 
@@ -84,30 +83,6 @@ export default {
 		// loading
 		setLoad(value) {
 			this.loading = value;
-		},
-
-		// 获取 UserInfo
-		getUserInfoFn() {
-			this.loading = true;
-			getUserInfo()
-				.then(resData => {
-					this.$store.dispatch('user', resData);
-					this.loading = false;
-					// if (!resData.groupId) {
-					// 	console.log(resData.groupId);
-					// 	this.$router.push({ name: 'information' });
-					// }
-					this.$router.push({ name: 'home' });
-				})
-				.catch(error => {
-					this.loading = false;
-					this.$message({
-						showClose: true,
-						center: true,
-						message: error.message,
-						type: 'error',
-					});
-				});
 		},
 	},
 

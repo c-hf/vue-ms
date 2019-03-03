@@ -10,10 +10,6 @@
                      :rules="rules"
                      label-position="left"
                      label-width="120px">
-                <!-- <el-form-item label="家庭组 ID"
-                              prop="groupId">
-                    {{ data.groupId }}
-                </el-form-item> -->
                 <el-form-item label="DeviceID"
                               prop="deviceId">
                     {{ data.deviceId }}
@@ -169,6 +165,12 @@ export default {
 			updateDevice(data)
 				.then(resData => {
 					this.data = resData;
+					this.$message({
+						showClose: true,
+						center: true,
+						message: '保存成功！',
+						type: 'success',
+					});
 				})
 				.catch(error => {
 					this.$message({

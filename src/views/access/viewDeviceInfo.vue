@@ -183,7 +183,6 @@ export default {
 
 	methods: {
 		typeChange(value) {
-			console.log(this.options);
 			this.options.forEach((el, index) => {
 				if (el.value === value[0]) {
 					this.deviceData.name = this.options[index].children.find(

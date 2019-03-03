@@ -7,10 +7,9 @@
                     height="200"
                     v-show="loading">
             </canvas>
-            <span class="view-complete-content-icon"
-                  :class="{'view-complete-content-icon-success':isSuccess,'view-complete-content-icon-error': !isSuccess}"
-                  v-show="!loading">
-            </span>
+            <svg-icon v-show="!loading"
+                      class="view-complete-content-icon"
+                      :iconClass="iconClass" />
         </div>
         <span class="view-complete-text">
             {{text}}
@@ -53,6 +52,7 @@ export default {
 			loading: true,
 			text: '正在创建...',
 			isSuccess: false,
+			iconClass: 'icon-success_info',
 			user: {},
 		};
 	},
@@ -71,7 +71,7 @@ export default {
 				groupData: this.groupData,
 			})
 				.then(resData => {
-					this.isSuccess = true;
+					this.iconClass = 'icon-success_info';
 					this.text = '创建成功！';
 					storage.set('token', resData.token);
 					this.$store.dispatch('token', resData.token);
@@ -82,7 +82,7 @@ export default {
 					this.loading = false;
 				})
 				.catch(error => {
-					this.isSuccess = false;
+					this.iconClass = 'icon-error';
 					this.loading = false;
 					this.text = error.message;
 					this.$message({
@@ -193,13 +193,6 @@ export default {
 			background-size: 100% 100%;
 			background-position: center center;
 			background-repeat: no-repeat;
-
-			&-success {
-				background-image: url(~@/assets/img/information/success.svg);
-			}
-			&-error {
-				background-image: url(~@/assets/img/information/error.svg);
-			}
 		}
 	}
 
