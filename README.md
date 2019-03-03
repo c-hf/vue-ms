@@ -44,29 +44,28 @@ ToDo-List - 未完成
 
 ## 截图
 
-<img src="_md_img\1-登录.PNG" width="45%" style="padding: 5px;">
-<img src="_md_img\1-注册.PNG" width="45%" style="padding: 5px;">
-<img src="_md_img\2-首页-2.PNG" width="45%" style="padding: 5px;">
-<img src="_md_img\2-首页-3.PNG" width="45%" style="padding: 5px;">
-<img src="_md_img\3-群组-1.PNG" width="45%" style="padding: 5px;">
-<img src="_md_img\3-群组-2.PNG" width="45%" style="padding: 5px;">
-<img src="_md_img\3-群组-3.PNG" width="45%" style="padding: 5px;">
-<img src="_md_img\3-群组-4.PNG" width="45%" style="padding: 5px;">
-<img src="_md_img\3-群组-5.PNG" width="45%" style="padding: 5px;">
-<img src="_md_img\4-控制台.PNG" width="45%" style="padding: 5px;">
-<img src="_md_img\4-设备管理-1.PNG" width="45%" style="padding: 5px;">
-<img src="_md_img\4-设备管理-2.PNG" width="45%" style="padding: 5px;">
-<img src="_md_img\4-设备管理-3.PNG" width="45%" style="padding: 5px;">
-<img src="_md_img\5-设备接入-2.PNG" width="45%" style="padding: 5px;">
-<img src="_md_img\6-设备控制面板-1.PNG" width="45%" style="padding: 5px;">
-<img src="_md_img\6-设备控制面板-2.PNG" width="45%" style="padding: 5px;">
-<img src="_md_img\6-设备控制面板-3.PNG" width="45%" style="padding: 5px;">
-<img src="_md_img\6-设备控制面板-4.PNG" width="45%" style="padding: 5px;">
-<img src="_md_img\6-设备控制面板-5.PNG" width="45%" style="padding: 5px;">
-<img src="_md_img\6-设备控制面板-6.PNG" width="45%" style="padding: 5px;">
-<img src="_md_img\7-消息中心.PNG" width="45%" style="padding: 5px;">
-<img src="_md_img\7-消息中心-2.PNG" width="45%" style="padding: 5px;">
-<img src="_md_img\7-消息中心-3.PNG" width="45%" style="padding: 5px;">
-<img src="_md_img\8-设置-1.PNG" width="45%" style="padding: 5px;">
-<img src="_md_img\8-设置-2.PNG" width="45%" style="padding: 5px;">
-<img src="_md_img\8-设置-3.PNG" width="45%" style="padding: 5px;">
+<img src="_md_img\1-登录.PNG" width="45%" style="padding: 5px;"><img src="_md_img\1-注册.PNG" width="45%" style="padding: 5px;">
+
+<img src="_md_img\2-首页-2.PNG" width="45%" style="padding: 5px;"><img src="_md_img\2-首页-3.PNG" width="45%" style="padding: 5px;">
+
+<img src="_md_img\3-群组-1.PNG" width="45%" style="padding: 5px;"><img src="_md_img\3-群组-2.PNG" width="45%" style="padding: 5px;">
+
+<img src="_md_img\3-群组-3.PNG" width="45%" style="padding: 5px;"><img src="_md_img\3-群组-4.PNG" width="45%" style="padding: 5px;">
+
+<img src="_md_img\3-群组-5.PNG" width="45%" style="padding: 5px;"><img src="_md_img\4-控制台.PNG" width="45%" style="padding: 5px;">
+
+<img src="_md_img\4-设备管理-1.PNG" width="45%" style="padding: 5px;"><img src="_md_img\4-设备管理-2.PNG" width="45%" style="padding: 5px;">
+
+<img src="_md_img\4-设备管理-3.PNG" width="45%" style="padding: 5px;"><img src="_md_img\5-设备接入-2.PNG" width="45%" style="padding: 5px;">
+
+<img src="_md_img\6-设备控制面板-1.PNG" width="45%" style="padding: 5px;"><img src="_md_img\6-设备控制面板-2.PNG" width="45%" style="padding: 5px;">
+
+<img src="_md_img\6-设备控制面板-3.PNG" width="45%" style="padding: 5px;"><img src="_md_img\6-设备控制面板-4.PNG" width="45%" style="padding: 5px;">
+
+<img src="_md_img\6-设备控制面板-5.PNG" width="45%" style="padding: 5px;"><img src="_md_img\6-设备控制面板-6.PNG" width="45%" style="padding: 5px;">
+
+<img src="_md_img\7-消息中心.PNG" width="45%" style="padding: 5px;"><img src="_md_img\7-消息中心-2.PNG" width="45%" style="padding: 5px;">
+
+<img src="_md_img\7-消息中心-3.PNG" width="45%" style="padding: 5px;"><img src="_md_img\8-设置-1.PNG" width="45%" style="padding: 5px;">
+
+<img src="_md_img\8-设置-2.PNG" width="45%" style="padding: 5px;"><img src="_md_img\8-设置-3.PNG" width="45%" style="padding: 5px;">
