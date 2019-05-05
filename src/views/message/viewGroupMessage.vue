@@ -347,7 +347,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~@/assets/scss/mixins';
+// @import '~@/assets/scss/mixins';
 
 .view-group-message {
 	padding: 20px;

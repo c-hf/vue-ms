@@ -77,7 +77,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~@/assets/scss/mixins';
+// @import '~@/assets/scss/mixins';
+
 .bubble {
 	width: 280px;
 	height: 280px;

@@ -390,7 +390,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '~@/assets/scss/mixins';
+// @import '~@/assets/scss/mixins';
 
 .view-member {
 	background-image: url(~@/assets/img/signLeft/4.jpg);

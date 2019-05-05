@@ -199,7 +199,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~@/assets/scss/mixins';
+// @import '~@/assets/scss/mixins';
 
 .app-drawer-device {
 	padding: 20px;

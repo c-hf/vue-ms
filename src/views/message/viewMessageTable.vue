@@ -133,7 +133,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~@/assets/scss/mixins';
+// @import '~@/assets/scss/mixins';
 
 .view-message-table {
 	min-height: 360px;

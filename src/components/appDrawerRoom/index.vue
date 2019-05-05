@@ -229,7 +229,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '~@/assets/scss/mixins';
+// @import '~@/assets/scss/mixins';
 
 .app-drawer-room {
 	padding: 50px 0;

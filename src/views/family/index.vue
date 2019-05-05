@@ -139,7 +139,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '~@/assets/scss/mixins';
+// @import '~@/assets/scss/mixins';
 
 .family {
 	background-color: inherit;
