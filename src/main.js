@@ -5,7 +5,9 @@ import store from './store';
 import axios from 'axios';
 import ElementUI from 'element-ui';
 import echarts from 'echarts/lib/echarts';
+import NProgress from 'nprogress';
 
+import 'nprogress/nprogress.css';
 import 'echarts/lib/component/title';
 import 'echarts/lib/component/legend';
 
@@ -23,14 +25,17 @@ Vue.config.productionTip = false;
 Vue.use(ElementUI);
 
 Vue.prototype.$echarts = echarts;
-
 // /* global TweenMax Draggable */
 // Vue.prototype.$TweenMax = TweenMax;
 // Vue.prototype.$Draggable = Draggable;
 Vue.component('svg-icon', SvgIcon);
 
+NProgress.inc(0.2);
+NProgress.configure({ easing: 'ease', speed: 500, showSpinner: false });
+
 // 路由守卫
 router.beforeEach((to, from, next) => {
+	NProgress.start();
 	if (to.fullPath === '/') {
 		next({
 			path: '/home',
@@ -71,10 +76,11 @@ router.beforeEach((to, from, next) => {
 // 	next();
 // });
 
-// router.afterEach((to, from) => {
-// 	console.log('afterEach');
-// 	console.log(from);
-// });
+router.afterEach(() => {
+	NProgress.done();
+	// console.log('afterEach');
+	// console.log(from);
+});
 
 // axios 全局默认设置
 axios.defaults.baseURL = BASEURL;
