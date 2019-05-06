@@ -85,8 +85,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// @import '~@/assets/scss/mixins';
-
 .fade-enter-active,
 .fade-leave-active {
 	transition: opacity 0.5s;

@@ -276,8 +276,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// @import '~@/assets/scss/mixins';
-
 .view-group {
 	padding: 32px;
 	padding-top: 40px;

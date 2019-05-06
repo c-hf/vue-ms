@@ -80,8 +80,6 @@ export default {
 </script>
 
 <style lang="scss">
-// @import '~@/assets/scss/mixins';
-
 .information {
 	width: 100%;
 	min-height: 100%;

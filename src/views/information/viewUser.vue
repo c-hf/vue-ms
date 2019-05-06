@@ -169,8 +169,6 @@ export default {
 </script>
 
 <style lang="scss">
-// @import '~@/assets/scss/mixins';
-
 .view-user {
 	height: 100%;
 	position: relative;

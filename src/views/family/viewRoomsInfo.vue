@@ -290,8 +290,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// @import '~@/assets/scss/mixins';
-
 .view-rooms-info {
 	&-echart {
 		width: 80%;

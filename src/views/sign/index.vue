@@ -110,6 +110,12 @@ export default {
 		display: flex;
 	}
 
+	@media screen and (min-width: 1600px) {
+		.el-card {
+			height: 660px !important;
+		}
+	}
+
 	.el-card {
 		width: 60%;
 		height: 560px;

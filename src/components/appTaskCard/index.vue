@@ -299,8 +299,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// @import '~@/assets/scss/mixins';
-
 .app-task-card {
 	height: 100%;
 	&-item {

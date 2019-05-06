@@ -180,8 +180,6 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-// @import '~@/assets/scss/mixins';
-
 .app-aside-content {
 	min-width: 64px;
 	transition: all 0.5s;
@@ -215,7 +213,6 @@ export default {
 			white-space: nowrap;
 			text-overflow: ellipsis;
 			text-align: center;
-			// color: #fff;
 			overflow: hidden;
 			cursor: pointer;
 		}
@@ -229,7 +226,6 @@ export default {
 		vertical-align: middle;
 		padding-right: 10px;
 		font-size: 20px;
-		// color: #303133;
 		color: #909399;
 	}
 

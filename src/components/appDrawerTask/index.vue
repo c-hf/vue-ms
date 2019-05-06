@@ -361,8 +361,6 @@ export default {
 </script>
 
 <style lang="scss">
-// @import '~@/assets/scss/mixins';
-
 .app-drawer-task {
 	&-title {
 		padding-top: 20px;

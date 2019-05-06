@@ -295,8 +295,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// @import '~@/assets/scss/mixins';
-
 .message {
 	width: 100%;
 	// min-height: calc(100vh - 150px);

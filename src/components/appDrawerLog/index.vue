@@ -185,8 +185,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// @import '~@/assets/scss/mixins';
-
 .app-drawer-card {
 	&-title {
 		@include flex-start(column);

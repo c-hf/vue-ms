@@ -36,8 +36,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// @import '~@/assets/scss/mixins';
-
 .view-control-info {
 	margin-bottom: 10px;
 

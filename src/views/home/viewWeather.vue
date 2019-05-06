@@ -180,8 +180,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// @import '~@/assets/scss/mixins';
-
 .view-weather {
 	margin-bottom: 20px;
 

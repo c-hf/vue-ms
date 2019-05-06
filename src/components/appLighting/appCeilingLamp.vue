@@ -137,8 +137,6 @@ export default {
 </script>
 
 <style lang="scss">
-// @import '~@/assets/scss/mixins';
-
 .app-lighting-card {
 	// margin-bottom: 20px;
 	// user-select: none;

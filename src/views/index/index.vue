@@ -358,8 +358,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// @import '~@/assets/scss/mixins';
 .app-main {
+	display: flex;
+	flex-direction: column;
+
 	&-title {
 		height: 40px;
 		margin: 0 20px;
@@ -373,6 +375,7 @@ export default {
 	}
 
 	&-content {
+		flex: 1;
 		width: 100%;
 		min-height: calc(100vh - 160px);
 		padding: 20px;

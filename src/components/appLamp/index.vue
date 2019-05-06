@@ -55,8 +55,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// @import '~@/assets/scss/mixins';
-
 .app-lamp {
 	width: 150px;
 	height: 150px;

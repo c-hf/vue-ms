@@ -172,8 +172,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// @import '~@/assets/scss/mixins';
-
 .view-complete {
 	height: 100%;
 	position: relative;

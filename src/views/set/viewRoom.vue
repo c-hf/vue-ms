@@ -180,8 +180,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// @import '~@/assets/scss/mixins';
-
 .view-room {
 	padding: 32px;
 	padding-top: 40px;

@@ -2,9 +2,7 @@
     <div class="bubble"
          ref="bubble">
         <span class="bubble-mini bubble-mini-1"></span>
-        <!-- <span class="bubble-mini bubble-mini-2"></span> -->
         <span class="bubble-mini bubble-mini-3"></span>
-        <!-- <span class="bubble-text">Temperature</span> -->
         <span class="bubble-num">
             {{animatedNumber}}
             <i>&#8451;</i>
@@ -42,7 +40,6 @@ export default {
 
 	methods: {
 		mousemove(event) {
-			// console.log(event.clientX, event.clientY);
 			const x = Math.round(
 				(event.clientX - this.$refs.bubble.offsetLeft - 240) / 22
 			);
@@ -67,18 +64,10 @@ export default {
 			type: Number,
 		},
 	},
-
-	mounted() {
-		// this.$refs.bubble.addEventListener('mouseover', e => {
-		// 	console.log(e);
-		// });
-	},
 };
 </script>
 
 <style lang="scss" scoped>
-// @import '~@/assets/scss/mixins';
-
 .bubble {
 	width: 280px;
 	height: 280px;
