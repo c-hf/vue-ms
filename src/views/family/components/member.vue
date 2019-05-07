@@ -124,7 +124,7 @@
 import { getUserById } from '@/api/user';
 import { getGroupById, exitGroup, unGroup } from '@/api/group';
 
-import ViewSearch from './viewSearch';
+import ViewSearch from './search';
 
 export default {
 	name: 'Member',

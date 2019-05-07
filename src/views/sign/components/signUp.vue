@@ -18,7 +18,7 @@
         </el-form-item>
         <el-form-item prop="password">
             <el-input placeholder="密码"
-                      type="password"
+                      show-password
                       v-model="data.password">
             </el-input>
         </el-form-item>
@@ -59,7 +59,7 @@
 
 <script>
 import { signUp, signSendCode } from '@/api/user';
-import { EMAIL_SUFFIX } from './config';
+import { EMAIL_SUFFIX } from '../config';
 import storage from '@/assets/js/storage';
 
 export default {

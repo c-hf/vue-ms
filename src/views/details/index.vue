@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import ViewLighting from './viewLighting';
+import ViewLighting from './components/lighting';
 
 export default {
 	name: 'Details',
@@ -45,7 +45,6 @@ export default {
 
 <style lang="scss" scoped>
 .details {
-	width: 100%;
 	background-color: inherit;
 }
 </style>

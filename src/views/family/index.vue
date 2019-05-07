@@ -44,7 +44,7 @@
         </el-dialog>
         <el-dialog class="app-dialog-group"
                    :visible.sync="groupVisible"
-                   width="600px">
+                   width="800px">
             <app-dialog-group v-if="groupVisible"
                               @setVisible="setGroupVisible"
                               @addMember="addMember" />
@@ -58,11 +58,11 @@ import AppDialogUser from '@/components/appDialogUser';
 import AppDialogGroup from '@/components/appDialogGroup';
 import AppDrawerRoom from '@/components/appDrawerRoom';
 
-import ViewMember from './viewMember';
-import ViewGroupInfo from './viewGroupInfo';
-import ViewRoomsInfo from './viewRoomsInfo';
-import ViewDrawerUser from './viewDrawerUser';
-import ViewDrawerGroup from './viewDrawerGroup';
+import ViewMember from './components/member';
+import ViewGroupInfo from './components/groupInfo';
+import ViewRoomsInfo from './components/roomsInfo';
+import ViewDrawerUser from './components/drawerUser';
+import ViewDrawerGroup from './components/drawerGroup';
 
 export default {
 	name: 'Family',
@@ -138,16 +138,11 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .family {
 	background-color: inherit;
 
 	&-dialog {
-		.el-dialog__header,
-		.el-dialog__body {
-			padding: 0;
-		}
-
 		.block {
 			display: block;
 		}
@@ -217,6 +212,17 @@ export default {
 			top: 277px;
 			right: 15px;
 			font-size: 20px;
+		}
+	}
+}
+</style>
+
+<style lang="scss">
+.family {
+	&-dialog {
+		.el-dialog__header,
+		.el-dialog__body {
+			padding: 0;
 		}
 	}
 }

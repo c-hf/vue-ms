@@ -26,7 +26,7 @@
 <script>
 import 'echarts/lib/chart/graph';
 
-import { DEVICECOLOR } from './config.js';
+import { DEVICECOLOR } from '../config.js';
 import { updateDevice } from '@/api/device';
 
 export default {

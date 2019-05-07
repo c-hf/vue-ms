@@ -1,75 +1,73 @@
 <template>
-    <div>
-        <el-card class="message"
-                 v-loading="loading">
-            <div slot="header">
-                <span class="title">
-                    消息中心
-                </span>
-                <el-checkbox v-model="unread"
-                             @change="messageChange">
-                    仅看未读消息
-                </el-checkbox>
-            </div>
-            <div class="message-menu">
-                <span class="message-menu-left">
-                    <el-radio-group v-model="category"
-                                    @change="messageChange">
-                        <el-radio label="ALL">
-                            全部类型
-                        </el-radio>
-                        <el-radio label="GROUP">
-                            家庭组
-                        </el-radio>
-                        <el-radio label="DEVICE">
-                            设备
-                        </el-radio>
-                    </el-radio-group>
-                    <el-button-group>
-                        <el-button :disabled="disabled"
-                                   plain
-                                   size="medium"
-                                   @click="setAsRead">
-                            标为已读
-                        </el-button>
-                        <el-button :disabled="disabled"
-                                   plain
-                                   size="medium"
-                                   @click="deleteMessage">
-                            删除
-                        </el-button>
-                        <el-button plain
-                                   size="medium"
-                                   @click="refreshMessage">
-                            刷新
-                        </el-button>
-                    </el-button-group>
-                </span>
-                <span class="message-menu-right">
-                    <el-input placeholder="请输入搜索的标题"
-                              v-model="keyword"
-                              @keyup.enter="searchMessages">
-                        <i slot="suffix"
-                           class="el-input__icon el-icon-search"
-                           @click="searchMessages">
-                        </i>
-                    </el-input>
-                </span>
-            </div>
-            <view-message-table :messages="messages"
-                                @selectChange="selectChange"
-                                @updateMessageStatus="updateMessageStatusFn"
-                                @refreshMessage="refreshMessage"
-                                @setLoading="setLoading" />
-            <div class="message-footer">
-                <el-pagination background
-                               layout="prev, pager, next"
-                               :total="total"
-                               :current-page.sync="currentPage"
-                               @current-change="currentChange">
-                </el-pagination>
-            </div>
-        </el-card>
+    <div class="message"
+         v-loading="loading">
+        <div class="message-header">
+            <span class="title">
+                消息中心
+            </span>
+            <el-checkbox v-model="unread"
+                         @change="messageChange">
+                仅看未读消息
+            </el-checkbox>
+        </div>
+        <div class="message-menu">
+            <span class="message-menu-left">
+                <el-radio-group v-model="category"
+                                @change="messageChange">
+                    <el-radio label="ALL">
+                        全部类型
+                    </el-radio>
+                    <el-radio label="GROUP">
+                        家庭组
+                    </el-radio>
+                    <el-radio label="DEVICE">
+                        设备
+                    </el-radio>
+                </el-radio-group>
+                <el-button-group>
+                    <el-button :disabled="disabled"
+                               plain
+                               size="medium"
+                               @click="setAsRead">
+                        标为已读
+                    </el-button>
+                    <el-button :disabled="disabled"
+                               plain
+                               size="medium"
+                               @click="deleteMessage">
+                        删除
+                    </el-button>
+                    <el-button plain
+                               size="medium"
+                               @click="refreshMessage">
+                        刷新
+                    </el-button>
+                </el-button-group>
+            </span>
+            <span class="message-menu-right">
+                <el-input placeholder="请输入搜索的标题"
+                          v-model="keyword"
+                          @keyup.enter="searchMessages">
+                    <i slot="suffix"
+                       class="el-input__icon el-icon-search"
+                       @click="searchMessages">
+                    </i>
+                </el-input>
+            </span>
+        </div>
+        <view-message-table :messages="messages"
+                            @selectChange="selectChange"
+                            @updateMessageStatus="updateMessageStatusFn"
+                            @refreshMessage="refreshMessage"
+                            @setLoading="setLoading" />
+        <div class="message-footer">
+            <el-pagination background
+                           layout="prev, pager, next"
+                           :total="total"
+                           :current-page.sync="currentPage"
+                           @current-change="currentChange">
+            </el-pagination>
+        </div>
     </div>
 </template>
 
@@ -80,7 +78,7 @@ import {
 	deleteMessage,
 	getSearchMessages,
 } from '@/api/message';
-import ViewMessageTable from './viewMessageTable';
+import ViewMessageTable from './components/messageTable';
 
 export default {
 	name: 'Message',
@@ -296,16 +294,23 @@ export default {
 
 <style lang="scss" scoped>
 .message {
-	width: 100%;
-	// min-height: calc(100vh - 150px);
+	@include flex-direction();
+	@include content-background();
 
-	.title {
-		font-size: 18px;
-		padding: 0 10px;
+	&-header {
+		padding-bottom: 18px;
+		border-bottom: 1px solid #ebeef5;
+		box-sizing: border-box;
+
+		.title {
+			font-size: 18px;
+			padding: 0 10px;
+		}
 	}
 
 	&-menu {
 		height: 100px;
+		margin-top: 20px;
 
 		@include flex-between();
 		align-items: flex-start;

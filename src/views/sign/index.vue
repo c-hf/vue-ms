@@ -44,8 +44,8 @@
 </template>
 
 <script>
-import SignUp from './signUp';
-import SignIn from './signIn';
+import SignUp from './components/signUp';
+import SignIn from './components/signIn';
 
 import avatar from '@//assets/img/avatar/avatar.jpg';
 

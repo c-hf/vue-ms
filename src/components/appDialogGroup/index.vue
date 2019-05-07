@@ -251,7 +251,7 @@ export default {
 	}
 
 	&-content {
-		height: 440px;
+		height: 500px;
 		@include flex-between();
 	}
 

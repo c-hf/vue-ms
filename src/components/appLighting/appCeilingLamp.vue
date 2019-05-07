@@ -139,13 +139,13 @@ export default {
 <style lang="scss">
 .app-lighting-card {
 	// margin-bottom: 20px;
-	// user-select: none;
+	user-select: none;
 
 	// position: relative;
 
 	&-top {
 		width: 100%;
-		height: 180px;
+		height: 220px;
 		position: relative;
 		@include flex-center();
 

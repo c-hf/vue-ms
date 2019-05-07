@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import { TABLEDATA } from './config.js';
+import { TABLEDATA } from '../config.js';
 import { setDevice } from '@/api/device';
 
 export default {

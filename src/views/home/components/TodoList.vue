@@ -9,8 +9,6 @@
             <el-button circle
                        icon="el-icon-plus"
                        size="mini">
-                <!-- 操作按钮 -->
-                <!-- <i class="el-icon-plus"></i> -->
             </el-button>
         </div>
         <div class="view-todo-list-content"

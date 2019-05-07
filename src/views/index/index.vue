@@ -376,12 +376,10 @@ export default {
 
 	&-content {
 		flex: 1;
-		width: 100%;
 		min-height: calc(100vh - 160px);
-		padding: 20px;
+		margin: 20px;
 		box-sizing: border-box;
 		overflow: hidden;
-		// transition: all 0.5s;
 	}
 }
 

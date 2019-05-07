@@ -13,10 +13,10 @@
             </el-table-column>
             <el-table-column type="expand">
                 <template slot-scope="props">
-                    <view-group-message v-if="props.row.message.category === 'GROUP'"
-                                        :messageData="props.row.message"
-                                        @refreshMessage="refreshMessage"
-                                        @setLoading="setLoading" />
+                    <group-message v-if="props.row.message.category === 'GROUP'"
+                                   :messageData="props.row.message"
+                                   @refreshMessage="refreshMessage"
+                                   @setLoading="setLoading" />
                 </template>
             </el-table-column>
             <el-table-column label=""
@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import ViewGroupMessage from './viewGroupMessage';
+import GroupMessage from './groupMessage';
 
 export default {
 	name: 'ViewMessageTable',
@@ -69,10 +69,6 @@ export default {
 	},
 
 	methods: {
-		// rowKey(row) {
-		// 	return row.messageId;
-		// },
-
 		// 单元格样式设置
 		cellStyle({ row, columnIndex }) {
 			if (columnIndex === 4 || columnIndex === 5) {
@@ -118,7 +114,7 @@ export default {
 	},
 
 	components: {
-		ViewGroupMessage,
+		GroupMessage,
 	},
 
 	props: {
@@ -134,6 +130,7 @@ export default {
 
 <style lang="scss" scoped>
 .view-message-table {
-	min-height: 360px;
+	// min-height: 360px;
+	flex: 1;
 }
 </style>

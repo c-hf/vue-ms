@@ -155,7 +155,7 @@
 import {
 	INFORMATION_DATA_KEY,
 	CATEGORY_CONTENT_UPDATE_TIME_INTERVAL,
-} from './config.js';
+} from '../config.js';
 import { DEVICERULES } from '@/config';
 
 import { getAllDeviceCategory, getDeviceId } from '@/api/device';

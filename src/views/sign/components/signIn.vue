@@ -20,18 +20,22 @@
         </el-form-item>
         <el-form-item prop="password">
             <el-input placeholder="密码"
-                      type="password"
+                      show-password
                       v-model="data.password">
             </el-input>
         </el-form-item>
         <el-form-item size="medium">
             <el-button type="primary"
                        class="sign-in-btn"
-                       @click="onSubmit('signInForm')">登录</el-button>
+                       @click="onSubmit('signInForm')">
+                登录
+            </el-button>
             <span class="sign-up-btn">
                 没有账号？
                 <el-button type="text"
-                           @click="signUp">注册</el-button>
+                           @click="signUp">
+                    注册
+                </el-button>
             </span>
         </el-form-item>
         <el-form-item>
@@ -41,9 +45,9 @@
 </template>
 
 <script>
-import { signIn, getUserAvatar } from '@/api/user';
-import { EMAIL_SUFFIX } from './config';
 import storage from '@/assets/js/storage';
+import { signIn, getUserAvatar } from '@/api/user';
+import { EMAIL_SUFFIX } from '../config';
 
 export default {
 	name: 'SignIn',

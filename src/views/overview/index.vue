@@ -2,7 +2,9 @@
     <div>
         <el-row class="overview"
                 :gutter="24">
-            <el-col :sm="8"
+            <el-col class="item"
+                    :sm="8"
+                    :md="6"
                     :lg="6"
                     :xl="4"
                     v-for="(item, index) in device"
@@ -44,5 +46,10 @@ export default {
 .overview {
 	width: 100%;
 	min-height: 600px;
+
+	.item {
+		padding-bottom: 24px;
+		// 	margin-top: 20px;
+	}
 }
 </style>

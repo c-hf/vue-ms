@@ -34,9 +34,9 @@
 </template>
 
 <script>
-import ViewUser from './viewUser';
-import ViewGroup from './viewGroup';
-import ViewComplete from './viewComplete';
+import ViewUser from './components/user';
+import ViewGroup from './components/group';
+import ViewComplete from './components/complete';
 import { IMGURL } from '@/config';
 
 export default {

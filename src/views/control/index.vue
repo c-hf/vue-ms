@@ -21,8 +21,9 @@
 <script>
 import AppDrawer from '@/components/appDrawer';
 import AppDrawerDevice from '@/components/appDrawerDevice';
-import ViewControlTable from './viewControlTable';
-import ViewControlInfo from './viewControlInfo';
+import ViewControlTable from './components/controlTable';
+import ViewControlInfo from './components/controlInfo';
+
 import { deleteDevice } from '@/api/device';
 
 export default {

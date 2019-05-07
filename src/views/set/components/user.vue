@@ -224,6 +224,7 @@ export default {
 
 <style lang="scss" scoped>
 .view-user {
+	height: 100%;
 	padding: 20px;
 
 	&-left {

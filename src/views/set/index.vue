@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <el-tabs class="set"
+    <section class="set">
+        <el-tabs class="set-content"
                  type="border-card"
                  v-model="activeName">
             <el-tab-pane label="个人资料"
@@ -18,13 +18,13 @@
                 <view-room />
             </el-tab-pane>
         </el-tabs>
-    </div>
+    </section>
 </template>
 
 <script>
-import ViewUser from './viewUser';
-import ViewGroup from './viewGroup';
-import ViewRoom from './viewRoom';
+import ViewUser from './components/user';
+import ViewGroup from './components/group';
+import ViewRoom from './components/room';
 
 export default {
 	name: 'Set',
@@ -43,21 +43,30 @@ export default {
 		},
 	},
 
-	methods: {},
-
 	components: {
 		ViewUser,
 		ViewGroup,
 		ViewRoom,
 	},
-
-	created() {},
 };
 </script>
 
 <style lang="scss" scoped>
 .set {
-	width: 100%;
-	height: 100%;
+	@include flex-direction();
+
+	&-content {
+		@include flex-direction();
+		flex: 1;
+	}
 }
 </style>
+
+<style lang="scss">
+.set {
+	.el-tabs__content {
+		flex: 1;
+	}
+}
+</style>
+

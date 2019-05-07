@@ -22,8 +22,8 @@
 </template>
 
 <script>
-import ViewDeviceInfo from './viewDeviceInfo';
-import ViewDeviceParam from './viewDeviceParam';
+import ViewDeviceInfo from './components/deviceInfo';
+import ViewDeviceParam from './components/deviceParam';
 
 import { getDeviceParamAndAttrById } from '@/api/device';
 

@@ -80,9 +80,9 @@
 </template>
 
 <script>
-import ViewWeather from './viewWeather';
-import ViewMap from './viewMap';
-import ViewTodoList from './viewTodoList';
+import ViewWeather from './components/weather';
+import ViewMap from './components/map';
+import ViewTodoList from './components/TodoList';
 
 export default {
 	name: 'Home',

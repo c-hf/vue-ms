@@ -50,7 +50,7 @@
 
 <script>
 import { getProvinceInfo, getCityInfo, getDistrictInfo } from '@/api/user';
-import { RULES } from './config.js';
+import { RULES } from '../config.js';
 
 export default {
 	name: 'ViewGroup',

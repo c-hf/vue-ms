@@ -195,7 +195,7 @@
 import Drawer from '@/components/drawer';
 import AppBubble from '@/components/appBubble';
 import LogCard from '@/components/logCard';
-import { ICONS } from './config.js';
+import { ICONS } from '../config.js';
 
 export default {
 	name: 'ViewLighting',
