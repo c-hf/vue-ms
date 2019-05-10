@@ -76,8 +76,8 @@
                                   :route="{name: 'control'}">
                         设备管理
                     </el-menu-item>
-                    <el-menu-item index="control"
-                                  :route="{name: 'control'}">
+                    <el-menu-item index="relevance"
+                                  :route="{name: 'relevance'}">
                         设备关联
                     </el-menu-item>
                 </el-menu-item-group>

@@ -1,9 +1,9 @@
 <template>
-    <el-card class="view-control-table"
+    <el-card class="control-content"
              body-style="min-height:480px;">
         <el-table :data="deviceData"
-                  :default-sort="{prop:'最后活跃时间',order: 'ascending'}"
-                  class="device-table"
+                  :default-sort="{prop:'最后活跃时间', order: 'ascending'}"
+                  class="table"
                   highlight-current-row
                   ref="multipleTable"
                   style="width: 100%"
@@ -14,7 +14,7 @@
             </el-table-column>
             <el-table-column type="expand">
                 <template slot-scope="props">
-                    <el-form class="device-table-expand"
+                    <el-form class="table-expand"
                              inline
                              label-position="left">
                         <el-form-item label="名称">
@@ -52,7 +52,8 @@
             </el-table-column>
             <el-table-column :show-overflow-tooltip="true"
                              label="名称"
-                             prop="name"></el-table-column>
+                             prop="name">
+            </el-table-column>
             <el-table-column :show-overflow-tooltip="true"
                              label="设备类型"
                              prop="categoryItemName">
@@ -105,7 +106,7 @@
 
 <script>
 export default {
-	name: 'ViewControlTable',
+	name: 'ControlContent',
 	data() {
 		return {
 			selection: false,
@@ -142,53 +143,51 @@ export default {
 </script>
 
 <style lang="scss">
-.device-table {
-	&-expand {
-		font-size: 0;
-		padding-left: 50px;
+.control-content {
+	flex: 1;
 
-		.el-form-item {
-			width: 50%;
-			margin-right: 0;
-			margin-bottom: 0;
+	.table {
+		&-expand {
+			font-size: 0;
+			padding-left: 50px;
 
-			&__label {
-				width: 100px;
-				color: #99a9bf;
+			.el-form-item {
+				width: 50%;
+				margin-right: 0;
+				margin-bottom: 0;
+
+				&__label {
+					width: 100px;
+					color: #99a9bf;
+				}
 			}
 		}
-	}
 
-	&-status {
-		width: 100%;
-		display: block;
-		text-align: center;
-	}
-
-	.on-line,
-	.off-line {
-		display: block;
-		margin-left: 20px;
-		position: relative;
-
-		&::after {
-			content: ' ';
+		.on-line,
+		.off-line {
 			display: block;
-			width: 10px;
-			height: 10px;
-			border-radius: 50%;
-			background-color: rgba($color: #67c23a, $alpha: 1);
-			position: absolute;
-			left: -20px;
-			top: 50%;
-			margin-top: -5px;
-		}
-	}
+			margin-left: 20px;
+			position: relative;
 
-	.off-line {
-		color: #909399;
-		&::after {
-			background-color: rgba($color: #f56c6c, $alpha: 1);
+			&::after {
+				content: ' ';
+				display: block;
+				width: 10px;
+				height: 10px;
+				border-radius: 50%;
+				background-color: rgba($color: #67c23a, $alpha: 1);
+				position: absolute;
+				left: -20px;
+				top: 50%;
+				margin-top: -5px;
+			}
+		}
+
+		.off-line {
+			color: #909399;
+			&::after {
+				background-color: rgba($color: #f56c6c, $alpha: 1);
+			}
 		}
 	}
 }

@@ -1,10 +1,7 @@
 <template>
-    <el-card class="view-control-info"
-             body-style="display: flex;
-             justify-content: space-between;
-             alignItems: center">
+    <div class="control-info">
         <div class="control-info-left">
-            <span class="control-info-left-title">
+            <span class="title">
                 设备列表
             </span>
         </div>
@@ -16,12 +13,12 @@
                 添加设备
             </el-button>
         </div>
-    </el-card>
+    </div>
 </template>
 
 <script>
 export default {
-	name: 'ViewControlInfo',
+	name: 'ControlInfo',
 	data() {
 		return {};
 	},
@@ -29,25 +26,22 @@ export default {
 	methods: {
 		// 设备接入
 		routeAccess() {
-			this.$router.push({ name: 'access' });
+			// this.$router.push({ name: 'access' });
 		},
 	},
 };
 </script>
 
 <style lang="scss" scoped>
-.view-control-info {
-	margin-bottom: 10px;
+.control-info {
+	padding: 20px;
+	margin-bottom: 20px;
+	@include info-card();
+	@include flex-between();
 
 	&-left {
-		height: 60px;
-		@include flex-around(column);
-		align-items: flex-start;
-
-		&-title {
-			font-size: 18px;
-			padding: 10px 0;
-		}
+		height: 40px;
+		line-height: 40px;
 
 		&-num {
 			padding: 10px 0;

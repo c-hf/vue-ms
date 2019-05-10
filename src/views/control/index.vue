@@ -1,15 +1,9 @@
 <template>
     <div class="control"
          v-loading="loading">
-        <el-row :gutter="24">
-            <el-col :span="24">
-                <view-control-info />
-            </el-col>
-            <el-col :span="24">
-                <view-control-table @onEdit="onEdit"
-                                    @onDelete="onDelete" />
-            </el-col>
-        </el-row>
+        <control-info />
+        <control-content @onEdit="onEdit"
+                         @onDelete="onDelete" />
         <app-drawer :show.sync="show">
             <app-drawer-device v-if="show"
                                :deviceId="deviceId"
@@ -21,8 +15,8 @@
 <script>
 import AppDrawer from '@/components/appDrawer';
 import AppDrawerDevice from '@/components/appDrawerDevice';
-import ViewControlTable from './components/controlTable';
-import ViewControlInfo from './components/controlInfo';
+import ControlContent from './components/content';
+import ControlInfo from './components/info';
 
 import { deleteDevice } from '@/api/device';
 
@@ -79,13 +73,17 @@ export default {
 	components: {
 		AppDrawer,
 		AppDrawerDevice,
-		ViewControlTable,
-		ViewControlInfo,
+		ControlContent,
+		ControlInfo,
 	},
 };
 </script>
 
 <style lang="scss" scoped>
+.control {
+	@include flex-direction();
+}
+
 .fade-enter-active,
 .fade-leave-active {
 	transition: opacity 0.5s;

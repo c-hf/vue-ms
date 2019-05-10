@@ -96,6 +96,7 @@ export default {
 				control: { path: '/control', name: '设备管理' },
 				details: { path: '/overview', name: '概览' },
 				access: { path: '/control', name: '设备接入' },
+				relevance: { path: '/relevance', name: '设备关联' },
 				message: { path: '/message', name: '消息中心' },
 				set: { path: '/set', name: '设置' },
 			};

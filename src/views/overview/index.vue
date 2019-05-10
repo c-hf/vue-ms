@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-row class="overview"
-                :gutter="24">
+                :gutter="12">
             <el-col class="item"
                     :sm="8"
                     :md="6"
@@ -11,7 +11,6 @@
                     :key="index">
                 <app-ceiling-lamp :device="item" />
             </el-col>
-            <router-view />
         </el-row>
     </div>
 </template>
@@ -45,7 +44,9 @@ export default {
 <style lang="scss" scoped>
 .overview {
 	width: 100%;
-	min-height: 600px;
+	height: 100%;
+	// padding: 0 40px;
+	// min-height: 600px;
 
 	.item {
 		padding-bottom: 24px;

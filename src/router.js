@@ -69,7 +69,7 @@ export default new Router({
 				},
 				// 概览
 				{
-					path: 'overview',
+					path: '/overview',
 					name: 'overview',
 					meta: {
 						requireAuth: true,
@@ -78,7 +78,7 @@ export default new Router({
 				},
 				// 管理
 				{
-					path: 'control',
+					path: '/control',
 					name: 'control',
 					meta: {
 						requireAuth: true,
@@ -88,7 +88,7 @@ export default new Router({
 
 				// 接入
 				{
-					path: 'control/access',
+					path: '/control/access',
 					name: 'access',
 					meta: {
 						requireAuth: true,
@@ -96,14 +96,24 @@ export default new Router({
 					component: () => import('./views/access'),
 				},
 
-				// 概览
+				// 控制面板
 				{
-					path: 'details/:deviceId',
+					path: '/details/:deviceId',
 					name: 'details',
 					meta: {
 						requireAuth: true,
 					},
 					component: () => import('./views/details'),
+				},
+
+				// 设备关联
+				{
+					path: '/relevance',
+					name: 'relevance',
+					meta: {
+						requireAuth: true,
+					},
+					component: () => import('./views/relevance'),
 				},
 			],
 		},

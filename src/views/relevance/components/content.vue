@@ -1,16 +1,13 @@
 <template>
     <div>
-        <!-- sdasd -->
-        <relevance-info></relevance-info>
+
     </div>
 </template>
 
 
 <script>
-import RelevanceInfo from './components/info.vue';
-
 export default {
-	name: 'Relevance',
+	name: 'RelevanceContent',
 	data() {
 		return {};
 	},
@@ -19,9 +16,7 @@ export default {
 
 	methods: {},
 
-	components: {
-		RelevanceInfo,
-	},
+	components: {},
 
 	props: {},
 
@@ -35,4 +30,3 @@ export default {
 
 <style lang="scss" scoped>
 </style>
-
