@@ -385,7 +385,7 @@ export default {
 
 .router-leave-active,
 .router-enter-active {
-	transition: all 0.5s;
+	transition: all 0.4s;
 }
 
 .router-enter {

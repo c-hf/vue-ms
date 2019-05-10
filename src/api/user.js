@@ -33,11 +33,46 @@ export const perfectInformation = data => {
 	return axiosFn(options);
 };
 
+// 添加 to-dolist
+export const setTodoList = data => {
+	options.method = 'post';
+	options.url = '/api/user/TodoList';
+	options.data = data;
+	return axiosFn(options);
+};
+
+// delete
+// 删除 to-dolist
+export const deleteTodoList = data => {
+	const deleteOptions = {
+		method: 'delete',
+		url: '/api/user/TodoList',
+		params: data,
+	};
+	return axiosFn(deleteOptions);
+};
+
 // put
 // 更新用户信息
 export const updateUserInfo = data => {
 	options.method = 'put';
 	options.url = '/api/user/updateUserInfo';
+	options.data = data;
+	return axiosFn(options);
+};
+
+// 更新 to-dolist
+export const updateTodoList = data => {
+	options.method = 'put';
+	options.url = '/api/user/TodoList';
+	options.data = data;
+	return axiosFn(options);
+};
+
+// 完成 to-dolist
+export const finishTodoList = data => {
+	options.method = 'put';
+	options.url = '/api/user/finish/TodoList';
 	options.data = data;
 	return axiosFn(options);
 };
@@ -120,6 +155,16 @@ export const getWeatherInfo = data => {
 	const getOptions = {
 		method: 'get',
 		url: '/api/aMap/getWeatherInfo',
+		params: data,
+	};
+	return axiosFn(getOptions);
+};
+
+// 获取 To-do List
+export const getTodoList = data => {
+	const getOptions = {
+		method: 'get',
+		url: '/api/user/TodoList',
 		params: data,
 	};
 	return axiosFn(getOptions);

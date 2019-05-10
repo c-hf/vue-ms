@@ -46,5 +46,8 @@ export default {
 <style lang="scss" scoped>
 .details {
 	background-color: inherit;
+	padding-top: 20px;
+
+	@include flex-direction();
 }
 </style>

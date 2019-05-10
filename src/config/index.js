@@ -1,19 +1,19 @@
 // axios URL
-const BASEURL = 'http://118.24.169.3/v1';
-const SOCKETURL = 'http://118.24.169.3';
+// const BASEURL = 'http://118.24.169.3/v1';
+// const SOCKETURL = 'http://118.24.169.3';
 
-// 上传头像 URL
-const UPLOADIMGURL = 'http://118.24.169.3/v1/api/user/setUserAvatar';
-// 默认头像 URL
-const IMGURL = 'http://118.24.169.3/v1/static/avatar/1.jpg';
-
-// const BASEURL = 'http://10.10.72.4:3000';
-// const SOCKETURL = 'http://10.10.72.4:3000';
-
-// // 上传头像 UPLOADIMGURL
-// const UPLOADIMGURL = 'http://10.10.72.4:3000/api/user/setUserAvatar';
+// // 上传头像 URL
+// const UPLOADIMGURL = 'http://118.24.169.3/v1/api/user/setUserAvatar';
 // // 默认头像 URL
-// const IMGURL = 'http://10.10.72.4:3000/static/avatar/1.jpg';
+// const IMGURL = 'http://118.24.169.3/v1/static/avatar/1.jpg';
+
+const BASEURL = ' http://10.10.72.11:3000';
+const SOCKETURL = 'ws://10.10.72.11:3000';
+
+// // // 上传头像 UPLOADIMGURL
+const UPLOADIMGURL = ' http://10.10.72.11:3000/api/user/setUserAvatar';
+// // // 默认头像 URL
+const IMGURL = ' http://10.10.72.11:3000/static/avatar/1.jpg';
 
 // 操作日志
 const DEVICESOURCE = {

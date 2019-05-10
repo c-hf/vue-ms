@@ -1,170 +1,168 @@
 <template>
     <div class="view-lighting"
          ref="details">
-        <el-row>
-            <el-col :span="16"
-                    class="view-lighting-left">
-                <el-col :span="24"
-                        class="view-lighting-left-top">
-                    <el-tabs v-model="activeName"
-                             class="view-lighting-info">
-                        <el-tab-pane label="设备信息"
-                                     name="first">
-                            <el-card class="view-lighting-info-content">
-                                <span class="view-lighting-info-content-item">
-                                    <i>设备名称</i>
-                                    <i>
-                                        {{ device.name }}
-                                    </i>
-                                </span>
-                                <span class="view-lighting-info-content-item">
-                                    <i>分类</i>
-                                    <i>
-                                        {{ device.categoryName }}
-                                    </i>
-                                </span>
-                                <span class="view-lighting-info-content-item">
-                                    <i>位置</i>
-                                    <i>
-                                        {{ roomName }}
-                                    </i>
-                                </span>
-                                <span class="view-lighting-info-content-item">
-                                    <i>创建时间</i>
-                                    <i>
-                                        {{ device.createTime.split(' ')[0] }}
-                                    </i>
-                                </span>
-                            </el-card>
-                        </el-tab-pane>
-                        <el-tab-pane label="配置管理"
-                                     name="second">
-                            <el-card class="view-lighting-info-content">
-                                <span class="view-lighting-info-content-id">
-                                    <i>群组 ID</i>
-                                    <i>
-                                        {{ device.groupId }}
-                                    </i>
-                                </span>
-                                <span class="view-lighting-info-content-id">
-                                    <i>DeviceID</i>
-                                    <i>
-                                        {{ device.deviceId }}
-                                    </i>
-                                </span>
-                            </el-card>
-                        </el-tab-pane>
-                    </el-tabs>
-                    <div class="view-lighting-lamp">
-                        <app-lamp :luminance="status.luminance / 100"
-                                  :switch="status.switch && device.onLine" />
-                    </div>
-                </el-col>
-                <el-col :span="24"
-                        class="view-lighting-left-bottom">
-                    <el-tabs type="border-card"
-                             class="view-lighting-left-bottom-log">
-                        <el-tab-pane class="log-card">
-                            <span slot="label">
-                                <svg-icon iconClass="icon-document" />
-                                设备日志
-                            </span>
-                            <app-log-card ref="log-card"
-                                          :deviceLogs="deviceLogs"
-                                          @more="moreDeviceLogs" />
-                        </el-tab-pane>
-                        <el-tab-pane class="log-card">
-                            <span slot="label">
-                                <svg-icon iconClass="icon-warning" />
-                                设备告警
-                            </span>
-                            <app-log-card ref="warn-card"
-                                          :deviceLogs="deviceLogs"
-                                          logType="warn"
-                                          @more="moreDeviceLogs" />
-                        </el-tab-pane>
-                    </el-tabs>
-                </el-col>
-            </el-col>
-            <el-col :span="8"
-                    class="view-lighting-control">
-                <el-card class="view-lighting-control-content">
-                    <div class="view-lighting-control-content-top">
-                        <span class="item"
-                              :class="{active: device.onLine}">
-                            连接 -
-                        </span>
-                        <span class="item"
-                              :class="{active: status.switch && device.onLine}">
-                            运行 -
-                        </span>
-                        <span class="item warn">
-                            告警 -
-                        </span>
-                    </div>
-                    <div class="view-lighting-control-content-middle">
-                        <div class="luminance">
-                            <span class="luminance-setting">
-                                亮度设定
-                                <el-slider v-model="luminance"
-                                           vertical
-                                           height="100px"
-                                           :step="10"
-                                           :min="10"
-                                           :disabled="!status.switch || !device.onLine"
-                                           @change="setLuminance">
-                                </el-slider>
-                            </span>
-                            <span class="luminance-current">
-                                <svg-icon iconClass="icon-light" />
+        <div class="left">
+            <div class="left-top">
+                <el-tabs class="view-lighting-info"
+                         v-model="activeName"
+                         type="border-card">
+                    <el-tab-pane label="设备信息"
+                                 name="first">
+                        <div class="content">
+                            <span class="content-item">
+                                <i>设备名称</i>
                                 <i>
-                                    {{ status.luminance }}&#37;
+                                    {{ device.name }}
+                                </i>
+                            </span>
+                            <span class="content-item">
+                                <i>分类</i>
+                                <i>
+                                    {{ device.categoryName }}
+                                </i>
+                            </span>
+                            <span class="content-item">
+                                <i>位置</i>
+                                <i>
+                                    {{ roomName }}
+                                </i>
+                            </span>
+                            <span class="content-item">
+                                <i>创建时间</i>
+                                <i>
+                                    {{ device.createTime.split(' ')[0] }}
                                 </i>
                             </span>
                         </div>
-                    </div>
-                    <div class="view-lighting-control-content-bottom">
-                        <span>
+                    </el-tab-pane>
+                    <el-tab-pane label="配置管理"
+                                 name="second">
+                        <div class="content">
+                            <span class="content-id">
+                                <i>群组 ID</i>
+                                <i>
+                                    {{ device.groupId }}
+                                </i>
+                            </span>
+                            <span class="content-id">
+                                <i>DeviceID</i>
+                                <i>
+                                    {{ device.deviceId }}
+                                </i>
+                            </span>
+                        </div>
+                    </el-tab-pane>
+                </el-tabs>
+                <div class="view-lighting-lamp">
+                    <app-lamp :luminance="status.luminance / 100"
+                              :switch="status.switch && device.onLine" />
+                </div>
+            </div>
+            <div class="left-bottom">
+                <el-tabs type="border-card"
+                         class="view-lighting-left-bottom-log">
+                    <el-tab-pane class="log-card">
+                        <span slot="label">
+                            <svg-icon iconClass="icon-document" />
+                            设备日志
+                        </span>
+                        <app-log-card ref="log-card"
+                                      :deviceLogs="deviceLogs"
+                                      :height="250"
+                                      @more="moreDeviceLogs" />
+                    </el-tab-pane>
+                    <el-tab-pane class="log-card">
+                        <span slot="label">
+                            <svg-icon iconClass="icon-warning" />
+                            设备告警
+                        </span>
+                        <app-log-card ref="warn-card"
+                                      :deviceLogs="deviceLogs"
+                                      logType="warn"
+                                      :height="250"
+                                      @more="moreDeviceLogs" />
+                    </el-tab-pane>
+                </el-tabs>
+            </div>
+        </div>
+        <div class="right">
+            <el-card class="view-lighting-control-content">
+                <div class="view-lighting-control-content-top">
+                    <span class="item"
+                          :class="{active: device.onLine}">
+                        连接 -
+                    </span>
+                    <span class="item"
+                          :class="{active: status.switch && device.onLine}">
+                        运行 -
+                    </span>
+                    <span class="item warn">
+                        告警 -
+                    </span>
+                </div>
+                <div class="view-lighting-control-content-middle">
+                    <div class="luminance">
+                        <span class="luminance-setting">
+                            亮度设定
+                            <el-slider v-model="luminance"
+                                       vertical
+                                       height="100px"
+                                       :step="10"
+                                       :min="10"
+                                       :disabled="!status.switch || !device.onLine"
+                                       @change="setLuminance">
+                            </el-slider>
+                        </span>
+                        <span class="luminance-current">
+                            <svg-icon iconClass="icon-light" />
                             <i>
-                                开启/关闭
+                                {{ status.luminance }}&#37;
                             </i>
-                            <el-button class=" button"
-                                       :loading="switchLoading"
-                                       @click="setSwitch"
-                                       :disabled="!device.onLine"
-                                       :type="type"
-                                       circle
-                                       plain>
-                                <svg-icon v-if="!switchLoading"
-                                          iconClass="icon-guanbi" />
-                            </el-button>
                         </span>
                     </div>
-                </el-card>
-                <el-card class="view-lighting-control-footer"
-                         v-loading="timedTaskloading">
-                    <div slot="header"
-                         class="header">
-                        定时任务
-                        <el-button type="primary"
-                                   icon="el-icon-plus"
-                                   size="small"
+                </div>
+                <div class="view-lighting-control-content-bottom">
+                    <span>
+                        <i>
+                            开启/关闭
+                        </i>
+                        <el-button class=" button"
+                                   :loading="switchLoading"
+                                   @click="setSwitch"
                                    :disabled="!device.onLine"
+                                   :type="type"
                                    circle
-                                   plain
-                                   @click="setTimedTask">
+                                   plain>
+                            <svg-icon v-if="!switchLoading"
+                                      iconClass="icon-guanbi" />
                         </el-button>
-                    </div>
-                    <div class="content">
-                        <app-task-card ref="appTaskCard"
-                                       :deviceId="deviceId"
-                                       :onLine="device.onLine"
-                                       @elitTask="elitTask"
-                                       @setLoading="setLoading" />
-                    </div>
-                </el-card>
-            </el-col>
-        </el-row>
+                    </span>
+                </div>
+            </el-card>
+            <el-card class="view-lighting-control-footer"
+                     v-loading="timedTaskloading">
+                <div slot="header"
+                     class="header">
+                    定时任务
+                    <el-button type="primary"
+                               icon="el-icon-plus"
+                               size="small"
+                               :disabled="!device.onLine"
+                               circle
+                               plain
+                               @click="setTimedTask">
+                    </el-button>
+                </div>
+                <div class="content">
+                    <app-task-card ref="appTaskCard"
+                                   :deviceId="deviceId"
+                                   :onLine="device.onLine"
+                                   :height="260"
+                                   @elitTask="elitTask"
+                                   @setLoading="setLoading" />
+                </div>
+            </el-card>
+        </div>
         <app-drawer :show.sync="drawerVisible">
             <app-drawer-log v-if="drawerVisible && drawerType === 'log'"
                             :deviceId="deviceId"
@@ -468,31 +466,45 @@ export default {
 
 <style lang="scss" scoped>
 .view-lighting {
-	&-left {
-		&-top,
-		&-bottom {
-			display: flex;
-		}
+	flex: 1;
+	@include flex-between();
+	align-items: flex-start;
 
-		&-bottom-log {
-			width: 100%;
-			margin-top: 10px;
-			margin-right: 10px;
+	.left {
+		width: 70%;
+		height: 100%;
+		padding: 0 20px;
+		box-sizing: border-box;
+
+		&-top {
+			height: 50%;
+			@include flex-between();
 		}
+	}
+
+	.right {
+		width: 30%;
+		padding: 0 20px;
+		box-sizing: border-box;
 	}
 
 	&-info {
 		width: 30%;
-		height: 350px;
+		margin-bottom: 50px;
 		min-width: 220px;
 
-		&-content {
-			padding: 10px;
+		.content {
+			height: 300px;
+			margin: 10px;
+			padding: 20px;
+			border: 1px solid #f2f6fc;
+			border-radius: 4px;
+			box-sizing: border-box;
 
 			&-item {
 				width: 100%;
-				height: 50px;
-				line-height: 50px;
+				height: 60px;
+				line-height: 60px;
 				color: #909399;
 				@include flex-start();
 
@@ -622,7 +634,10 @@ export default {
 
 		&-content-bottom {
 			height: 100px;
+			margin-top: 10px;
+			margin-bottom: 20px;
 			@include flex-center();
+
 			span {
 				flex: 1;
 				@include flex-center(column);
@@ -645,7 +660,7 @@ export default {
 			}
 
 			.content {
-				height: 140px;
+				height: 260px;
 			}
 		}
 	}

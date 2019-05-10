@@ -14,8 +14,9 @@ module.exports = {
 			vuex: 'Vuex',
 			axios: 'axios',
 			'element-ui': 'ELEMENT',
-			TweenMax: 'TweenMax',
-			Draggable: 'draggable',
+			dayjs: 'dayjs',
+			// TweenMax: 'TweenMax',
+			// Draggable: 'draggable',
 		},
 	},
 

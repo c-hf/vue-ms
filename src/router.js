@@ -67,25 +67,6 @@ export default new Router({
 					},
 					component: () => import('./views/set'),
 				},
-				// // 设备
-				// {
-				// 	path: '/device',
-				// 	name: 'device',
-				// 	meta: {
-				// 		requireAuth: true,
-				// 	},
-				// 	beforeEnter: (to, from, next) => {
-				// 		if (to.fullPath === '/device') {
-				// 			next({
-				// 				path: '/device/overview',
-				// 			});
-				// 		} else {
-				// 			next();
-				// 		}
-				// 	},
-				// 	component: () => import('./views/device'),
-
-				// 	children: [
 				// 概览
 				{
 					path: 'overview',

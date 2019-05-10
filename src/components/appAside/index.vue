@@ -12,17 +12,6 @@
                 <i v-else>...</i>
             </span>
             <span class="app-aside-content-user-btn">
-                <!-- <el-tooltip effect="dark"
-                            content="yonghu "
-                            :open-delay="600"
-                            placement="top-start">
-                    <el-button size="mini"
-                               v-show="!isCollapse"
-                               circle
-                               @click="displayUserInfo">
-                        <svg-icon iconClass="icon-people_fill" />
-                    </el-button>
-                </el-tooltip> -->
                 <el-tooltip effect="dark"
                             content="设置"
                             :open-delay="600"
@@ -87,8 +76,20 @@
                                   :route="{name: 'control'}">
                         设备管理
                     </el-menu-item>
+                    <el-menu-item index="control"
+                                  :route="{name: 'control'}">
+                        设备关联
+                    </el-menu-item>
                 </el-menu-item-group>
             </el-submenu>
+            <el-menu-item index="message"
+                          :route="{name: 'message'}">
+                <svg-icon class="app-aside-content-icon"
+                          iconClass="icon-qrcode_fill" />
+                <span slot="title">
+                    情景模式
+                </span>
+            </el-menu-item>
             <el-menu-item index="message"
                           :route="{name: 'message'}">
                 <svg-icon class="app-aside-content-icon"

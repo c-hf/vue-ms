@@ -28,10 +28,13 @@ Vue.prototype.$echarts = echarts;
 // /* global TweenMax Draggable */
 // Vue.prototype.$TweenMax = TweenMax;
 // Vue.prototype.$Draggable = Draggable;
+
+/* global dayjs */
+Vue.prototype.$day = dayjs;
 Vue.component('svg-icon', SvgIcon);
 
-NProgress.inc(0.2);
-NProgress.configure({ easing: 'ease', speed: 500, showSpinner: false });
+// NProgress.inc(0.2);
+NProgress.configure({ easing: 'ease', speed: 600, showSpinner: false });
 
 // 路由守卫
 router.beforeEach((to, from, next) => {

@@ -2,7 +2,8 @@
     <ul class="app-task-card">
         <el-scrollbar style="height:100%">
             <span v-if="!tasks.length"
-                  class="app-task-card-error">
+                  class="app-task-card-error"
+                  :style="{height: `${height}px`}">
                 <svg-icon class="error-icon"
                           iconClass="icon-File-Error" />
                 未设置任务
@@ -272,6 +273,11 @@ export default {
 			type: Boolean,
 			default: true,
 		},
+
+		height: {
+			type: Number,
+			default: 310,
+		},
 	},
 
 	watch: {
@@ -301,6 +307,7 @@ export default {
 <style lang="scss" scoped>
 .app-task-card {
 	height: 100%;
+
 	&-item {
 		height: 60px;
 		padding: 0 10px;
@@ -338,7 +345,6 @@ export default {
 	}
 
 	&-error {
-		height: 140px;
 		color: #c0c4cc;
 		@include flex-center();
 

@@ -73,22 +73,34 @@
             </el-col>
             <el-col :span="10"
                     :lg="12">
-                <view-todo-list />
+                <view-todo-list ref="ToDoList"
+                                @addTodoList="addTodoList"
+                                @editTodoList="editTodoList" />
             </el-col>
         </el-row>
+        <app-drawer :show.sync="drawerVisible"
+                    :width="520">
+            <drawer-to-do-list v-if="drawerVisible"
+                               :todoData="todoData"
+                               @getTodoList="getTodoList" />
+        </app-drawer>
     </div>
 </template>
 
 <script>
+import AppDrawer from '@/components/appDrawer';
 import ViewWeather from './components/weather';
 import ViewMap from './components/map';
 import ViewTodoList from './components/TodoList';
+import DrawerToDoList from './components/drawerToDoList';
 
 export default {
 	name: 'Home',
 	data() {
 		return {
+			drawerVisible: false,
 			warnNum: 0,
+			data: {},
 		};
 	},
 
@@ -115,10 +127,42 @@ export default {
 		},
 	},
 
+	methods: {
+		// 添加
+		addTodoList() {
+			this.todoData = {
+				todoId: '',
+				todoType: '1',
+				content: '',
+				time: '',
+			};
+			this.drawerVisible = true;
+		},
+
+		// 获取
+		getTodoList() {
+			this.drawerVisible = false;
+			this.$refs.ToDoList.getTodoListFn();
+		},
+
+		// 编辑
+		editTodoList(data) {
+			this.todoData = {
+				todoId: data.todoId,
+				todoType: data.todoType,
+				content: data.content,
+				time: data.time,
+			};
+			this.drawerVisible = true;
+		},
+	},
+
 	components: {
+		AppDrawer,
 		ViewWeather,
 		ViewMap,
 		ViewTodoList,
+		DrawerToDoList,
 	},
 };
 </script>

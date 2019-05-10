@@ -71,13 +71,17 @@
                 </el-tag>
             </span>
             <span class="app-dialog-group-right-item height">
-                <i class="title">拥有设备&nbsp;</i>
+                <i class="title">
+                    拥有设备&nbsp;
+                </i>
                 <i>
                     {{data.deviceNum }}
                 </i>
             </span>
             <span class="app-dialog-group-right-item height">
-                <i class="title">所在地&nbsp;</i>
+                <i class="title">
+                    所在地&nbsp;
+                </i>
                 <i>
                     {{ data.group.region[0].name }},
                     {{ data.group.region[1].name }},
@@ -90,7 +94,8 @@
                 </i>
                 <el-button v-if="data.group.ownerId === data.userId"
                            plain
-                           size="small">
+                           size="small"
+                           @click="setUnGroup">
                     解散家庭组
                 </el-button>
                 <el-button v-else
@@ -107,7 +112,7 @@
 
 <script>
 import storage from '@/assets/js/storage';
-import { getGroupById, exitGroup } from '@/api/group';
+import { getGroupById, exitGroup, unGroup } from '@/api/group';
 
 export default {
 	name: 'AppDialogGroup',
@@ -156,6 +161,19 @@ export default {
 			})
 				.then(() => {
 					this.exitGroupFn();
+				})
+				.catch(() => {});
+		},
+
+		// 解散群组
+		setUnGroup() {
+			this.$confirm('确定要解散家庭组吗？', '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning',
+			})
+				.then(() => {
+					this.unGroupFn();
 				})
 				.catch(() => {});
 		},
@@ -235,6 +253,28 @@ export default {
 					this.$emit('setVisible', false);
 				});
 		},
+
+		// 解散群组封装
+		unGroupFn() {
+			this.loading = true;
+			unGroup({ groupId: this.user.groupId })
+				.then(resData => {
+					if (resData.ok) {
+						return;
+					}
+				})
+				.catch(error => {
+					this.$message({
+						showClose: true,
+						center: true,
+						message: error.message,
+						type: 'error',
+					});
+				})
+				.then(() => {
+					this.loading = false;
+				});
+		},
 	},
 
 	created() {
@@ -270,7 +310,7 @@ export default {
 	&-left {
 		width: 40%;
 		height: 100%;
-		padding-top: 40px;
+		padding-top: 60px;
 		box-sizing: border-box;
 		background-color: #909399;
 		position: relative;
@@ -279,7 +319,7 @@ export default {
 
 		&-name {
 			width: 100%;
-			margin-top: 30px;
+			margin-top: 60px;
 			color: #fff;
 			font-size: 20px;
 			text-align: center;

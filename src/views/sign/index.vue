@@ -11,7 +11,8 @@
                             <div class="left-content">
                                 <span class="left-user-avatar">
                                     <img :src="avatar"
-                                         alt="avatar">
+                                         alt="avatar"
+                                         draggable="false">
                                 </span>
                                 <span class="left-user-title">
                                     {{ title }}
@@ -135,6 +136,7 @@ export default {
 			background-size: 100% 100%;
 			background-position: center center;
 			position: relative;
+			user-select: none;
 
 			&::after {
 				content: ' ';
