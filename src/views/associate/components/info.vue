@@ -1,11 +1,11 @@
 <template>
-    <div class="relevance-info">
-        <div class="relevance-info-left">
+    <div class="associate-info">
+        <div class="associate-info-left">
             <span class="title">
                 设备关联列表
             </span>
         </div>
-        <div class="relevance-info-right">
+        <div class="associate-info-right">
             <el-button type="primary"
                        icon="el-icon-plus"
                        size="medium"
@@ -18,7 +18,7 @@
 
 <script>
 export default {
-	name: 'RelevanceInfo',
+	name: 'AssociateInfo',
 	data() {
 		return {};
 	},
@@ -26,14 +26,14 @@ export default {
 	methods: {
 		// 设备接入
 		routeAccess() {
-			this.$router.push({ name: 'access' });
+			// this.$router.push({ name: 'access' });
 		},
 	},
 };
 </script>
 
 <style lang="scss" scoped>
-.relevance-info {
+.associate-info {
 	padding: 20px;
 	margin-bottom: 20px;
 	@include info-card();

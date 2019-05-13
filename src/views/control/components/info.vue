@@ -26,7 +26,7 @@ export default {
 	methods: {
 		// 设备接入
 		routeAccess() {
-			// this.$router.push({ name: 'access' });
+			this.$router.push({ name: 'access' });
 		},
 	},
 };

@@ -1,13 +1,21 @@
 <template>
-    <div>
+    <div class="associate-item">
+        <div class="title">
+            <span>
 
+            </span>
+            <span></span>
+            <span>
+
+            </span>
+        </div>
     </div>
 </template>
 
 
 <script>
 export default {
-	name: 'RelevanceContent',
+	name: 'AssociateItem',
 	data() {
 		return {};
 	},
@@ -29,4 +37,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.associate-item {
+	height: 400px;
+}
 </style>

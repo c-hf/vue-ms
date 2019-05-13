@@ -101,6 +101,13 @@ export const DEVICERULES = {
 	],
 };
 
+const DEVICEICON = {
+	ceilingLamp: 'icon-light_lamp',
+	tableLamp: 'icon-tableLamp',
+	airConditioner: 'icon-airConditioner',
+	LEDLamp: 'icon-light',
+};
+
 // 天气图标
 const WEATHERICON = {
 	晴: 'icon-sun',
@@ -198,4 +205,5 @@ export {
 	DEVICESOURCE,
 	WEATHERICON,
 	ROOMICONS,
+	DEVICEICON,
 };

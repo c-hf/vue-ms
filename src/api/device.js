@@ -24,6 +24,14 @@ export const setDeviceTimedTask = data => {
 	return axiosFn(options);
 };
 
+// 设置关联设备
+export const setDeviceAssociate = data => {
+	options.method = 'post';
+	options.url = '/api/device/deviceAssociate';
+	options.data = data;
+	return axiosFn(options);
+};
+
 // 删除设备
 export const deleteDevice = data => {
 	const deleteOptions = {
@@ -167,6 +175,16 @@ export const getDeviceLogById = data => {
 	const getOptions = {
 		method: 'get',
 		url: '/api/device/getDeviceLogById',
+		params: data,
+	};
+	return axiosFn(getOptions);
+};
+
+// 获取设备关联
+export const getDeviceAssociate = data => {
+	const getOptions = {
+		method: 'get',
+		url: '/api/device/DeviceAssociate',
 		params: data,
 	};
 	return axiosFn(getOptions);

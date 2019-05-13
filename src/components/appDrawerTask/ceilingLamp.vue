@@ -10,7 +10,9 @@
         <span class="app-drawer-task-task-item"
               v-for="(item, index) in dataTasks"
               :key="index">
-            <i class="name">{{ item.name }}</i>
+            <i class="name">
+                {{ item.name }}
+            </i>
             <el-switch v-if="item.el === 'switch'"
                        v-model="item.value"
                        active-color="#13ce66"

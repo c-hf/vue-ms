@@ -108,12 +108,12 @@ export default new Router({
 
 				// 设备关联
 				{
-					path: '/relevance',
-					name: 'relevance',
+					path: '/associate',
+					name: 'associate',
 					meta: {
 						requireAuth: true,
 					},
-					component: () => import('./views/relevance'),
+					component: () => import('./views/associate'),
 				},
 			],
 		},
