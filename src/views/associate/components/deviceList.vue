@@ -63,13 +63,17 @@ export default {
 
 	computed: {
 		deviceData() {
-			const deviceData = this.$store.state.device.map(el => {
+			let deviceData = [];
+			this.$store.state.device.forEach(el => {
+				if (el.deviceId === this.deviceId) {
+					return;
+				}
 				let device = el;
 				const room = this.$store.state.rooms.find(
 					room => room.roomId === device.roomId
 				);
 				device.roomName = room.name;
-				return device;
+				deviceData.push(device);
 			});
 			return deviceData;
 		},
@@ -101,7 +105,11 @@ export default {
 
 	components: {},
 
-	props: {},
+	props: {
+		deviceId: {
+			type: String,
+		},
+	},
 
 	watch: {},
 

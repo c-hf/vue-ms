@@ -62,6 +62,16 @@ export const deleteDeviceTimedTask = data => {
 	return axiosFn(getOptions);
 };
 
+// 	// 删除设备关联
+export const deleteDeviceAssociate = data => {
+	const getOptions = {
+		method: 'delete',
+		url: '/api/device/deviceAssociate',
+		params: data,
+	};
+	return axiosFn(getOptions);
+};
+
 // 更新设备参数
 export const updateDevice = data => {
 	options.method = 'put';
@@ -94,6 +104,22 @@ export const startDeviceTimedTask = timedTaskId => {
 export const updateDeviceTimedTask = data => {
 	options.method = 'put';
 	options.url = '/api/device/updateDeviceTimedTask';
+	options.data = data;
+	return axiosFn(options);
+};
+
+// 更新关联设备
+export const updateDeviceAssociate = data => {
+	options.method = 'put';
+	options.url = '/api/device/deviceAssociate';
+	options.data = data;
+	return axiosFn(options);
+};
+
+// 开启关闭关联设备
+export const openDeviceAssociate = data => {
+	options.method = 'put';
+	options.url = '/api/device/open/deviceAssociate';
 	options.data = data;
 	return axiosFn(options);
 };
@@ -184,7 +210,7 @@ export const getDeviceLogById = data => {
 export const getDeviceAssociate = data => {
 	const getOptions = {
 		method: 'get',
-		url: '/api/device/DeviceAssociate',
+		url: '/api/device/deviceAssociate',
 		params: data,
 	};
 	return axiosFn(getOptions);

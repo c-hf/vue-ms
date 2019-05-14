@@ -5,14 +5,14 @@
                 设备关联列表
             </span>
         </div>
-        <div class="associate-info-right">
+        <!-- <div class="associate-info-right">
             <el-button type="primary"
                        icon="el-icon-plus"
                        size="medium"
                        @click="routeAccess">
                 添加关联
             </el-button>
-        </div>
+        </div> -->
     </div>
 </template>
 

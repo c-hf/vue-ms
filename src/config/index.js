@@ -22,6 +22,7 @@ const DEVICESOURCE = {
 	Voice: '语音',
 	Device: '设备',
 	Schedule: '定时任务',
+	DeviceAssociate: '关联设备',
 };
 
 // 添加设备验证规则

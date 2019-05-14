@@ -1,5 +1,6 @@
 <template>
     <el-scrollbar class="drawer-associate"
+                  v-loading="loading"
                   style="height:100%">
         <div class="drawer-associate-title">
             设备关联 - {{ title }}
@@ -8,16 +9,29 @@
             <span class="item-title">
                 关联名称
             </span>
-            <el-input placeholder="关联名称"
-                      v-model="data.name"
-                      :maxlength="8"
-                      :minlength="2"
-                      clearable>
-            </el-input>
+            <el-form :model="data"
+                     ref="Form"
+                     :rules="rules"
+                     label-width="0">
+                <el-form-item prop="name">
+                    <el-input placeholder="关联名称"
+                              v-model="data.name"
+                              :maxlength="8"
+                              :minlength="2"
+                              clearable>
+                    </el-input>
+                </el-form-item>
+            </el-form>
         </div>
         <div class="drawer-associate-device item">
             <span class="item-title">
                 选择设备
+                <el-button class="refresh"
+                           type="text"
+                           icon="el-icon-refresh"
+                           circle
+                           @click="selectDevice">
+                </el-button>
             </span>
             <div class="device"
                  v-if="device.deviceId">
@@ -44,6 +58,7 @@
                         {{ device.roomName }}
                     </span>
                 </div>
+
             </div>
             <div class="select-device"
                  v-else>
@@ -99,17 +114,19 @@
                 <el-button class="delete"
                            icon="el-icon-close"
                            size="mini"
-                           circle>
+                           circle
+                           @click="deleteCondition">
                 </el-button>
             </span>
         </div>
         <div class="drawer-associate-btn">
             <el-button type="primary"
                        plain
-                       @click="onSubmit">
+                       @click="onSubmit('Form')">
                 确定
             </el-button>
-            <el-button plain>
+            <el-button plain
+                       @click="onReset('Form')">
                 重置
             </el-button>
         </div>
@@ -118,13 +135,14 @@
                    :append-to-body="true"
                    title="选择设备"
                    width="1000px">
-            <device-list @getDevice="getDevice" />
+            <device-list :deviceId="editData.deviceId"
+                         @getDevice="getDevice" />
         </el-dialog>
     </el-scrollbar>
 </template>
 
 <script>
-import { setDeviceAssociate } from '@/api/device';
+import { setDeviceAssociate, updateDeviceAssociate } from '@/api/device';
 import DeviceList from './deviceList';
 import { DEVICEICON } from '@/config';
 import { ATTRS } from '../config';
@@ -137,6 +155,21 @@ export default {
 			title: '触发设备',
 			data: {
 				name: '',
+			},
+			rules: {
+				name: [
+					{
+						required: true,
+						message: '请输入关联名称',
+						trigger: 'blur',
+					},
+					{
+						min: 3,
+						max: 5,
+						message: '长度在 3 到 5 个字符',
+						trigger: 'blur',
+					},
+				],
 			},
 			device: {},
 			visible: false,
@@ -157,16 +190,54 @@ export default {
 	},
 
 	methods: {
-		onSubmit() {
-			// console.log(this.data, this.device, this.condition);
-			const data = {
-				deviceId: this.device.deviceId, // 设备 ID
-				condition: {
+		onSubmit(formName) {
+			this.$refs[formName].validate(valid => {
+				if (!valid) {
+					return;
+				}
+			});
+			if (!this.device.deviceId || !this.condition.id) {
+				this.$message({
+					showClose: true,
+					center: true,
+					message: '信息不完整',
+					type: 'warning',
+				});
+				return;
+			}
+
+			let data = {
+				name: this.data.name,
+			};
+			if (this.type === 1) {
+				data.condition = {
+					deviceId: this.device.deviceId, // 设备 ID
 					id: this.condition.id,
 					value: this.condition.value,
-				},
-			};
-			this.setDeviceAssociateFn(data);
+				};
+			} else if (this.type === 2) {
+				data.expect = {
+					deviceId: this.device.deviceId, // 设备 ID
+					id: this.condition.id,
+					value: this.condition.value,
+				};
+			}
+
+			if (this.editData.associateId) {
+				data.associateId = this.editData.associateId;
+				data.type = this.type;
+				this.updateDeviceAssociateFn(data);
+			} else {
+				this.setDeviceAssociateFn(data);
+			}
+		},
+
+		// 重置
+		onReset(formName) {
+			this.$refs[formName].resetFields();
+			this.data.name = '';
+			this.device = {};
+			this.condition = {};
 		},
 
 		// 选择设备
@@ -195,12 +266,48 @@ export default {
 			this.condition = item;
 		},
 
+		deleteCondition() {
+			this.condition = {};
+		},
+
 		// 添加关联
 		setDeviceAssociateFn(data) {
 			this.loading = true;
 			setDeviceAssociate(data)
 				.then(resData => {
-					console.log(resData);
+					if (resData.ok) {
+						this.$emit('getDeviceAssociate');
+					}
+				})
+				.catch(error => {
+					this.$message({
+						showClose: true,
+						center: true,
+						message: error.message,
+						type: 'error',
+					});
+				})
+				.then(() => {
+					this.loading = false;
+				});
+		},
+
+		// 更新
+		updateDeviceAssociateFn(data) {
+			this.loading = true;
+			updateDeviceAssociate(data)
+				.then(resData => {
+					if (resData.ok) {
+						this.$emit('getDeviceAssociate');
+					}
+				})
+				.catch(error => {
+					this.$message({
+						showClose: true,
+						center: true,
+						message: error.message,
+						type: 'error',
+					});
 				})
 				.then(() => {
 					this.loading = false;
@@ -210,6 +317,31 @@ export default {
 
 	components: {
 		DeviceList,
+	},
+
+	props: {
+		editData: {
+			type: Object,
+		},
+
+		type: {
+			type: Number, // 1 触发 2 响应
+		},
+	},
+
+	created() {
+		if (!this.editData.associateId) {
+			return;
+		} else if (this.editData.device.deviceId) {
+			const device = this.$store.state.device.find(
+				el => el.deviceId === this.editData.device.deviceId
+			);
+			this.getDevice(device);
+			this.commandEvent(this.editData.device.id);
+			this.condition.value = this.editData.device.value;
+		}
+		this.data.name = this.editData.name;
+		this.title = this.type === 1 ? '触发设备' : '响应设备';
 	},
 };
 </script>
@@ -229,6 +361,7 @@ export default {
 			display: block;
 			padding: 20px 0;
 			font-weight: bold;
+			@include flex-between();
 		}
 	}
 
@@ -240,6 +373,7 @@ export default {
 			padding: 10px 0;
 			border: 1px solid #ebeef5;
 			border-radius: 4px;
+			position: relative;
 
 			@include flex-between();
 
@@ -267,6 +401,10 @@ export default {
 						color: #909399;
 					}
 				}
+			}
+			.refresh {
+				position: absolute;
+				right: 20px;
 			}
 		}
 

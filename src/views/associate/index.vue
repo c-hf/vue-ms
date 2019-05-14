@@ -1,10 +1,17 @@
 <template>
-    <div class="associate">
+    <div class="associate"
+         v-loading="loading">
         <associate-info />
-        <associate-content @addAssociate="addAssociate" />
+        <associate-content ref="content"
+                           @addAssociate="addAssociate"
+                           @updateAssociate="updateAssociate"
+                           @setLoading="setLoading" />
         <app-drawer :show.sync="drawerVisible"
                     :width="520">
-            <drawer-associate />
+            <drawer-associate v-if="drawerVisible"
+                              :editData="editData"
+                              :type="type"
+                              @getDeviceAssociate="getDeviceAssociate" />
         </app-drawer>
     </div>
 </template>
@@ -15,13 +22,15 @@ import AppDrawer from '@/components/appDrawer';
 import AssociateInfo from './components/info.vue';
 import AssociateContent from './components/content.vue';
 import DrawerAssociate from './components/drawerAssociate.vue';
-// drawerAssociate
 
 export default {
 	name: 'Associate',
 	data() {
 		return {
+			loading: false,
 			drawerVisible: false,
+			editData: {},
+			type: 1,
 		};
 	},
 
@@ -29,7 +38,24 @@ export default {
 
 	methods: {
 		addAssociate() {
+			this.editData = {};
+			this.type = 1;
 			this.drawerVisible = true;
+		},
+
+		updateAssociate(associate, type) {
+			this.editData = associate;
+			this.type = type;
+			this.drawerVisible = true;
+		},
+
+		getDeviceAssociate() {
+			this.drawerVisible = false;
+			this.$refs.content.getDeviceAssociateFn();
+		},
+
+		setLoading(value) {
+			this.loading = value;
 		},
 	},
 
