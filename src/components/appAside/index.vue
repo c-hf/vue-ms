@@ -82,8 +82,8 @@
                     </el-menu-item>
                 </el-menu-item-group>
             </el-submenu>
-            <el-menu-item index="message"
-                          :route="{name: 'message'}">
+            <el-menu-item index="contextualModel"
+                          :route="{name: 'contextualModel'}">
                 <svg-icon class="app-aside-content-icon"
                           iconClass="icon-qrcode_fill" />
                 <span slot="title">

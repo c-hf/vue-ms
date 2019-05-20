@@ -97,6 +97,7 @@ export default {
 				details: { path: '/overview', name: '概览' },
 				access: { path: '/control', name: '设备接入' },
 				associate: { path: '/associate', name: '设备关联' },
+				contextualModel: { path: '/contextualModel', name: '情景模式' },
 				message: { path: '/message', name: '消息中心' },
 				set: { path: '/set', name: '设置' },
 			};

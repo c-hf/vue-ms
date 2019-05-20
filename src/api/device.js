@@ -32,6 +32,22 @@ export const setDeviceAssociate = data => {
 	return axiosFn(options);
 };
 
+// 设置情景模式
+export const setMode = data => {
+	options.method = 'post';
+	options.url = '/api/device/mode';
+	options.data = data;
+	return axiosFn(options);
+};
+
+// 设置情景模式任务
+export const setModeTask = data => {
+	options.method = 'post';
+	options.url = '/api/device/mode/task';
+	options.data = data;
+	return axiosFn(options);
+};
+
 // 删除设备
 export const deleteDevice = data => {
 	const deleteOptions = {
@@ -67,6 +83,26 @@ export const deleteDeviceAssociate = data => {
 	const getOptions = {
 		method: 'delete',
 		url: '/api/device/deviceAssociate',
+		params: data,
+	};
+	return axiosFn(getOptions);
+};
+
+// 删除情景模式
+export const deleteMode = data => {
+	const getOptions = {
+		method: 'delete',
+		url: '/api/device/mode',
+		params: data,
+	};
+	return axiosFn(getOptions);
+};
+
+// 删除情景模式任务
+export const deleteModeTask = data => {
+	const getOptions = {
+		method: 'delete',
+		url: '/api/device/mode/task',
 		params: data,
 	};
 	return axiosFn(getOptions);
@@ -120,6 +156,22 @@ export const updateDeviceAssociate = data => {
 export const openDeviceAssociate = data => {
 	options.method = 'put';
 	options.url = '/api/device/open/deviceAssociate';
+	options.data = data;
+	return axiosFn(options);
+};
+
+// 更新情景模式
+export const updateMode = data => {
+	options.method = 'put';
+	options.url = '/api/device/mode';
+	options.data = data;
+	return axiosFn(options);
+};
+
+// 更新情景模式任务
+export const updateModeTask = data => {
+	options.method = 'put';
+	options.url = '/api/device/mode/task';
 	options.data = data;
 	return axiosFn(options);
 };
@@ -211,6 +263,16 @@ export const getDeviceAssociate = data => {
 	const getOptions = {
 		method: 'get',
 		url: '/api/device/deviceAssociate',
+		params: data,
+	};
+	return axiosFn(getOptions);
+};
+
+// 获取情景模式
+export const getMode = data => {
+	const getOptions = {
+		method: 'get',
+		url: '/api/device/mode',
 		params: data,
 	};
 	return axiosFn(getOptions);

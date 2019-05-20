@@ -238,27 +238,5 @@ export default {
 			margin-top: 10px;
 		}
 	}
-
-	// .info {
-	// 	&::after {
-	// 		background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-	// 	}
-	// }
-
-	// .now {
-	// 	&::after {
-	// 		background-image: linear-gradient(
-	// 			to right,
-	// 			#43e97b 0%,
-	// 			#38f9d7 100%
-	// 		);
-	// 	}
-	// }
-
-	// .warn {
-	// 	&::after {
-	// 		background-image: linear-gradient(to top, #ff0844 0%, #ffb199 100%);
-	// 	}
-	// }
 }
 </style>

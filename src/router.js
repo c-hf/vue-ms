@@ -49,6 +49,15 @@ export default new Router({
 					},
 					component: () => import('./views/message'),
 				},
+				// 情景模式
+				{
+					path: '/contextualModel',
+					name: 'contextualModel',
+					meta: {
+						requireAuth: true,
+					},
+					component: () => import('./views/contextualModel'),
+				},
 				// 用户中心
 				{
 					path: '/user',

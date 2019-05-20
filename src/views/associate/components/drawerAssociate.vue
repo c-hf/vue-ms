@@ -58,7 +58,6 @@
                         {{ device.roomName }}
                     </span>
                 </div>
-
             </div>
             <div class="select-device"
                  v-else>
@@ -144,8 +143,7 @@
 <script>
 import { setDeviceAssociate, updateDeviceAssociate } from '@/api/device';
 import DeviceList from './deviceList';
-import { DEVICEICON } from '@/config';
-import { ATTRS } from '../config';
+import { DEVICEICON, ATTRS } from '@/config';
 
 export default {
 	name: 'DrawerAssociate',
