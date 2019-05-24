@@ -88,7 +88,7 @@ export default {
 	data() {
 		// 昵称验证
 		const validateNickName = (rule, value, callback) => {
-			const nameRegExp = /^[\u4e00-\u9fa5a-zA-Z0-9_]{4,18}$/;
+			const nameRegExp = /^[\u4e00-\u9fa5a-zA-Z0-9_]{2,18}$/;
 			if (!value) {
 				callback(new Error('请输入昵称'));
 			} else {
@@ -96,7 +96,7 @@ export default {
 					callback();
 					return;
 				}
-				callback(new Error('4 - 18 个字，支持中、英文、数字及 _'));
+				callback(new Error('2 - 18 个字，支持中、英文、数字及 _'));
 			}
 		};
 		const validateBirthday = (rule, value, callback) => {

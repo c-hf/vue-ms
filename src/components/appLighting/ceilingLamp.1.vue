@@ -6,14 +6,11 @@
             <span class="app-lighting-card-top-icon"
                   :class="{'off-line-icon': !device.onLine}"
                   @click="routeDetails">
-                <svg-icon v-if="device.categoryItemId  === 'ceilingLamp'"
-                          iconClass="icon-light_lamp" />
-                <svg-icon v-else
-                          iconClass="icon-light" />
+                <svg-icon iconClass="icon-light_lamp" />
             </span>
-            <span class="app-lighting-card-top-set">
+            <!-- <span class="app-lighting-card-top-set">
                 <svg-icon iconClass="icon-collection" />
-            </span>
+            </span> -->
         </div>
         <div class="app-lighting-card-bottom">
             <span class="app-lighting-card-bottom-item name">

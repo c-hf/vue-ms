@@ -113,7 +113,7 @@ export default {
 		setAvatarSuccess(resData, file) {
 			this.isAvatarError = false;
 			this.imgUrl = URL.createObjectURL(file.raw);
-			this.dete.avatar = resData.response.url;
+			this.data.avatar = resData.response.url;
 		},
 
 		// 上传限制

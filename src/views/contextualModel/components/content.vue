@@ -19,19 +19,80 @@
                         </el-button-group>
                     </div>
                     <div class="item-content">
-                        <mode-task-item v-for="(task, key) in item.modeTasks"
-                                        :key="key"
-                                        :modeTask="task"
-                                        :modeId="item.modeId"
-                                        :index="key"
-                                        @getMode="getModeFn"
-                                        @onEditModeTask="onEditModeTask"
-                                        @setLoading="setLoading" />
-                        <span v-if="item.modeTasks.length < 5"
-                              class="device add"
-                              @click="addModeTask(item.modeId)">
-                            <i class="el-icon-plus"></i>
-                        </span>
+                        <div class="left">
+                            <mode-task-item v-for="(task, key) in item.modeTasks"
+                                            :key="key"
+                                            :modeTask="task"
+                                            :modeId="item.modeId"
+                                            :index="key"
+                                            @getMode="getModeFn"
+                                            @onEditModeTask="onEditModeTask"
+                                            @setLoading="setLoading" />
+                            <span v-if="item.modeTasks.length < 5"
+                                  class="device add"
+                                  @click="addModeTask(item.modeId)">
+                                <i class="el-icon-plus"></i>
+                            </span>
+                        </div>
+                        <div class="right">
+                            <template v-if="item.perform">
+                                <span>
+                                    执行中...
+                                </span>
+                            </template>
+                            <template v-else>
+                                <span v-if="item.timeType === 0">
+                                    <el-switch style="display: block"
+                                               v-model="item.switch"
+                                               active-color="#13ce66"
+                                               inactive-color="#ff4949"
+                                               active-text="开启"
+                                               inactive-text="关闭"
+                                               :disabled="item.modeTasks.length < 1"
+                                               @change="switchChange(item)">
+                                    </el-switch>
+                                </span>
+                                <span v-if="item.timeType === 1"
+                                      class="">
+                                    <i v-if="new Date() < new Date(item.time)">
+                                        {{ new Date(item.time).toLocaleString('zh-CN', { hour12: false }) }}
+                                        <el-switch style="display: block; margin-top: 20px;"
+                                                   v-model="item.switch"
+                                                   active-color="#13ce66"
+                                                   inactive-color="#ff4949"
+                                                   active-text="开启"
+                                                   inactive-text="关闭"
+                                                   :disabled="item.modeTasks.length < 1"
+                                                   @change="switchChange(item)">
+                                        </el-switch>
+                                    </i>
+                                    <i v-else>
+                                        {{ new Date(item.time).toLocaleString('zh-CN', { hour12: false }) }}
+                                        已过期...
+                                    </i>
+                                </span>
+                                <span v-if="item.timeType === 2">
+                                    <i>
+                                        周 {{ item.date.toString() }}
+                                        {{ new Date(item.time).getHours() }}:{{ new Date(item.time).getMinutes() }}
+                                        <el-switch style="display: block; margin-top: 20px;"
+                                                   v-model="item.switch"
+                                                   active-color="#13ce66"
+                                                   inactive-color="#ff4949"
+                                                   active-text="开启"
+                                                   inactive-text="关闭"
+                                                   :disabled="item.modeTasks.length < 1"
+                                                   @change="switchChange(item)">
+                                        </el-switch>
+                                    </i>
+                                </span>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="wrap"
+                         :class="{'active': item.perform}">
+                        执行期间禁止操作
+                        <!-- <i class="el-icon-loading"></i> -->
                     </div>
                 </div>
             </el-col>
@@ -48,7 +109,7 @@
 
 
 <script>
-import { getMode, deleteMode } from '@/api/device';
+import { getMode, deleteMode, updateModeSwitch } from '@/api/device';
 import ModeTaskItem from './item';
 
 export default {
@@ -90,6 +151,31 @@ export default {
 					this.deleteModeFn({ modeId: data.modeId });
 				})
 				.catch(() => {});
+		},
+
+		// 开关
+		switchChange(data) {
+			this.$emit('setLoading', true);
+			updateModeSwitch({
+				modeId: data.modeId,
+				switch: data.switch,
+			})
+				.then(resData => {
+					if (resData.ok) {
+						return;
+					}
+				})
+				.catch(error => {
+					this.$message({
+						showClose: true,
+						center: true,
+						message: error.message,
+						type: 'error',
+					});
+				})
+				.then(() => {
+					this.$emit('setLoading', false);
+				});
 		},
 
 		// 设置loading
@@ -154,6 +240,45 @@ export default {
 					this.$emit('setLoading', false);
 				});
 		},
+
+		socketOn() {
+			try {
+				this.socket = this.$store.state.socket;
+				if (!this.socket.on) {
+					return;
+				}
+				this.socket.on('updateMode', data => {
+					// this.deviceLogs.unshift(data);
+					console.log(data);
+					const index = this.data.findIndex(
+						el => el.modeId === data.modeId
+					);
+					if (index !== -1) {
+						Object.keys(data.data).forEach(el => {
+							this.data[index][el] = data.data[el];
+						});
+						// type: 'perform',
+						// 	modeId: data.modeId,
+						// 	data: {
+						// 		perform: true,
+						// 	},
+					}
+					if (data.message) {
+						this.$notify({
+							title: data.title,
+							message: data.message,
+						});
+					}
+				});
+			} catch (error) {
+				this.$message({
+					showClose: true,
+					center: true,
+					message: error.message,
+					type: 'error',
+				});
+			}
+		},
 	},
 
 	components: {
@@ -163,6 +288,16 @@ export default {
 	created() {
 		this.getModeFn();
 	},
+
+	mounted() {
+		this.socketOn();
+	},
+
+	destroyed() {
+		if (this.socket.on) {
+			this.socket.off('updateMode');
+		}
+	},
 };
 </script>
 
@@ -171,6 +306,7 @@ export default {
 	.item {
 		margin-bottom: 20px;
 		padding: 20px;
+		position: relative;
 		@include info-card();
 
 		&-title {
@@ -181,11 +317,20 @@ export default {
 
 		&-content {
 			padding: 40px 0;
-			@include flex-start();
+			@include flex-between();
+
+			.left {
+				width: 80%;
+				@include flex-start();
+			}
+
+			.right {
+				width: 20%;
+			}
 
 			.device {
-				width: 60px;
-				height: 60px;
+				width: 80px;
+				height: 80px;
 				margin: 0 20px;
 				border: 1px solid #ebeef5;
 				border-radius: 50%;
@@ -202,6 +347,31 @@ export default {
 					color: #606266;
 				}
 			}
+		}
+		.wrap {
+			width: 100%;
+			height: 100%;
+			background-color: #fff;
+			opacity: 0.6;
+			font-weight: bold;
+			user-select: none;
+			position: absolute;
+			top: 0;
+			left: 0;
+			cursor: pointer;
+
+			@include flex-center(column);
+			display: none;
+
+			i {
+				margin-top: 20px;
+				opacity: 1;
+				font-size: 18px;
+			}
+		}
+
+		.wrap.active {
+			display: flex;
 		}
 	}
 

@@ -9,14 +9,17 @@
                     :xl="4"
                     v-for="(item, index) in device"
                     :key="index">
-                <app-ceiling-lamp :device="item" />
+                <component :is="item.categoryItemId"
+                           :device="item"></component>
             </el-col>
         </el-row>
     </div>
 </template>
 
 <script>
-import AppCeilingLamp from '@/components/appLighting/appCeilingLamp';
+import CeilingLamp from '@/components/appLighting/ceilingLamp';
+import TableLamp from '@/components/appLighting/tableLamp';
+import LEDLamp from '@/components/appLighting/lEDLamp';
 
 export default {
 	name: 'Overview', // 设备概览
@@ -36,7 +39,9 @@ export default {
 	methods: {},
 
 	components: {
-		AppCeilingLamp,
+		CeilingLamp,
+		TableLamp,
+		LEDLamp,
 	},
 };
 </script>
@@ -45,12 +50,9 @@ export default {
 .overview {
 	width: 100%;
 	height: 100%;
-	// padding: 0 40px;
-	// min-height: 600px;
 
 	.item {
 		padding-bottom: 24px;
-		// 	margin-top: 20px;
 	}
 }
 </style>

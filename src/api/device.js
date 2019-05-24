@@ -176,6 +176,14 @@ export const updateModeTask = data => {
 	return axiosFn(options);
 };
 
+// 开启关闭情景模式
+export const updateModeSwitch = data => {
+	options.method = 'put';
+	options.url = '/api/device/mode/switch';
+	options.data = data;
+	return axiosFn(options);
+};
+
 // 获取设备信息
 export const getDeviceInfo = data => {
 	const getOptions = {

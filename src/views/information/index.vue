@@ -17,7 +17,7 @@
             </el-steps>
 
             <el-col :span="16"
-                    :offset="4"
+                    :offset="6"
                     class="information-card">
                 <view-user @next="next"
                            :userData="userData"
