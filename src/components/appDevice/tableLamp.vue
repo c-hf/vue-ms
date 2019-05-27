@@ -6,11 +6,8 @@
             <span class="app-lighting-card-top-icon"
                   :class="{'off-line-icon': !device.onLine}"
                   @click="routeDetails">
-                <svg-icon iconClass="icon-light_lamp" />
+                <svg-icon iconClass="icon-tableLamp" />
             </span>
-            <!-- <span class="app-lighting-card-top-set">
-                <svg-icon iconClass="icon-collection" />
-            </span> -->
         </div>
         <div class="app-lighting-card-bottom">
             <span class="app-lighting-card-bottom-item name">
@@ -135,10 +132,7 @@ export default {
 
 <style lang="scss">
 .app-lighting-card {
-	// margin-bottom: 20px;
 	user-select: none;
-
-	// position: relative;
 
 	&-top {
 		width: 100%;

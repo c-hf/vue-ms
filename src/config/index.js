@@ -107,6 +107,10 @@ const DEVICEICON = {
 	tableLamp: 'icon-tableLamp',
 	airConditioner: 'icon-airConditioner',
 	LEDLamp: 'icon-light',
+	alarm: 'icon-shengguangbaojingqi',
+	airFan: 'icon-fengshan',
+	flameSensor: 'icon-huoyantanceqi',
+	humidityTemperatureSensor: 'icon-icon-temperature',
 };
 
 // 天气图标
@@ -219,8 +223,61 @@ const ATTRS = new Map([
 			value: 100,
 			step: 10,
 			min: 10,
+			max: 100,
 		},
 	],
+	[
+		'speed',
+		{
+			id: 'speed',
+			name: '速度',
+			type: 'Number',
+			el: 'slider',
+			value: 1,
+			step: 1,
+			min: 1,
+			max: 3,
+		},
+	],
+	[
+		'flame',
+		{
+			id: 'flame',
+			name: '火焰',
+			type: 'Boolean',
+			el: 'flame',
+			value: true,
+		},
+	],
+	[
+		'temp',
+		{
+			id: 'temp',
+			name: '温度',
+			type: 'Number',
+			el: 'judge',
+			judge: 1, // 1 大于 2 小于 3 等于
+			value: 0,
+			min: 0,
+			max: 100,
+			suffix: '&#8451;',
+		},
+	],
+	[
+		'humidity',
+		{
+			id: 'humidity',
+			name: '湿度',
+			type: 'Number',
+			el: 'judge',
+			judge: 1, // 1 大于 2 小于 3 等于
+			value: 0,
+			min: 0,
+			max: 100,
+			suffix: '%',
+		},
+	],
+	// judge
 ]);
 
 export {

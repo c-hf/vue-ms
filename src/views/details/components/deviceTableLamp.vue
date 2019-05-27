@@ -1,93 +1,24 @@
 <template>
-    <div class="view-lighting"
+    <div class="table-lamp"
          ref="details">
         <div class="left">
             <div class="left-top">
-                <el-tabs class="view-lighting-info"
-                         v-model="activeName"
-                         type="border-card">
-                    <el-tab-pane label="设备信息"
-                                 name="first">
-                        <div class="content">
-                            <span class="content-item">
-                                <i>设备名称</i>
-                                <i>
-                                    {{ device.name }}
-                                </i>
-                            </span>
-                            <span class="content-item">
-                                <i>分类</i>
-                                <i>
-                                    {{ device.categoryName }}
-                                </i>
-                            </span>
-                            <span class="content-item">
-                                <i>位置</i>
-                                <i>
-                                    {{ roomName }}
-                                </i>
-                            </span>
-                            <span class="content-item">
-                                <i>创建时间</i>
-                                <i>
-                                    {{ device.createTime.split(' ')[0] }}
-                                </i>
-                            </span>
-                        </div>
-                    </el-tab-pane>
-                    <el-tab-pane label="配置管理"
-                                 name="second">
-                        <div class="content">
-                            <span class="content-id">
-                                <i>群组 ID</i>
-                                <i>
-                                    {{ device.groupId }}
-                                </i>
-                            </span>
-                            <span class="content-id">
-                                <i>DeviceID</i>
-                                <i>
-                                    {{ device.deviceId }}
-                                </i>
-                            </span>
-                        </div>
-                    </el-tab-pane>
-                </el-tabs>
-                <div class="view-lighting-lamp">
+                <details-info :device="device" />
+                <div class="table-lamp-lamp">
                     <app-lamp :luminance="status.luminance / 100"
-                              :switch="status.switch && device.onLine" />
+                              :switch="status.switch && device.onLine"
+                              :color="color" />
                 </div>
             </div>
             <div class="left-bottom">
-                <el-tabs type="border-card"
-                         class="view-lighting-left-bottom-log">
-                    <el-tab-pane class="log-card">
-                        <span slot="label">
-                            <svg-icon iconClass="icon-document" />
-                            设备日志
-                        </span>
-                        <app-log-card ref="log-card"
-                                      :deviceLogs="deviceLogs"
-                                      :height="250"
-                                      @more="moreDeviceLogs" />
-                    </el-tab-pane>
-                    <el-tab-pane class="log-card">
-                        <span slot="label">
-                            <svg-icon iconClass="icon-warning" />
-                            设备告警
-                        </span>
-                        <app-log-card ref="warn-card"
-                                      :deviceLogs="deviceLogs"
-                                      logType="warn"
-                                      :height="250"
-                                      @more="moreDeviceLogs" />
-                    </el-tab-pane>
-                </el-tabs>
+                <details-log ref="log"
+                             :deviceId="deviceId"
+                             @moreDeviceLogs="moreDeviceLogs" />
             </div>
         </div>
         <div class="right">
-            <el-card class="view-lighting-control-content">
-                <div class="view-lighting-control-content-top">
+            <el-card class="table-lamp-control-content">
+                <div class="table-lamp-control-content-top">
                     <span class="item"
                           :class="{active: device.onLine}">
                         连接 -
@@ -100,7 +31,7 @@
                         告警 -
                     </span>
                 </div>
-                <div class="view-lighting-control-content-middle">
+                <div class="table-lamp-control-content-middle">
                     <div class="luminance">
                         <span class="luminance-setting">
                             亮度设定
@@ -120,8 +51,20 @@
                             </i>
                         </span>
                     </div>
+                    <div class="color">
+                        <span class="color-title">
+                            颜色设定
+                        </span>
+                        <ul class="color-set">
+                            <li v-for="(item, index) in 4"
+                                :key="index"
+                                :class="{active: index === color}"
+                                @click="setColor(index)">
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="view-lighting-control-content-bottom">
+                <div class="table-lamp-control-content-bottom">
                     <span>
                         <i>
                             开启/关闭
@@ -139,7 +82,7 @@
                     </span>
                 </div>
             </el-card>
-            <el-card class="view-lighting-control-footer"
+            <el-card class="table-lamp-control-footer"
                      v-loading="timedTaskloading">
                 <div slot="header"
                      class="header">
@@ -183,17 +126,18 @@
 <script>
 import AppDrawer from '@/components/appDrawer';
 import AppLamp from '@/components/appLamp';
-import AppLogCard from '@/components/appLogCard';
 import AppDrawerLog from '@/components/appDrawerLog';
 import AppDrawerTask from '@/components/appDrawerTask';
 import AppTaskCard from '@/components/appTaskCard';
-import { setDesired, deleteDeviceLog, getDeviceLogById } from '@/api/device';
+import DetailsInfo from './info';
+import DetailsLog from './log';
+
+import { setDesired } from '@/api/device';
 
 export default {
-	name: 'ViewLighting',
+	name: 'TableLamp',
 	data() {
 		return {
-			activeName: 'first',
 			switchLoading: false,
 			timedTaskloading: false,
 			timedTask: false,
@@ -202,6 +146,7 @@ export default {
 			deviceLogs: [],
 			timedTaskId: '',
 			luminance: 0,
+			color: 0,
 			drawerType: 'log',
 			taskType: 'new',
 		};
@@ -215,20 +160,9 @@ export default {
 			return type;
 		},
 
-		// 房间名
-		roomName() {
-			const el = this.$store.state.rooms.find(
-				el => el.roomId === this.device.roomId
-			);
-			if (el) {
-				return el.name;
-			}
-			return '';
-		},
-
 		// 设备状态
 		status() {
-			let status = { switch: false, luminance: 0 };
+			let status = { switch: false, luminance: 0, color: 0 };
 			if (this.device.deviceId) {
 				status = this.$store.state.status[this.device.deviceId];
 				this.setDataLuminance(status);
@@ -262,9 +196,22 @@ export default {
 			});
 		},
 
+		// 设置颜色
+		setColor(index) {
+			if (!this.device.onLine) {
+				return;
+			}
+			this.color = index;
+			this.setDesiredFn({
+				deviceId: this.device.deviceId,
+				desired: { color: this.color },
+			});
+		},
+
 		// 设置双向绑定亮度值
 		setDataLuminance(status) {
 			this.luminance = status.luminance;
+			this.color = status.color;
 		},
 
 		// 防抖动
@@ -320,27 +267,7 @@ export default {
 
 		// 侧边栏删除日志
 		deleteLogs() {
-			this.getDeviceLogByIdFn(this.deviceId);
-		},
-
-		// 监听日志更新
-		socketOn(deviceId) {
-			try {
-				this.socket = this.$store.state.socket;
-				if (!this.socket.on) {
-					return;
-				}
-				this.socket.on(`${deviceId}-updateDeviceLog`, data => {
-					this.deviceLogs.unshift(data);
-				});
-			} catch (error) {
-				this.$message({
-					showClose: true,
-					center: true,
-					message: error.message,
-					type: 'error',
-				});
-			}
+			this.$refs.log.getDeviceLogByIdFn(this.deviceId);
 		},
 
 		// 操作设备封装
@@ -353,51 +280,6 @@ export default {
 					type: 'error',
 				});
 			});
-		},
-
-		// 获取日志封装
-		getDeviceLogByIdFn(deviceId) {
-			getDeviceLogById({
-				deviceId: deviceId,
-				dayNum: 0,
-			})
-				.then(resData => {
-					this.deviceLogs = resData;
-				})
-				.catch(error => {
-					this.$message({
-						showClose: true,
-						center: true,
-						message: error.message,
-						type: 'error',
-					});
-				});
-		},
-
-		// 删除日志封装
-		deleteDeviceLogFn() {
-			deleteDeviceLog({
-				deviceId: this.device.deviceId,
-			})
-				.then(resData => {
-					if (resData.ok) {
-						this.$message({
-							showClose: true,
-							message: '删除成功！',
-							type: 'success',
-							center: true,
-						});
-					}
-					this.getDeviceLogByIdFn(this.deviceId);
-				})
-				.catch(error => {
-					this.$message({
-						showClose: true,
-						center: true,
-						message: error.message,
-						type: 'error',
-					});
-				});
 		},
 	},
 
@@ -442,30 +324,17 @@ export default {
 	components: {
 		AppDrawer,
 		AppDrawerLog,
-		AppLogCard,
 		AppDrawerTask,
 		AppTaskCard,
 		AppLamp,
-	},
-
-	created() {
-		this.getDeviceLogByIdFn(this.deviceId);
-	},
-
-	mounted() {
-		this.socketOn(this.deviceId);
-	},
-
-	destroyed() {
-		if (this.socket.on) {
-			this.socket.off(`${this.deviceId}-updateDeviceLog`);
-		}
+		DetailsInfo,
+		DetailsLog,
 	},
 };
 </script>
 
 <style lang="scss" scoped>
-.view-lighting {
+.table-lamp {
 	flex: 1;
 	@include flex-between();
 	align-items: flex-start;
@@ -486,51 +355,6 @@ export default {
 		width: 30%;
 		padding: 0 20px;
 		box-sizing: border-box;
-	}
-
-	&-info {
-		width: 30%;
-		margin-bottom: 50px;
-		min-width: 220px;
-
-		.content {
-			height: 300px;
-			margin: 10px;
-			padding: 20px;
-			border: 1px solid #f2f6fc;
-			border-radius: 4px;
-			box-sizing: border-box;
-
-			&-item {
-				width: 100%;
-				height: 60px;
-				line-height: 60px;
-				color: #909399;
-				@include flex-start();
-
-				i:nth-of-type(1) {
-					width: 80px;
-					display: block;
-				}
-				i:nth-of-type(2) {
-					color: #606266;
-				}
-			}
-
-			&-id {
-				width: 100%;
-				height: 50px;
-				line-height: 50px;
-				color: #909399;
-
-				i {
-					display: block;
-				}
-				i:nth-of-type(2) {
-					color: #606266;
-				}
-			}
-		}
 	}
 
 	&-lamp {
@@ -630,10 +454,62 @@ export default {
 					}
 				}
 			}
+
+			.color {
+				height: 80px;
+				@include flex-between();
+
+				&-title {
+					width: 40%;
+				}
+
+				&-set {
+					width: 60%;
+					@include flex-around();
+
+					.active {
+						border: 2px solid #e4e7ed;
+						padding: 10px;
+					}
+
+					li {
+						width: 25px;
+						height: 25px;
+						border-radius: 50%;
+						padding: 5px;
+						cursor: pointer;
+					}
+					li:nth-of-type(1) {
+						background-image: radial-gradient(
+							rgb(255, 254, 255) 10%,
+							rgb(255, 253, 220) 100%
+						);
+					}
+
+					li:nth-of-type(2) {
+						background-image: radial-gradient(
+							rgb(245, 108, 108) 10%,
+							rgb(248, 179, 179) 100%
+						);
+					}
+					li:nth-of-type(3) {
+						background-image: radial-gradient(
+							rgb(103, 194, 58) 10%,
+							rgb(151, 200, 127) 100%
+						);
+					}
+					li:nth-of-type(4) {
+						background-image: radial-gradient(
+							rgb(64, 158, 255) 10%,
+							rgb(140, 197, 235) 100%
+						);
+					}
+				}
+			}
 		}
 
 		&-content-bottom {
-			height: 100px;
+			height: 60px;
 			margin-top: 10px;
 			margin-bottom: 20px;
 			@include flex-center();
@@ -660,7 +536,7 @@ export default {
 			}
 
 			.content {
-				height: 260px;
+				height: 220px;
 			}
 		}
 	}

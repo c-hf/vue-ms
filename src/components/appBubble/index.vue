@@ -1,23 +1,31 @@
 <template>
     <div class="bubble"
          ref="bubble">
-        <span class="bubble-mini bubble-mini-1"></span>
-        <span class="bubble-mini bubble-mini-3"></span>
-        <span class="bubble-num">
-            {{animatedNumber}}
-            <i>&#8451;</i>
-        </span>
-        <span class="bubble-icon">
-            <i class="active">
-                <svg-icon iconClass="icon-zhileng" />
-            </i>
-            <i>
-                <svg-icon iconClass="icon-zhire" />
-            </i>
-            <i>
+        <div class="bubble-mini bubble-mini-1"></div>
+        <div class="bubble-mini bubble-mini-3"></div>
+        <div class="bubble-num-container">
+            <span class="bubble-num">
+                {{ temp }}
+                <i>&#8451;</i>
+            </span>
+            <span class="bubble-num">
+                {{ humidity }}
+                <i>%</i>
+            </span>
+        </div>
+        <div class="bubble-icon">
+            <span class="active">
+                <!-- <svg-icon iconClass="icon-zhileng" /> -->
+                <svg-icon iconClass="icon-iconset0480" />
+            </span>
+            <span class="active">
+                <!-- <svg-icon iconClass="icon-zhire" /> -->
+                <svg-icon iconClass="icon-kongqishidu" />
+            </span>
+            <!-- <i>
                 <svg-icon iconClass="icon-time" />
-            </i>
-        </span>
+            </i> -->
+        </div>
     </div>
 </template>
 
@@ -32,36 +40,44 @@ export default {
 		};
 	},
 
-	computed: {
-		animatedNumber: function() {
-			return this.tweenedNumber.toFixed(0);
-		},
-	},
+	// computed: {
+	// 	animatedNumber: function() {
+	// 		return this.tweenedNumber.toFixed(0);
+	// 	},
+	// },
 
-	methods: {
-		mousemove(event) {
-			const x = Math.round(
-				(event.clientX - this.$refs.bubble.offsetLeft - 240) / 22
-			);
-			const y = Math.round(
-				(event.clientY - this.$refs.bubble.offsetTop - 133) / 22
-			);
-			this.x = (x - 5) * 1.5;
-			this.y = (y - 5) * 1.5;
-			console.log(this.x, -this.y);
-		},
-	},
+	// methods: {
+	// 	mousemove(event) {
+	// 		const x = Math.round(
+	// 			(event.clientX - this.$refs.bubble.offsetLeft - 240) / 22
+	// 		);
+	// 		const y = Math.round(
+	// 			(event.clientY - this.$refs.bubble.offsetTop - 133) / 22
+	// 		);
+	// 		this.x = (x - 5) * 1.5;
+	// 		this.y = (y - 5) * 1.5;
+	// 		console.log(this.x, -this.y);
+	// 	},
+	// },
 
-	watch: {
-		number: function(newValue) {
-			/*global TweenLite */
-			TweenLite.to(this.$data, 0.5, { tweenedNumber: newValue });
-		},
-	},
+	// watch: {
+	// 	number: function(newValue) {
+	// 		/*global TweenLite */
+	// 		TweenLite.to(this.$data, 0.5, { tweenedNumber: newValue });
+	// 	},
+	// },
 
 	props: {
 		number: {
 			type: Number,
+		},
+		temp: {
+			type: Number,
+			default: 45,
+		},
+		humidity: {
+			type: Number,
+			default: 99,
 		},
 	},
 };
@@ -69,8 +85,8 @@ export default {
 
 <style lang="scss" scoped>
 .bubble {
-	width: 280px;
-	height: 280px;
+	width: 320px;
+	height: 320px;
 	border-radius: 50%;
 	box-shadow: 0 0 60px 2px rgba(255, 255, 255, 1) inset,
 		0 0 100px 30px rgba(255, 255, 255, 0.1) inset,
@@ -121,19 +137,31 @@ export default {
 	// 	color: #909399;
 	// }
 
+	&-num-container {
+		width: 100%;
+		text-align: center;
+	}
+
 	&-num {
-		font-size: 64px;
+		width: 50%;
+		box-sizing: border-box;
+		font-size: 48px;
 		color: #303133;
 		margin-top: 20px;
+		padding: 0 30px;
 		position: relative;
 
 		i {
 			font-size: 20px;
 			align-self: flex-start;
 			position: absolute;
-			right: -20px;
+			right: 10px;
 			top: 0px;
 		}
+	}
+
+	&-num:nth-of-type(1) {
+		border-right: 1px solid #e4e7ed;
 	}
 
 	&-icon {

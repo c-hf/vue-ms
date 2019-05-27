@@ -5,14 +5,6 @@
                 设备关联列表
             </span>
         </div>
-        <!-- <div class="associate-info-right">
-            <el-button type="primary"
-                       icon="el-icon-plus"
-                       size="medium"
-                       @click="routeAccess">
-                添加关联
-            </el-button>
-        </div> -->
     </div>
 </template>
 
@@ -21,13 +13,6 @@ export default {
 	name: 'AssociateInfo',
 	data() {
 		return {};
-	},
-
-	methods: {
-		// 设备接入
-		routeAccess() {
-			// this.$router.push({ name: 'access' });
-		},
 	},
 };
 </script>

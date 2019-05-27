@@ -20,14 +20,16 @@ export default {
 			if (!this.switch || this.luminance === 0) {
 				return '';
 			}
-			return `0px 2px 5px rgba(255,253,220, ${0.6 *
+			return `0px 2px 5px rgba(${this.bgColorEnd}, ${0.6 *
 				this.luminance}) inset,
-            0px 2px 10px rgba(255,253,220, ${0.6 * this.luminance}),
-            0px 5px 40px 10px rgba(255,253,220, ${0.6 * this.luminance}),
-            0px 8px 80px ${22.2 * this.luminance +
-				17.8}px rgba(255,253,220, ${0.4 * this.luminance}),
-            0px 8px 120px ${44.4 * this.luminance +
-				35.6}px rgba(255,253,220, ${0.2 * this.luminance})`;
+            0px 2px 10px rgba(${this.bgColorEnd}, ${0.6 * this.luminance}),
+            0px 5px 40px 10px rgba(${this.bgColorEnd}, ${0.6 * this.luminance}),
+            0px 8px 80px 
+            ${22.2 * this.luminance + 17.8}px rgba(${this.bgColorEnd}, 
+            ${0.4 * this.luminance}),
+            0px 8px 120px 
+            ${44.4 * this.luminance + 35.6}px 
+            rgba(${this.bgColorEnd}, ${0.2 * this.luminance})`;
 		},
 
 		background() {
@@ -35,8 +37,32 @@ export default {
 				return '';
 			}
 			return `radial-gradient(
-                rgba(255,254,255, ${0.6 * this.luminance + 0.4}) 10%,
-                rgba(255,253,220, ${0.6 * this.luminance + 0.4}) 100%)`;
+                rgba(${this.bgColorStart}, ${0.6 * this.luminance + 0.4}) 10%,
+                rgba(${this.bgColorEnd}, ${0.6 * this.luminance + 0.4}) 100%)`;
+		},
+
+		bgColorStart() {
+			let color = '255,254,255';
+			if (this.color === 1) {
+				color = '245,108,108';
+			} else if (this.color === 2) {
+				color = '103,194,58';
+			} else if (this.color === 3) {
+				color = '64,158,255';
+			}
+			return color;
+		},
+
+		bgColorEnd() {
+			let color = '255,253,220';
+			if (this.color === 1) {
+				color = '248,179,179';
+			} else if (this.color === 2) {
+				color = '151, 200, 127';
+			} else if (this.color === 3) {
+				color = '140, 197, 235';
+			}
+			return color;
 		},
 	},
 
@@ -50,6 +76,11 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+
+		color: {
+			type: Number,
+			default: 0,
+		},
 	},
 };
 </script>
@@ -62,9 +93,9 @@ export default {
 	background: rgba(255, 255, 255, 0);
 	box-shadow: inset 2px -2px 10px rgba(255, 255, 255, 0.5),
 		0px 0px 10px 20px rgba(255, 255, 255, 0.5);
-	border: 1px solid rgba(255, 255, 255, 0.8);
+	// border: 1px solid rgba(255, 255, 255, 0.8);
 	box-shadow: 0px 0px 50px rgba(255, 255, 255, 0.8);
-	transition: all 0.15s;
+	transition: all 0.5s;
 	position: relative;
 }
 
@@ -93,7 +124,7 @@ export default {
 	border-radius: 50%;
 	background: rgba(255, 255, 255, 0.03);
 	box-shadow: inset 2px -2px 10px rgba(255, 255, 255, 0.07);
-	transition: all 0.15s;
+	transition: all 0.5s;
 }
 
 .gonna-give-light,

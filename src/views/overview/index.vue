@@ -17,9 +17,14 @@
 </template>
 
 <script>
-import CeilingLamp from '@/components/appLighting/ceilingLamp';
-import TableLamp from '@/components/appLighting/tableLamp';
-import LEDLamp from '@/components/appLighting/lEDLamp';
+import CeilingLamp from '@/components/appDevice/ceilingLamp';
+import TableLamp from '@/components/appDevice/tableLamp';
+import LEDLamp from '@/components/appDevice/lEDLamp';
+import AirFan from '@/components/appDevice/airFan';
+import Alarm from '@/components/appDevice/alarm';
+import HumidityTemperatureSensor from '@/components/appDevice/humidityTemperatureSensor';
+import FlameSensor from '@/components/appDevice/flameSensor';
+import InfraredSensor from '@/components/appDevice/infraredSensor';
 
 export default {
 	name: 'Overview', // 设备概览
@@ -42,6 +47,11 @@ export default {
 		CeilingLamp,
 		TableLamp,
 		LEDLamp,
+		AirFan,
+		Alarm,
+		HumidityTemperatureSensor,
+		FlameSensor,
+		InfraredSensor,
 	},
 };
 </script>

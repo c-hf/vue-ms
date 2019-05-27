@@ -79,7 +79,8 @@
                     <el-slider v-else-if="item.el === 'slider'"
                                v-model="item.value"
                                :step="item.step"
-                               :min="item.min">
+                               :min="item.min"
+                               :max="item.max">
                     </el-slider>
                     <el-button class="app-drawer-task-task-item-delete"
                                icon="el-icon-close"
@@ -126,7 +127,7 @@ import {
 	updateDeviceTimedTask,
 	getDeviceTimedTaskById,
 } from '@/api/device';
-import { TASKS } from './config.js';
+import { ATTRS } from '@/config';
 
 export default {
 	name: 'AppDrawerTask',
@@ -135,7 +136,7 @@ export default {
 			name: '定时任务',
 			hour: 0,
 			minute: 0,
-			tasks: TASKS,
+			tasks: ATTRS,
 			status: {},
 			dataTasks: [],
 			statusItems: [],

@@ -38,7 +38,8 @@
             </el-table>
         </el-scrollbar>
         <div class="device-list-btn">
-            <el-button plain>
+            <el-button plain
+                       @click="onBack">
                 返回
             </el-button>
             <el-button type="primary"
@@ -64,7 +65,10 @@ export default {
 		deviceData() {
 			let deviceData = [];
 			this.$store.state.device.forEach(el => {
-				if (el.deviceId === this.deviceId) {
+				if (
+					el.deviceId === this.deviceId ||
+					el.categoryId === 'sensor'
+				) {
 					return;
 				}
 				let device = el;
@@ -99,6 +103,10 @@ export default {
 					type: 'warning',
 				});
 			}
+		},
+
+		onBack() {
+			this.$emit('onBack');
 		},
 	},
 

@@ -114,7 +114,8 @@
                     <el-slider v-else-if="item.el === 'slider'"
                                v-model="item.value"
                                :step="item.step"
-                               :min="item.min">
+                               :min="item.min"
+                               :max="item.max">
                     </el-slider>
                     <el-button class="drawer-task-task-item-delete"
                                icon="el-icon-close"
@@ -142,7 +143,8 @@
                    :append-to-body="true"
                    title="选择设备"
                    width="1000px">
-            <device-list @getDevice="getDevice" />
+            <device-list @getDevice="getDevice"
+                         @onBack="onBack" />
         </el-dialog>
     </el-scrollbar>
 </template>
@@ -228,6 +230,11 @@ export default {
 			this.time.second = 0;
 			this.statusItems = [];
 			this.dataTasks = [];
+		},
+
+		// 设备列表返回
+		onBack() {
+			this.visible = false;
 		},
 
 		// 分钟选择

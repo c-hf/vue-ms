@@ -38,7 +38,8 @@
             </el-table>
         </el-scrollbar>
         <div class="device-list-btn">
-            <el-button plain>
+            <el-button plain
+                       @click="onBack">
                 返回
             </el-button>
             <el-button type="primary"
@@ -65,6 +66,8 @@ export default {
 			let deviceData = [];
 			this.$store.state.device.forEach(el => {
 				if (el.deviceId === this.deviceId) {
+					return;
+				} else if (this.type === 2 && el.categoryId === 'sensor') {
 					return;
 				}
 				let device = el;
@@ -100,11 +103,19 @@ export default {
 				});
 			}
 		},
+
+		onBack() {
+			this.$emit('onBack');
+		},
 	},
 
 	props: {
 		deviceId: {
 			type: String,
+		},
+
+		type: {
+			type: Number, // 1 触发设备 2 响应设备
 		},
 	},
 };

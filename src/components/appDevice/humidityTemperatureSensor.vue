@@ -6,11 +6,8 @@
             <span class="app-lighting-card-top-icon"
                   :class="{'off-line-icon': !device.onLine}"
                   @click="routeDetails">
-                <svg-icon iconClass="icon-tableLamp" />
+                <svg-icon iconClass="icon-icon-temperature" />
             </span>
-            <!-- <span class="app-lighting-card-top-set">
-                <svg-icon iconClass="icon-collection" />
-            </span> -->
         </div>
         <div class="app-lighting-card-bottom">
             <span class="app-lighting-card-bottom-item name">
@@ -21,31 +18,19 @@
                 <i v-if="!device.onLine">
                     设备离线
                 </i>
-                <el-button v-else
-                           @click="setSwitch"
-                           :loading="switchLoading"
-                           :type="type"
-                           plain
-                           circle>
-                    <svg-icon v-if="!switchLoading"
-                              iconClass="icon-guanbi" />
-                </el-button>
+                <i v-else>
+                    {{ status.temp }}&#8451; {{ status.humidity }}%
+                </i>
             </span>
         </div>
     </el-card>
 </template>
 
 <script>
-import { setDesired } from '@/api/device';
-
 export default {
 	name: 'AppCeilingLamp',
 	data() {
-		return {
-			switchLoading: false,
-			timer: null,
-			luminance: 0,
-		};
+		return {};
 	},
 
 	computed: {
@@ -68,42 +53,6 @@ export default {
 	},
 
 	methods: {
-		// 防抖动
-		setTimeOut() {
-			if (this.timer) {
-				clearTimeout(this.timer);
-				this.timer = null;
-			}
-			this.timer = setTimeout(() => {
-				if (this.switchLoading) {
-					this.$message({
-						showClose: true,
-						center: true,
-						message: '操作超时！请重试',
-						type: 'error',
-					});
-					this.switchLoading = false;
-				}
-			}, 2000);
-		},
-
-		// 设置开关
-		setSwitch() {
-			this.switchLoading = true;
-			this.setTimeOut();
-			setDesired({
-				deviceId: this.device.deviceId,
-				desired: { switch: !this.status.switch },
-			}).catch(error => {
-				this.$message({
-					showClose: true,
-					center: true,
-					message: error.message,
-					type: 'error',
-				});
-			});
-		},
-
 		// 设备接入
 		routeDetails() {
 			this.$router.push({
@@ -121,21 +70,15 @@ export default {
 			type: Object,
 		},
 	},
-
-	watch: {
-		status() {
-			if (this.switchLoading) {
-				this.switchLoading = false;
-				this.timer ? clearTimeout(this.timer) : (this.timer = null);
-			}
-		},
-	},
 };
 </script>
 
 <style lang="scss">
 .app-lighting-card {
+	// margin-bottom: 20px;
 	user-select: none;
+
+	// position: relative;
 
 	&-top {
 		width: 100%;

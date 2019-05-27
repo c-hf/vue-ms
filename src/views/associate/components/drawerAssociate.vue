@@ -108,8 +108,30 @@
                 <el-slider v-else-if="condition.el === 'slider'"
                            v-model="condition.value"
                            :step="condition.step"
-                           :min="condition.min">
+                           :min="condition.min"
+                           :max="item.max">
                 </el-slider>
+                <el-switch v-if="condition.el === 'flame'"
+                           v-model="condition.value"
+                           active-color="#13ce66"
+                           inactive-color="#ff4949"
+                           disabled>
+                </el-switch>
+                <span class="judge"
+                      v-if="condition.el === 'judge'">
+                    <el-select v-model="condition.judge"
+                               placeholder="请选择">
+                        <el-option v-for="item in options"
+                                   :key="item.value"
+                                   :label="item.label"
+                                   :value="item.value">
+                        </el-option>
+                    </el-select>
+                    <el-input-number v-model="condition.value"
+                                     :min="condition.min"
+                                     :max="condition.max">
+                    </el-input-number>
+                </span>
                 <el-button class="delete"
                            icon="el-icon-close"
                            size="mini"
@@ -135,7 +157,9 @@
                    title="选择设备"
                    width="1000px">
             <device-list :deviceId="editData.deviceId"
-                         @getDevice="getDevice" />
+                         :type="type"
+                         @getDevice="getDevice"
+                         @onBack="onBack" />
         </el-dialog>
     </el-scrollbar>
 </template>
@@ -169,6 +193,20 @@ export default {
 					},
 				],
 			},
+			options: [
+				{
+					value: 1,
+					label: '大于',
+				},
+				{
+					value: 2,
+					label: '小于',
+				},
+				{
+					value: 3,
+					label: '等于',
+				},
+			],
 			device: {},
 			visible: false,
 			condition: {},
@@ -213,12 +251,18 @@ export default {
 					id: this.condition.id,
 					value: this.condition.value,
 				};
+				if (this.condition.el === 'judge') {
+					data.condition.judge = this.condition.judge;
+				}
 			} else if (this.type === 2) {
 				data.expect = {
 					deviceId: this.device.deviceId, // 设备 ID
 					id: this.condition.id,
 					value: this.condition.value,
 				};
+				if (this.condition.el === 'judge') {
+					data.expect.judge = this.condition.judge;
+				}
 			}
 
 			if (this.editData.associateId) {
@@ -238,6 +282,11 @@ export default {
 			this.condition = {};
 		},
 
+		// 设备列表返回
+		onBack() {
+			this.visible = false;
+		},
+
 		// 选择设备
 		selectDevice() {
 			this.visible = true;
@@ -247,6 +296,7 @@ export default {
 		getDevice(device) {
 			this.device = device;
 			this.visible = false;
+			this.condition = {};
 			this.statusInit(this.device.deviceId);
 		},
 
@@ -264,6 +314,7 @@ export default {
 			this.condition = item;
 		},
 
+		// 删除条件
 		deleteCondition() {
 			this.condition = {};
 		},
@@ -454,6 +505,16 @@ export default {
 				width: 120px;
 				display: block;
 				padding-left: 50px;
+			}
+
+			.judge {
+				.el-select {
+					width: 100px;
+					margin-right: 10px;
+				}
+				.el-input-number {
+					width: 140px;
+				}
 			}
 
 			.el-slider {

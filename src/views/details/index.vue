@@ -1,12 +1,22 @@
 <template>
     <div class="details">
-        <view-lighting :device="device"
-                       :deviceId="deviceId" />
+        <component v-if="device"
+                   :is="device.categoryItemId"
+                   :device="device"
+                   :deviceId="deviceId">
+        </component>
     </div>
 </template>
 
 <script>
-import ViewLighting from './components/lighting';
+import CeilingLamp from './components/deviceCeilingLamp';
+import LEDLamp from './components/deviceLEDLamp';
+import TableLamp from './components/deviceTableLamp';
+import Alarm from './components/deviceAlarm';
+import AirFan from './components/deviceAirFan';
+import HumidityTemperatureSensor from './components/deviceHumidityTemperatureSensor';
+import FlameSensor from './components/deviceFlameSensor';
+import InfraredSensor from './components/deviceInfraredSensor';
 
 export default {
 	name: 'Details',
@@ -34,7 +44,14 @@ export default {
 	},
 
 	components: {
-		ViewLighting,
+		CeilingLamp,
+		LEDLamp,
+		TableLamp,
+		Alarm,
+		AirFan,
+		HumidityTemperatureSensor,
+		FlameSensor,
+		InfraredSensor,
 	},
 
 	created() {
