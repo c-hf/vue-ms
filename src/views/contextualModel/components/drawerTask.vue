@@ -138,6 +138,13 @@
                             蓝色
                         </el-radio-button>
                     </el-radio-group>
+                    <el-button class="drawer-task-task-item-delete"
+                               icon="el-icon-close"
+                               size="mini"
+                               circle
+                               @click="deleteTask(index)">
+                    </el-button>
+                </span>
             </el-scrollbar>
         </div>
         <div class="drawer-task-btn">
