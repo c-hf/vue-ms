@@ -1,6 +1,7 @@
 <template>
     <div class="fire">
-        <div class="flames">
+        <div class="flames"
+             v-if="flame">
             <div class="flame"></div>
             <div class="flame"></div>
             <div class="flame"></div>

@@ -227,6 +227,16 @@ const ATTRS = new Map([
 		},
 	],
 	[
+		'color',
+		{
+			id: 'color',
+			name: '颜色',
+			type: 'Number',
+			el: 'color',
+			value: 0,
+		},
+	],
+	[
 		'speed',
 		{
 			id: 'speed',

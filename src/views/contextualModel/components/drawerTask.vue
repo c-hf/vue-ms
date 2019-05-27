@@ -117,13 +117,27 @@
                                :min="item.min"
                                :max="item.max">
                     </el-slider>
-                    <el-button class="drawer-task-task-item-delete"
-                               icon="el-icon-close"
-                               size="mini"
-                               circle
-                               @click="deleteTask(index)">
-                    </el-button>
-                </span>
+                    <el-switch v-if="item.el === 'flame'"
+                               v-model="item.value"
+                               active-color="#13ce66"
+                               inactive-color="#ff4949"
+                               disabled>
+                    </el-switch>
+                    <el-radio-group v-if="item.el === 'color'"
+                                    v-model="item.value">
+                        <el-radio-button :label="0">
+                            白色
+                        </el-radio-button>
+                        <el-radio-button :label="1">
+                            红色
+                        </el-radio-button>
+                        <el-radio-button :label="2">
+                            绿色
+                        </el-radio-button>
+                        <el-radio-button :label="3">
+                            蓝色
+                        </el-radio-button>
+                    </el-radio-group>
             </el-scrollbar>
         </div>
         <div class="drawer-task-btn">

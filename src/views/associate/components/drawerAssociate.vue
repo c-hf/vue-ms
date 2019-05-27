@@ -117,6 +117,21 @@
                            inactive-color="#ff4949"
                            disabled>
                 </el-switch>
+                <el-radio-group v-if="condition.el === 'color'"
+                                v-model="condition.value">
+                    <el-radio-button :label="0">
+                        白色
+                    </el-radio-button>
+                    <el-radio-button :label="1">
+                        红色
+                    </el-radio-button>
+                    <el-radio-button :label="2">
+                        绿色
+                    </el-radio-button>
+                    <el-radio-button :label="3">
+                        蓝色
+                    </el-radio-button>
+                </el-radio-group>
                 <span class="judge"
                       v-if="condition.el === 'judge'">
                     <el-select v-model="condition.judge"
@@ -514,6 +529,42 @@ export default {
 				}
 				.el-input-number {
 					width: 140px;
+				}
+			}
+
+			.color {
+				span {
+					display: block;
+					width: 25px;
+					height: 25px;
+					border-radius: 50%;
+					padding: 5px;
+					cursor: pointer;
+				}
+				span:nth-of-type(1) {
+					background-image: radial-gradient(
+						rgb(255, 254, 255) 10%,
+						rgb(255, 253, 220) 100%
+					);
+				}
+
+				span:nth-of-type(2) {
+					background-image: radial-gradient(
+						rgb(245, 108, 108) 10%,
+						rgb(248, 179, 179) 100%
+					);
+				}
+				span:nth-of-type(3) {
+					background-image: radial-gradient(
+						rgb(103, 194, 58) 10%,
+						rgb(151, 200, 127) 100%
+					);
+				}
+				span:nth-of-type(4) {
+					background-image: radial-gradient(
+						rgb(64, 158, 255) 10%,
+						rgb(140, 197, 235) 100%
+					);
 				}
 			}
 
