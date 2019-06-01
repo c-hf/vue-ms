@@ -5,7 +5,7 @@
             <div class="left-top">
                 <details-info :device="device" />
                 <div class="ceiling-lamp-flame">
-                    <app-flame :flame="status.switch && status.flame" />
+                    <app-flame :flame="device.onLine && status.flame" />
                 </div>
             </div>
             <div class="left-bottom">
@@ -22,7 +22,7 @@
                         连接 -
                     </span>
                     <span class="item"
-                          :class="{active: status.switch && device.onLine}">
+                          :class="{active: device.onLine}">
                         运行 -
                     </span>
                     <span class="item warn">

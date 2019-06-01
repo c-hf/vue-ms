@@ -1,24 +1,24 @@
 <template>
-    <div class="table-lamp"
+    <div class="LED-lamp"
          ref="details">
         <div class="left">
             <div class="left-top">
-                <details-info :device="device" />
-                <div class="table-lamp-lamp">
-                    <app-lamp :luminance="status.luminance / 100"
-                              :switch="status.switch && device.onLine"
-                              :color="color" />
+                <details-info :device="device"></details-info>
+                <div class="LED-lamp-lamp">
+                    <app-lamp :luminance="luminance / 100"
+                              :switch="status.switch && device.onLine" />
                 </div>
             </div>
             <div class="left-bottom">
                 <details-log ref="log"
                              :deviceId="deviceId"
-                             @moreDeviceLogs="moreDeviceLogs" />
+                             @moreDeviceLogs="moreDeviceLogs">
+                </details-log>
             </div>
         </div>
         <div class="right">
-            <el-card class="table-lamp-control-content">
-                <div class="table-lamp-control-content-top">
+            <el-card class="LED-lamp-control-content">
+                <div class="LED-lamp-control-content-top">
                     <span class="item"
                           :class="{active: device.onLine}">
                         连接 -
@@ -31,40 +31,17 @@
                         告警 -
                     </span>
                 </div>
-                <div class="table-lamp-control-content-middle">
+                <div class="LED-lamp-control-content-middle">
                     <div class="luminance">
-                        <span class="luminance-setting">
-                            亮度设定
-                            <el-slider v-model="luminance"
-                                       vertical
-                                       height="100px"
-                                       :step="10"
-                                       :min="10"
-                                       :disabled="!status.switch || !device.onLine"
-                                       @change="setLuminance">
-                            </el-slider>
-                        </span>
                         <span class="luminance-current">
                             <svg-icon iconClass="icon-light" />
                             <i>
-                                {{ status.luminance }}&#37;
+                                {{ luminance }} &#37;
                             </i>
                         </span>
                     </div>
-                    <div class="color">
-                        <span class="color-title">
-                            颜色设定
-                        </span>
-                        <ul class="color-set">
-                            <li v-for="(item, index) in 4"
-                                :key="index"
-                                :class="{active: index === color}"
-                                @click="setColor(index)">
-                            </li>
-                        </ul>
-                    </div>
                 </div>
-                <div class="table-lamp-control-content-bottom">
+                <div class="LED-lamp-control-content-bottom">
                     <span>
                         <i>
                             开启/关闭
@@ -82,7 +59,7 @@
                     </span>
                 </div>
             </el-card>
-            <el-card class="table-lamp-control-footer"
+            <el-card class="LED-lamp-control-footer"
                      v-loading="timedTaskloading">
                 <div slot="header"
                      class="header">
@@ -135,7 +112,7 @@ import DetailsLog from './log';
 import { setDesired } from '@/api/device';
 
 export default {
-	name: 'TableLamp',
+	name: 'LEDLamp',
 	data() {
 		return {
 			switchLoading: false,
@@ -145,14 +122,18 @@ export default {
 			timer: null,
 			deviceLogs: [],
 			timedTaskId: '',
-			luminance: 0,
-			color: 0,
 			drawerType: 'log',
 			taskType: 'new',
 		};
 	},
 
 	computed: {
+		luminance() {
+			let luminance = 0;
+			this.status.switch ? (luminance = 100) : (luminance = 0);
+			return luminance;
+		},
+
 		// 显示类型
 		type() {
 			let type = 'primary';
@@ -162,10 +143,9 @@ export default {
 
 		// 设备状态
 		status() {
-			let status = { switch: false, luminance: 0, color: 0 };
+			let status = { switch: false };
 			if (this.device.deviceId) {
 				status = this.$store.state.status[this.device.deviceId];
-				this.setDataLuminance(status);
 			}
 			return status;
 		},
@@ -183,35 +163,6 @@ export default {
 				deviceId: this.device.deviceId,
 				desired: { switch: !this.status.switch },
 			});
-		},
-
-		// 设置设备亮度
-		setLuminance() {
-			if (!this.device.onLine) {
-				return;
-			}
-			this.setDesiredFn({
-				deviceId: this.device.deviceId,
-				desired: { luminance: this.luminance },
-			});
-		},
-
-		// 设置颜色
-		setColor(index) {
-			if (!this.device.onLine) {
-				return;
-			}
-			this.color = index;
-			this.setDesiredFn({
-				deviceId: this.device.deviceId,
-				desired: { color: this.color },
-			});
-		},
-
-		// 设置双向绑定亮度值
-		setDataLuminance(status) {
-			this.luminance = status.luminance;
-			this.color = status.color;
 		},
 
 		// 防抖动
@@ -334,7 +285,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.table-lamp {
+.LED-lamp {
 	flex: 1;
 	@include flex-between();
 	align-items: flex-start;
@@ -454,62 +405,10 @@ export default {
 					}
 				}
 			}
-
-			.color {
-				height: 80px;
-				@include flex-between();
-
-				&-title {
-					width: 40%;
-				}
-
-				&-set {
-					width: 60%;
-					@include flex-around();
-
-					.active {
-						border: 2px solid #e4e7ed;
-						padding: 10px;
-					}
-
-					li {
-						width: 25px;
-						height: 25px;
-						border-radius: 50%;
-						padding: 5px;
-						cursor: pointer;
-					}
-					li:nth-of-type(1) {
-						background-image: radial-gradient(
-							rgb(255, 254, 255) 10%,
-							rgb(255, 253, 220) 100%
-						);
-					}
-
-					li:nth-of-type(2) {
-						background-image: radial-gradient(
-							rgb(245, 108, 108) 10%,
-							rgb(248, 179, 179) 100%
-						);
-					}
-					li:nth-of-type(3) {
-						background-image: radial-gradient(
-							rgb(103, 194, 58) 10%,
-							rgb(151, 200, 127) 100%
-						);
-					}
-					li:nth-of-type(4) {
-						background-image: radial-gradient(
-							rgb(64, 158, 255) 10%,
-							rgb(140, 197, 235) 100%
-						);
-					}
-				}
-			}
 		}
 
 		&-content-bottom {
-			height: 60px;
+			height: 100px;
 			margin-top: 10px;
 			margin-bottom: 20px;
 			@include flex-center();
@@ -536,7 +435,7 @@ export default {
 			}
 
 			.content {
-				height: 220px;
+				height: 260px;
 			}
 		}
 	}

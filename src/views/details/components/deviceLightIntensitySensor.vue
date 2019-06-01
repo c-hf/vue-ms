@@ -5,7 +5,7 @@
             <div class="left-top">
                 <details-info :device="device" />
                 <div class="ceiling-lamp-flame">
-                    <app-infrared />
+                    <app-light-intensity />
                 </div>
             </div>
             <div class="left-bottom">
@@ -30,10 +30,13 @@
                     </span>
                 </div>
                 <div class="ceiling-lamp-control-content-middle">
-
-                </div>
-                <div class="ceiling-lamp-control-content-bottom">
-
+                    <svg-icon iconClass="icon-sensor-guangzhao" />
+                    <span class="title">
+                        光照
+                    </span>
+                    <span class="value">
+                        {{ status.light }}
+                    </span>
                 </div>
             </el-card>
             <el-card class="ceiling-lamp-control-footer"
@@ -53,7 +56,7 @@
                     <app-task-card ref="appTaskCard"
                                    :deviceId="deviceId"
                                    :onLine="device.onLine"
-                                   :height="260" />
+                                   :height="380" />
                 </div>
             </el-card>
         </div>
@@ -68,7 +71,7 @@
 <script>
 import AppDrawer from '@/components/appDrawer';
 import AppDrawerLog from '@/components/appDrawerLog';
-import AppInfrared from '@/components/appInfrared';
+import AppLightIntensity from '@/components/appLightIntensity';
 import AppTaskCard from '@/components/appTaskCard';
 import DetailsInfo from './info';
 import DetailsLog from './log';
@@ -141,7 +144,7 @@ export default {
 		AppDrawer,
 		AppDrawerLog,
 		AppTaskCard,
-		AppInfrared,
+		AppLightIntensity,
 		DetailsInfo,
 		DetailsLog,
 	},
@@ -235,57 +238,18 @@ export default {
 		}
 
 		&-content-middle {
-			.el-input-number {
-				width: 120px;
-				margin-left: 10px;
-			}
-
-			.luminance {
-				height: 160px;
-				@include flex-center();
-
-				&-setting {
-					width: 60%;
-					height: 100%;
-					border-bottom: 1px solid #e4e7ed;
-					@include flex-start();
-
-					.el-slider {
-						margin: 0 auto;
-					}
-				}
-
-				&-current {
-					width: 40%;
-					font-size: 36px;
-					@include flex-start();
-
-					svg {
-						font-size: 36px;
-						color: #909399;
-					}
-
-					i {
-						margin-left: 10px;
-					}
-				}
-			}
-		}
-
-		&-content-bottom {
-			height: 100px;
-			margin-top: 10px;
-			margin-bottom: 20px;
+			height: 120px;
+			margin-top: 20px;
+			margin-bottom: 30px;
+			padding-top: 20px;
+			box-sizing: border-box;
+			border-top: 1px solid #e4e7ed;
 			@include flex-center();
-
-			span {
-				flex: 1;
-				@include flex-center(column);
-				i {
-					color: #909399;
-					font-size: 14px;
-					margin: 10px 0;
-				}
+			svg {
+				font-size: 48px;
+			}
+			.title {
+				margin: 0 40px;
 			}
 		}
 
@@ -300,7 +264,7 @@ export default {
 			}
 
 			.content {
-				height: 260px;
+				height: 380px;
 			}
 		}
 	}

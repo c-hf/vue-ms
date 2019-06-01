@@ -24,7 +24,7 @@ import AirFan from '@/components/appDevice/airFan';
 import Alarm from '@/components/appDevice/alarm';
 import HumidityTemperatureSensor from '@/components/appDevice/humidityTemperatureSensor';
 import FlameSensor from '@/components/appDevice/flameSensor';
-import InfraredSensor from '@/components/appDevice/infraredSensor';
+import LightIntensitySensor from '@/components/appDevice/lightIntensitySensor';
 
 export default {
 	name: 'Overview', // 设备概览
@@ -51,7 +51,7 @@ export default {
 		Alarm,
 		HumidityTemperatureSensor,
 		FlameSensor,
-		InfraredSensor,
+		LightIntensitySensor,
 	},
 };
 </script>

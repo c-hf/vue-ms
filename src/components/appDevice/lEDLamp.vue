@@ -8,9 +8,6 @@
                   @click="routeDetails">
                 <svg-icon iconClass="icon-light" />
             </span>
-            <!-- <span class="app-lighting-card-top-set">
-                <svg-icon iconClass="icon-collection" />
-            </span> -->
         </div>
         <div class="app-lighting-card-bottom">
             <span class="app-lighting-card-bottom-item name">

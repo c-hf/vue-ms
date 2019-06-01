@@ -16,7 +16,7 @@ import Alarm from './components/deviceAlarm';
 import AirFan from './components/deviceAirFan';
 import HumidityTemperatureSensor from './components/deviceHumidityTemperatureSensor';
 import FlameSensor from './components/deviceFlameSensor';
-import InfraredSensor from './components/deviceInfraredSensor';
+import LightIntensitySensor from './components/deviceLightIntensitySensor';
 
 export default {
 	name: 'Details',
@@ -51,7 +51,7 @@ export default {
 		AirFan,
 		HumidityTemperatureSensor,
 		FlameSensor,
-		InfraredSensor,
+		LightIntensitySensor,
 	},
 
 	created() {

@@ -6,7 +6,7 @@
             <span class="app-lighting-card-top-icon"
                   :class="{'off-line-icon': !device.onLine}"
                   @click="routeDetails">
-                <svg-icon iconClass="icon-sensor-honwai" />
+                <svg-icon iconClass="icon-sensor-guangzhao" />
             </span>
         </div>
         <div class="app-lighting-card-bottom">
@@ -18,7 +18,9 @@
                 <i v-if="!device.onLine">
                     设备离线
                 </i>
-
+                <i v-else>
+                    光照强度 {{ status.light }}
+                </i>
             </span>
         </div>
     </el-card>

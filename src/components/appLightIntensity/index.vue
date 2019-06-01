@@ -11,24 +11,10 @@
 
 <script>
 export default {
-	name: 'AppInfrared',
+	name: 'AppLightIntensity',
 	data() {
 		return {};
 	},
-
-	computed: {},
-
-	methods: {},
-
-	components: {},
-
-	props: {},
-
-	watch: {},
-
-	created() {},
-
-	mounted() {},
 };
 </script>
 
@@ -120,7 +106,7 @@ export default {
 	}
 	10% {
 		transform: scale(1.3);
-		border-color: #f56c6c;
+		border-color: #409eff;
 	}
 	20% {
 		transform: scale(1);
@@ -136,7 +122,7 @@ export default {
 	}
 	10% {
 		transform: scale(1.15);
-		border-color: #f56c6c;
+		border-color: #409eff;
 	}
 	20% {
 		transform: scale(1);
@@ -152,7 +138,7 @@ export default {
 	}
 	10% {
 		transform: scale(1.1);
-		border-color: #f56c6c;
+		border-color: #409eff;
 	}
 	20% {
 		transform: scale(1);
@@ -168,7 +154,7 @@ export default {
 	}
 	10% {
 		transform: scale(1.075);
-		border-color: #f56c6c;
+		border-color: #409eff;
 	}
 	20% {
 		transform: scale(1);
@@ -184,7 +170,7 @@ export default {
 	}
 	10% {
 		transform: scale(1.06);
-		border-color: #f56c6c;
+		border-color: #409eff;
 	}
 	20% {
 		transform: scale(1);
