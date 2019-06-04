@@ -25,6 +25,8 @@ import Alarm from '@/components/appDevice/alarm';
 import HumidityTemperatureSensor from '@/components/appDevice/humidityTemperatureSensor';
 import FlameSensor from '@/components/appDevice/flameSensor';
 import LightIntensitySensor from '@/components/appDevice/lightIntensitySensor';
+import Car from '@/components/appDevice/car';
+// car
 
 export default {
 	name: 'Overview', // 设备概览
@@ -52,6 +54,7 @@ export default {
 		HumidityTemperatureSensor,
 		FlameSensor,
 		LightIntensitySensor,
+		Car,
 	},
 };
 </script>

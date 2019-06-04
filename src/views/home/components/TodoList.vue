@@ -194,7 +194,7 @@ export default {
 				todoId: id,
 			})
 				.then(resData => {
-					console.log(resData);
+					// console.log(resData);
 					if (resData.ok) {
 						this.$message({
 							showClose: true,
@@ -225,7 +225,7 @@ export default {
 				todoId: todoId,
 			})
 				.then(resData => {
-					console.log(resData);
+					// console.log(resData);
 					if (resData.ok) {
 						return;
 					}

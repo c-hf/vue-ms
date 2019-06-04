@@ -249,7 +249,7 @@ export default {
 				}
 				this.socket.on('updateMode', data => {
 					// this.deviceLogs.unshift(data);
-					console.log(data);
+					// console.log(data);
 					const index = this.data.findIndex(
 						el => el.modeId === data.modeId
 					);

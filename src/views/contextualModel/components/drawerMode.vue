@@ -189,10 +189,6 @@ export default {
 			type: Object,
 		},
 	},
-
-	created() {
-		console.log(this.modeData);
-	},
 };
 </script>
 

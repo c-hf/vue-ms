@@ -147,7 +147,7 @@ export default {
 				time: data.time,
 			})
 				.then(resData => {
-					console.log(resData);
+					// console.log(resData);
 					if (resData.ok) {
 						this.$emit('getTodoList');
 					}

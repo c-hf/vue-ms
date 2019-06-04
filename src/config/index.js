@@ -111,6 +111,8 @@ const DEVICEICON = {
 	airFan: 'icon-fengshan',
 	flameSensor: 'icon-huoyantanceqi',
 	humidityTemperatureSensor: 'icon-icon-temperature',
+	lightIntensitySensor: 'icon-sensor-guangzhao',
+	car: 'icon-chelianwang',
 };
 
 // 天气图标
@@ -285,6 +287,20 @@ const ATTRS = new Map([
 			min: 0,
 			max: 100,
 			suffix: '%',
+		},
+	],
+	[
+		'light',
+		{
+			id: 'light',
+			name: '光强度',
+			type: 'Number',
+			el: 'judge',
+			judge: 1, // 1 大于 2 小于 3 等于
+			value: 0,
+			min: 0,
+			max: 200,
+			suffix: '',
 		},
 	],
 	// judge
