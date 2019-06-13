@@ -133,6 +133,9 @@ export default {
 			i {
 				color: #c0c4cc;
 			}
+			i:nth-of-type(2) {
+				color: #909399;
+			}
 		}
 	}
 }

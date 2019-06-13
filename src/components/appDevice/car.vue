@@ -6,7 +6,7 @@
             <span class="app-lighting-card-top-icon"
                   :class="{'off-line-icon': !device.onLine}"
                   @click="routeDetails">
-                <svg-icon iconClass="icon-sensor-guangzhao" />
+                <svg-icon iconClass="icon-chelianwang" />
             </span>
         </div>
         <div class="app-lighting-card-bottom">
@@ -120,6 +120,9 @@ export default {
 		.off-line-info {
 			i {
 				color: #c0c4cc;
+			}
+			i:nth-of-type(2) {
+				color: #909399;
 			}
 		}
 	}
